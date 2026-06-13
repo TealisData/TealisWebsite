@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, AlertCircle } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface FormData {
   firstName: string;
@@ -57,6 +58,7 @@ export default function ContactDrawer() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     const handler = () => setOpen(true);
@@ -86,14 +88,26 @@ export default function ContactDrawer() {
       return;
     }
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
+    setSubmitError(null);
+    const { error } = await supabase.from("contact_requests").insert({
+      first_name: form.firstName,
+      last_name: form.lastName,
+      email: form.email,
+      message: form.message,
+      country_code: form.countryCode || null,
+      mobile: form.mobile || null,
+    });
     setLoading(false);
+    if (error) {
+      setSubmitError("Something went wrong. Please try again.");
+      return;
+    }
     setSubmitted(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setTimeout(() => { setSubmitted(false); setForm(INITIAL); setErrors({}); }, 400);
+    setTimeout(() => { setSubmitted(false); setForm(INITIAL); setErrors({}); setSubmitError(null); }, 400);
   };
 
   const inputClass = (field: keyof FormErrors) =>
@@ -276,6 +290,13 @@ export default function ContactDrawer() {
                         </p>
                       )}
                     </div>
+
+                    {submitError && (
+                      <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                        <AlertCircle size={14} className="shrink-0" />
+                        {submitError}
+                      </div>
+                    )}
 
                     <button
                       type="submit"
