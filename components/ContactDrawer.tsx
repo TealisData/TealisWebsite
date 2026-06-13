@@ -59,11 +59,23 @@ export default function ContactDrawer() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [atBottom, setAtBottom] = useState(false);
 
   useEffect(() => {
     const handler = () => setOpen(true);
     window.addEventListener("tealis:open-contact", handler);
     return () => window.removeEventListener("tealis:open-contact", handler);
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const nearBottom = window.scrollY + window.innerHeight >= document.body.scrollHeight - 80;
+      setAtBottom(nearBottom);
+      window.dispatchEvent(new CustomEvent("tealis:at-bottom", { detail: nearBottom }));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -120,14 +132,17 @@ export default function ContactDrawer() {
   return (
     <>
       {/* Floating CTA button */}
-      <button
+      <motion.button
         onClick={() => setOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-[#4A86E8] text-white text-sm font-semibold rounded-full shadow-lg hover:bg-[#3a70d0] hover:shadow-xl transition-all duration-200 group"
+        animate={{ y: atBottom ? 120 : 0, opacity: atBottom ? 0 : 1 }}
+        transition={{ duration: 0.35, ease: "easeInOut" }}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-[#4A86E8] text-white text-sm font-semibold rounded-full shadow-lg hover:bg-[#3a70d0] hover:shadow-xl transition-colors duration-200 group"
         aria-label="Get In Touch"
+        style={{ pointerEvents: atBottom ? "none" : "auto" }}
       >
         <span>Get In Touch</span>
         <span className="text-white/70 group-hover:translate-x-0.5 transition-transform">→</span>
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {open && (
