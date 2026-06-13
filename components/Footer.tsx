@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, Mail, Phone } from "lucide-react";
 
@@ -11,6 +10,48 @@ const navLinks = [
   { href: "/learning", label: "Learning" },
   { href: "/about", label: "About Us" },
 ];
+
+function AnimatedLogo() {
+  return (
+    <svg viewBox="98 24 204 140" width="100" height="70" aria-label="Tealis" fill="none">
+      {/* Book pages — spread outward from center */}
+      <motion.path
+        fill="#ffffff"
+        d="M124 98 L194 98 Q198 98 199 103 L200 110 L201 103 Q202 98 206 98 L276 98 L292 110 L222 110 Q212 110 208 114 Q200 122 192 114 Q188 110 178 110 L108 110 Z"
+        initial={{ scaleX: 0.04, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: [0.34, 1.4, 0.64, 1] }}
+        style={{ transformOrigin: "200px 104px" }}
+      />
+      {/* Blue roof — rises up from the book */}
+      <motion.path
+        fill="#4A86E8"
+        d="M134 84 L191 44 Q200 39 209 44 L266 84 L252 84 L212 66 Q200 61 188 66 L148 84 Z"
+        initial={{ y: 32, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.22, ease: "easeOut" }}
+      />
+      {/* TEALIS text */}
+      <motion.text
+        x="108" y="150"
+        fontFamily="Inter, system-ui, sans-serif"
+        fontSize="19"
+        fontWeight="700"
+        textLength="184"
+        lengthAdjust="spacing"
+        fill="#ffffff"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.4, delay: 0.5 }}
+      >
+        TEALIS
+      </motion.text>
+    </svg>
+  );
+}
 
 const legalLinks = [
   { href: "/privacy-policy", label: "Privacy Policy" },
@@ -33,13 +74,7 @@ export default function Footer() {
 
           {/* Brand */}
           <div className="flex flex-col items-center gap-5 md:col-span-1">
-            <Image
-              src="/logos/logo-tealis-full-white.svg"
-              alt="Tealis"
-              width={110}
-              height={34}
-              unoptimized
-            />
+            <AnimatedLogo />
             <AnimatePresence>
               {atBottom && (
                 <motion.button
