@@ -13,7 +13,7 @@ const navLinks = [
   { href: "/about", label: "About Us" },
 ];
 
-const ETL_WORDS = ["Extract", "Transform", "Load"];
+const ETL_WORDS = ["Automate", "Standardize", "Visualize", "Architect", "Enrich with AI"];
 
 function EtlAnimatedText() {
   const [index, setIndex] = useState(0);
@@ -27,11 +27,7 @@ function EtlAnimatedText() {
 
   return (
     <div className="hidden md:flex items-center gap-2 select-none" aria-label="Extract Transform Load">
-      <span className="text-xs font-semibold text-gray-300 tracking-widest uppercase">
-        ETL
-      </span>
-      <span className="text-gray-300 text-xs">·</span>
-      <div className="relative h-5 w-24 overflow-hidden">
+      <div className="relative h-5 w-32 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.span
             key={ETL_WORDS[index]}
@@ -80,8 +76,8 @@ export default function Header() {
             <Image
               src="/logos/logo-tealis-full.svg"
               alt="Tealis"
-              width={130}
-              height={50}
+              width={80}
+              height={22}
               priority
             />
           </Link>
