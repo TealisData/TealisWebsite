@@ -159,12 +159,12 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-5xl lg:text-6xl font-bold text-[#22252A] leading-tight tracking-tight">
-              Transform Data Into{" "}
-              <span className="text-[#4A86E8]">Business Value</span>
+              We don&apos;t just deliver solutions,{" "}
+              <span className="text-[#4A86E8]">we build capability.</span>
             </h1>
 
             <p className="text-lg text-gray-500 leading-relaxed max-w-lg">
-              End-to-end data management, analytics, automation and Microsoft-powered business transformation.
+              We optimize your processes today, empowering your team to scale and manage them tomorrow.
             </p>
 
             <div className="flex flex-wrap gap-4">
