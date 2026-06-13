@@ -1,1 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="2000" zoomAndPan="magnify" viewBox="0 0 1500 1499.999933" height="2000" preserveAspectRatio="xMidYMid meet" version="1.0"><defs><clipPath id="3bb98af3b9"><path d="M 200 571 L 1300 571 L 1300 929 L 200 929 Z M 200 571 " clip-rule="nonzero"/></clipPath><clipPath id="4bef63f5ea"><path d="M -3.976562 473.882812 L 1500.484375 463.378906 L 1504.417969 1026.617188 L -0.046875 1037.121094 Z M -3.976562 473.882812 " clip-rule="nonzero"/></clipPath><clipPath id="1ed6107dcf"><path d="M -128.246094 398.261719 L 1621.460938 386.046875 L 1628.433594 1385.019531 L -121.273438 1397.238281 Z M -128.246094 398.261719 " clip-rule="nonzero"/></clipPath></defs><g clip-path="url(#3bb98af3b9)"><g clip-path="url(#4bef63f5ea)"><g clip-path="url(#1ed6107dcf)"><path fill="#4a86e8" d="M 200.921875 928.777344 L 673.082031 592.472656 C 722.835938 564.375 772.78125 564.023438 822.921875 591.425781 L 1299.730469 921.105469 L 1183.191406 921.917969 L 849.171875 774.394531 C 782.382812 747.113281 715.789062 747.578125 649.386719 775.792969 L 317.460938 927.960938 Z M 200.921875 928.777344 " fill-opacity="1" fill-rule="nonzero"/></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="200 571 1100 358" role="img" aria-label="Tealis">
+  <defs>
+    <clipPath id="favicon-clip"><path d="M 200 571 L 1300 571 L 1300 929 L 200 929 Z" clip-rule="nonzero"/></clipPath>
+  </defs>
+  <g clip-path="url(#favicon-clip)">
+    <path fill="#4a86e8" d="M 200.921875 928.777344 L 673.082031 592.472656 C 722.835938 564.375 772.78125 564.023438 822.921875 591.425781 L 1299.730469 921.105469 L 1183.191406 921.917969 L 849.171875 774.394531 C 782.382812 747.113281 715.789062 747.578125 649.386719 775.792969 L 317.460938 927.960938 Z" fill-rule="nonzero"/>
+  </g>
+</svg>

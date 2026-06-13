@@ -78,10 +78,10 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" aria-label="Tealis home">
             <Image
-              src="/logos/logo-tealis-icon.svg"
+              src="/logos/logo-tealis-full.svg"
               alt="Tealis"
-              width={44}
-              height={44}
+              width={130}
+              height={50}
               priority
             />
           </Link>
