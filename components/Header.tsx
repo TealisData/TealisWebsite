@@ -2,16 +2,52 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
-import Logo from "./Logo";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/learning", label: "Learning" },
   { href: "/about", label: "About Us" },
 ];
+
+const ETL_WORDS = ["Extract", "Transform", "Load"];
+
+function EtlAnimatedText() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % ETL_WORDS.length);
+    }, 2800);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="hidden md:flex items-center gap-2 select-none" aria-label="Extract Transform Load">
+      <span className="text-xs font-semibold text-gray-300 tracking-widest uppercase">
+        ETL
+      </span>
+      <span className="text-gray-300 text-xs">·</span>
+      <div className="relative h-5 w-24 overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.span
+            key={ETL_WORDS[index]}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="absolute inset-0 flex items-center text-sm font-semibold text-[#4A86E8]"
+          >
+            {ETL_WORDS[index]}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -28,10 +64,6 @@ export default function Header() {
     setMobileOpen(false);
   }, [pathname]);
 
-  const openContact = () => {
-    window.dispatchEvent(new CustomEvent("tealis:open-contact"));
-  };
-
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -42,8 +74,16 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+
+          {/* Logo */}
           <Link href="/" aria-label="Tealis home">
-            <Logo width={110} height={46} />
+            <Image
+              src="/logos/logo-tealis-icon.svg"
+              alt="Tealis"
+              width={44}
+              height={44}
+              priority
+            />
           </Link>
 
           {/* Desktop nav */}
@@ -66,14 +106,8 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="hidden md:flex items-center">
-            <button
-              onClick={openContact}
-              className="px-5 py-2.5 bg-[#4A86E8] text-white text-sm font-semibold rounded-lg hover:bg-[#3a70d0] transition-colors duration-200 shadow-sm hover:shadow-md"
-            >
-              Get In Touch
-            </button>
-          </div>
+          {/* ETL animated text */}
+          <EtlAnimatedText />
 
           {/* Mobile toggle */}
           <button
@@ -108,12 +142,6 @@ export default function Header() {
                   {label}
                 </Link>
               ))}
-              <button
-                onClick={() => { setMobileOpen(false); openContact(); }}
-                className="mt-2 w-full px-5 py-3 bg-[#4A86E8] text-white text-sm font-semibold rounded-lg hover:bg-[#3a70d0] transition-colors"
-              >
-                Get In Touch
-              </button>
             </div>
           </motion.div>
         )}

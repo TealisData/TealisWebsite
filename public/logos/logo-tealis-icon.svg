@@ -1,0 +1,46 @@
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="95 20 210 120"
+    role="img"
+    aria-labelledby="tealis-icon-title tealis-icon-desc">
+
+    <title id="tealis-icon-title">Tealis Symbol</title>
+    <desc id="tealis-icon-desc">
+        Simbolo geometrico del marchio Tealis.
+    </desc>
+
+    <g shape-rendering="geometricPrecision">
+
+        <!-- Parte superiore -->
+        <path
+            fill="#4A86E8"
+            d="M134 70
+               L191 30
+               Q200 25 209 30
+               L266 70
+               L252 70
+               L212 52
+               Q200 47 188 52
+               L148 70 Z"
+            transform="translate(0 14)" />
+
+        <!-- Parte inferiore -->
+        <path
+            fill="#22252A"
+            d="M124 98
+               L194 98
+               Q198 98 199 103
+               L200 110
+               L201 103
+               Q202 98 206 98
+               L276 98
+               L292 110
+               L222 110
+               Q212 110 208 114
+               Q200 122 192 114
+               Q188 110 178 110
+               L108 110 Z" />
+
+    </g>
+
+</svg>
