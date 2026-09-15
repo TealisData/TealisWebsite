@@ -74,8 +74,6 @@ export default function CanvasParticleBackground() {
       const dark = isDark();
       const roofColor = dark ? "#5D97F5" : "#4A86E8";
       const bookColor = dark ? "#CBD5E1" : "#22252A";
-      const ambientA = dark ? "rgba(93,151,245,0.18)" : "rgba(74,134,232,0.22)";
-      const ambientB = dark ? "rgba(203,213,225,0.12)" : "rgba(34,37,42,0.16)";
 
       for (let y = 0; y < h; y += step) {
         for (let x = 0; x < w; x += step) {
@@ -85,16 +83,6 @@ export default function CanvasParticleBackground() {
             particles.push({ baseX: x, baseY: y, x, y, vx: 0, vy: 0, color: roofColor, radius: 2.4, density: 25 });
           } else if (inBook) {
             particles.push({ baseX: x, baseY: y, x, y, vx: 0, vy: 0, color: bookColor, radius: 2.4, density: 25 });
-          } else {
-            const distToLogo = Math.hypot(x - (logoX + targetW / 2), y - (logoY + (541 * scale) / 2));
-            const maxDist = Math.max(w, h);
-            const chance = (1 - distToLogo / maxDist) * 0.08 + 0.025;
-            if (Math.random() < chance) {
-              const color = Math.random() > 0.5 ? ambientA : ambientB;
-              const jx = x + (Math.random() - 0.5) * 6;
-              const jy = y + (Math.random() - 0.5) * 6;
-              particles.push({ baseX: jx, baseY: jy, x: jx, y: jy, vx: 0, vy: 0, color, radius: 1.6, density: 15 });
-            }
           }
         }
       }
