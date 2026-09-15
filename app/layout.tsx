@@ -39,10 +39,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${jakarta.variable} h-full`}>
-      <body className="min-h-full flex flex-col antialiased bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <body className="h-full flex flex-col antialiased overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 overflow-y-auto flex flex-col">{children}</main>
           <Footer />
           <ContactDrawer />
         </ThemeProvider>
