@@ -2,15 +2,16 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 const services = [
   {
     id: "data-strategy",
     label: "Data Strategy & Governance",
     headline: "Turn data into a strategic asset.",
+    subtitle: "Structure where there is chaos — visibility where there is noise.",
     description:
-      "We help organizations design and implement enterprise-grade data ecosystems. From defining governance frameworks to building data products that scale, we bring structure where there is chaos — and visibility where there is noise.",
+      "We help organizations design and implement enterprise-grade data ecosystems. From defining governance frameworks to building data products that scale, we bring order to complexity and turn raw data into a competitive advantage.",
     capabilities: [
       "Data maturity assessment",
       "Governance frameworks & policies",
@@ -24,8 +25,9 @@ const services = [
     id: "analytics-bi",
     label: "Analytics & Business Intelligence",
     headline: "Decisions backed by data, not instinct.",
+    subtitle: "Power BI done right — from semantic model to executive dashboard.",
     description:
-      "We design and deploy analytics solutions that make information accessible to everyone in your organization — from the C-suite to the operational teams. Power BI done right: semantic models, row-level security, performance optimization.",
+      "We design and deploy analytics solutions that make information accessible to everyone in your organization — from the C-suite to the operational teams. Semantic models, row-level security, performance optimization — the full stack.",
     capabilities: [
       "Power BI report & dashboard design",
       "Semantic model development",
@@ -39,8 +41,9 @@ const services = [
     id: "data-engineering",
     label: "Data Engineering",
     headline: "Reliable pipelines. Clean data. Always.",
+    subtitle: "The plumbing that makes analytics possible.",
     description:
-      "We build the plumbing that makes analytics possible — ingestion, transformation, storage and orchestration. Whether you need a modern lakehouse on Microsoft Fabric or a legacy migration to the cloud, we cover the full engineering lifecycle.",
+      "We build ingestion, transformation, storage and orchestration pipelines that your business can depend on. Whether you need a modern lakehouse on Microsoft Fabric or a legacy migration to the cloud, we cover the full engineering lifecycle.",
     capabilities: [
       "ETL/ELT pipeline design & development",
       "Lakehouse & warehouse architecture",
@@ -54,8 +57,9 @@ const services = [
     id: "automation",
     label: "Business Automation",
     headline: "Automate the work that slows you down.",
+    subtitle: "Replace spreadsheets and email chains with real tools.",
     description:
-      "We digitalize manual processes using Microsoft Power Platform — building custom apps, automated workflows and business portals that replace spreadsheets and email chains. Delivered fast, built to last.",
+      "We digitalize manual processes using Microsoft Power Platform — building custom apps, automated workflows and business portals. Delivered fast, built to last, and owned by your team from day one.",
     capabilities: [
       "Power Apps (canvas & model-driven)",
       "Power Automate workflow design",
@@ -69,8 +73,9 @@ const services = [
     id: "ai-copilot",
     label: "AI & Microsoft Copilot",
     headline: "AI that works inside your existing tools.",
+    subtitle: "Practical, governed, grounded in your actual business context.",
     description:
-      "We implement Microsoft Copilot and AI-powered solutions within your Microsoft 365 environment — from Copilot Studio agents to AI-augmented data pipelines. Practical, governed, and grounded in your actual business context.",
+      "We implement Microsoft Copilot and AI-powered solutions within your Microsoft 365 environment — from Copilot Studio agents to AI-augmented data pipelines. No hype, no black boxes — just AI that delivers measurable value.",
     capabilities: [
       "Copilot Studio agent development",
       "Microsoft 365 Copilot deployment",
@@ -85,108 +90,109 @@ const services = [
 export default function ConsultingPage() {
   const [active, setActive] = useState(services[0].id);
   const current = services.find((s) => s.id === active)!;
-
   const openContact = () => window.dispatchEvent(new CustomEvent("tealis:open-contact"));
 
   return (
-    <div className="min-h-screen pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
+    <div className="flex flex-col flex-1 pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row flex-1 min-h-0 overflow-hidden">
 
-      {/* Page header */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 pb-10">
-        <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)] mb-3">Consulting</p>
-        <h1
-          className="text-4xl md:text-5xl font-bold text-[var(--text-primary)] leading-tight max-w-2xl"
-          style={{ fontFamily: "var(--font-heading)" }}
-        >
-          Services.
-        </h1>
-        <p className="mt-4 text-[var(--text-muted)] max-w-xl leading-relaxed">
-          End-to-end Microsoft data consulting — from strategy to engineering, analytics and automation. One partner for the full journey.
-        </p>
-      </div>
+        {/* ── Left column ── */}
+        <div className="lg:w-80 shrink-0 border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] overflow-y-auto">
+          <div className="py-12 lg:pr-12 flex flex-col gap-8">
 
-      {/* Split-screen */}
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
-        <div className="flex flex-col lg:flex-row gap-0 border border-[var(--border-subtle)] rounded-2xl overflow-hidden">
+            <div className="flex flex-col gap-4">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">Consulting</p>
+              <h1 className="text-2xl font-bold text-[var(--text-primary)] leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
+                Consulting Services
+              </h1>
+              <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                End-to-end Microsoft data consulting — from strategy to engineering, analytics and automation. One partner for the full journey.
+              </p>
+            </div>
 
-          {/* Left — service list */}
-          <nav className="lg:w-72 shrink-0 border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] bg-[var(--bg-surface)]">
-            <ul>
-              {services.map((s, i) => (
-                <li key={s.id}>
-                  <button
-                    onClick={() => setActive(s.id)}
-                    className={`w-full text-left px-6 py-5 flex items-center justify-between gap-3 text-sm font-medium transition-colors duration-150 ${
-                      active === s.id
-                        ? "bg-[var(--bg-primary)] text-[var(--color-brand)] border-l-2 border-[var(--color-brand)]"
-                        : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-primary)]/50"
-                    } ${i < services.length - 1 ? "border-b border-[var(--border-subtle)]" : ""}`}
-                  >
-                    {s.label}
-                    {active === s.id && <ArrowRight size={14} className="shrink-0" />}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+            <nav>
+              <ul className="border-t border-[var(--border-subtle)]">
+                {services.map((s) => (
+                  <li key={s.id} className="border-b border-[var(--border-subtle)]">
+                    <button
+                      onClick={() => setActive(s.id)}
+                      className={`w-full text-left py-4 flex items-center justify-between gap-3 transition-colors duration-150 group ${
+                        active === s.id ? "text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                      }`}
+                    >
+                      <span className={`text-base leading-snug ${active === s.id ? "font-semibold" : "font-normal"}`}>
+                        {s.label}
+                      </span>
+                      <ChevronRight
+                        size={16}
+                        className={`shrink-0 ${active === s.id ? "text-[var(--text-primary)]" : "text-[var(--border-subtle)] group-hover:text-[var(--text-muted)]"}`}
+                      />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-          {/* Right — detail */}
-          <div className="flex-1 p-8 md:p-12 min-h-[480px]">
+          </div>
+        </div>
+
+        {/* ── Right column ── */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="py-12 lg:pl-12">
             <AnimatePresence mode="wait">
               <motion.div
                 key={current.id}
-                initial={{ opacity: 0, y: 12 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="flex flex-col gap-7 h-full"
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="flex flex-col gap-8"
               >
-                <div>
-                  <h2
-                    className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] mb-3"
-                    style={{ fontFamily: "var(--font-heading)" }}
+                <div className="flex items-start justify-between gap-6">
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                      {current.headline}
+                    </h2>
+                    <p className="mt-2 text-base text-[var(--text-muted)]">{current.subtitle}</p>
+                  </div>
+                  <button
+                    onClick={openContact}
+                    className="shrink-0 px-5 py-2.5 bg-[var(--color-dark)] text-white text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
                   >
-                    {current.headline}
-                  </h2>
-                  <p className="text-[var(--text-muted)] leading-relaxed max-w-lg">{current.description}</p>
+                    Get in touch
+                  </button>
                 </div>
 
-                <div className="flex flex-col gap-4">
-                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)]">What we deliver</p>
-                  <ul className="flex flex-col gap-2">
-                    {current.capabilities.map((cap) => (
-                      <li key={cap} className="flex items-start gap-2 text-sm text-[var(--text-primary)]">
-                        <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
-                        {cap}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <hr className="border-[var(--border-subtle)]" />
+
+                <p className="text-base text-[var(--text-muted)] leading-relaxed max-w-2xl">
+                  {current.description}
+                </p>
+
+                <ul className="flex flex-col gap-3">
+                  {current.capabilities.map((cap) => (
+                    <li key={cap} className="flex items-start gap-3 text-base text-[var(--text-primary)]">
+                      <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
+                      {cap}
+                    </li>
+                  ))}
+                </ul>
 
                 <div className="flex flex-col gap-3">
-                  <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)]">Technologies</p>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">Technologies</p>
                   <div className="flex flex-wrap gap-2">
                     {current.tools.map((t) => (
-                      <span
-                        key={t}
-                        className="px-3 py-1 text-xs font-medium rounded-full border border-[var(--border-subtle)] text-[var(--text-muted)] bg-[var(--bg-surface)]"
-                      >
+                      <span key={t} className="px-3 py-1 text-sm rounded-md border border-[var(--border-subtle)] text-[var(--text-muted)]">
                         {t}
                       </span>
                     ))}
                   </div>
                 </div>
-
-                <button
-                  onClick={openContact}
-                  className="mt-auto w-fit inline-flex items-center gap-2 px-6 py-3 bg-[var(--color-brand)] text-white text-sm font-semibold rounded-xl hover:bg-[var(--color-brand-hover)] transition-colors"
-                >
-                  Get in touch <ArrowRight size={15} />
-                </button>
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
+
       </div>
     </div>
   );

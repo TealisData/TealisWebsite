@@ -11,7 +11,7 @@ import { useTheme } from "next-themes";
 const NAV_LINKS = [
   { href: "/",           label: "Home" },
   { href: "/consulting", label: "Consulting" },
-  { href: "/formation",  label: "Formation" },
+  { href: "/training",   label: "Training" },
   { href: "/about",      label: "About" },
   { href: "/contact",    label: "Contact" },
 ];
