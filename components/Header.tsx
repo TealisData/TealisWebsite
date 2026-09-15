@@ -4,44 +4,38 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Menu, X, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/learning", label: "Learning" },
-  { href: "/about", label: "About Us" },
+const NAV_LINKS = [
+  { href: "/",           label: "Home" },
+  { href: "/consulting", label: "Consulting" },
+  { href: "/formation",  label: "Formation" },
+  { href: "/about",      label: "About" },
+  { href: "/contact",    label: "Contact" },
 ];
 
-const ETL_WORDS = ["Automate", "Standardize", "Visualize", "Architect", "Enrich with AI"];
+function ThemeToggle() {
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-function EtlAnimatedText() {
-  const [index, setIndex] = useState(0);
+  useEffect(() => { setMounted(true); }, []);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % ETL_WORDS.length);
-    }, 2800);
-    return () => clearInterval(timer);
-  }, []);
+  if (!mounted) {
+    return <div className="w-11 h-11" />;
+  }
+
+  const isDark = resolvedTheme === "dark";
 
   return (
-    <div className="hidden md:flex items-center gap-2 select-none" aria-label="Extract Transform Load">
-      <div className="relative h-5 w-40 overflow-hidden">
-        <AnimatePresence mode="wait">
-          <motion.span
-            key={ETL_WORDS[index]}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="absolute inset-0 flex items-center text-sm font-semibold text-[#4A86E8]"
-          >
-            {ETL_WORDS[index]}
-          </motion.span>
-        </AnimatePresence>
-      </div>
-    </div>
+    <button
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="flex items-center justify-center w-11 h-11 rounded-full text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] transition-colors duration-200"
+    >
+      {isDark ? <Sun size={18} /> : <Moon size={18} />}
+    </button>
   );
 }
 
@@ -49,6 +43,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -60,60 +55,75 @@ export default function Header() {
     setMobileOpen(false);
   }, [pathname]);
 
+  const mobileVariants = shouldReduceMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+    : {
+        initial:  { opacity: 0, height: 0 },
+        animate:  { opacity: 1, height: "auto" },
+        exit:     { opacity: 0, height: 0 },
+      };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100"
+          ? "bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-subtle)]"
           : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14 md:h-[69px]">
 
           {/* Logo */}
-          <Link href="/" aria-label="Tealis home">
+          <Link href="/" aria-label="Tealis home" className="shrink-0">
             <Image
               src="/logos/logo-tealis-full.svg"
               alt="Tealis"
-              width={80}
-              height={22}
+              width={96}
+              height={26}
               priority
               unoptimized
             />
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`text-sm font-medium transition-colors duration-200 relative group ${
-                  pathname === href ? "text-[#4A86E8]" : "text-[#22252A] hover:text-[#4A86E8]"
-                }`}
-              >
-                {label}
-                <span
-                  className={`absolute -bottom-1 left-0 h-0.5 bg-[#4A86E8] transition-all duration-200 ${
-                    pathname === href ? "w-full" : "w-0 group-hover:w-full"
+          <nav className="hidden md:flex items-center gap-8" aria-label="Primary navigation">
+            {NAV_LINKS.map(({ href, label }) => {
+              const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`text-sm font-medium transition-colors duration-200 relative group ${
+                    active
+                      ? "text-[var(--color-brand)]"
+                      : "text-[var(--text-primary)] hover:text-[var(--color-brand)]"
                   }`}
-                />
-              </Link>
-            ))}
+                >
+                  {label}
+                  <span
+                    className={`absolute -bottom-1 left-0 h-0.5 bg-[var(--color-brand)] transition-all duration-200 ${
+                      active ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                </Link>
+              );
+            })}
           </nav>
 
-          {/* ETL animated text */}
-          <EtlAnimatedText />
+          {/* Right side: dark mode toggle + mobile hamburger */}
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
 
-          {/* Mobile toggle */}
-          <button
-            className="md:hidden p-3 text-[#22252A]"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+            <button
+              className="md:hidden flex items-center justify-center w-11 h-11 text-[var(--text-primary)]"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -121,25 +131,31 @@ export default function Header() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            key="mobile-nav"
+            initial={mobileVariants.initial}
+            animate={mobileVariants.animate}
+            exit={mobileVariants.exit}
             transition={{ duration: 0.2 }}
-            className="md:hidden overflow-hidden bg-white border-t border-gray-100 shadow-lg"
+            className="md:hidden overflow-hidden bg-[var(--bg-primary)] border-t border-[var(--border-subtle)] shadow-lg"
           >
-            <div className="px-4 py-4 flex flex-col gap-4">
-              {navLinks.map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`text-sm font-medium py-2 border-b border-gray-50 ${
-                    pathname === href ? "text-[#4A86E8]" : "text-[#22252A]"
-                  }`}
-                >
-                  {label}
-                </Link>
-              ))}
-            </div>
+            <nav className="px-4 py-4 flex flex-col gap-1" aria-label="Mobile navigation">
+              {NAV_LINKS.map(({ href, label }) => {
+                const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`text-sm font-medium py-3 px-2 rounded-lg transition-colors duration-150 ${
+                      active
+                        ? "text-[var(--color-brand)] bg-[var(--bg-surface)]"
+                        : "text-[var(--text-primary)] hover:bg-[var(--bg-surface)]"
+                    }`}
+                  >
+                    {label}
+                  </Link>
+                );
+              })}
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
