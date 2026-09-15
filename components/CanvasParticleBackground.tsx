@@ -80,9 +80,11 @@ export default function CanvasParticleBackground() {
           const inRoof = offCtx.isPointInPath(pathRoof, x, y);
           const inBook = offCtx.isPointInPath(pathBook, x, y);
           if (inRoof) {
-            particles.push({ baseX: x, baseY: y, x, y, vx: 0, vy: 0, color: roofColor, radius: 2.4, density: 25 });
+            particles.push({ baseX: x, baseY: y, x, y, vx: 0, vy: 0, color: roofColor, radius: 2, density: 25 });
           } else if (inBook) {
-            particles.push({ baseX: x, baseY: y, x, y, vx: 0, vy: 0, color: bookColor, radius: 2.4, density: 25 });
+            // skip isolated extreme-right outlier points (> 95% of viewport width)
+            if (x > w * 0.95) continue;
+            particles.push({ baseX: x, baseY: y, x, y, vx: 0, vy: 0, color: bookColor, radius: 2, density: 25 });
           }
         }
       }
@@ -113,7 +115,7 @@ export default function CanvasParticleBackground() {
         p.y += p.vy;
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.arc(Math.round(p.x), Math.round(p.y), p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.color;
         ctx.fill();
       }
