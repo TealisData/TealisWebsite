@@ -92,6 +92,8 @@ export default function CanvasParticleBackground() {
           if (inRoof) {
             raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, color: roofColor, radius: 2, density: 25 });
           } else if (inBook) {
+            // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
+            if (x > logoX + targetW - step * 1.5) continue;
             raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, color: bookColor, radius: 2, density: 25 });
           }
         }
