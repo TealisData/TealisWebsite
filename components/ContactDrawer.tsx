@@ -131,19 +131,6 @@ export default function ContactDrawer() {
 
   return (
     <>
-      {/* Floating CTA button */}
-      <motion.button
-        onClick={() => setOpen(true)}
-        animate={{ y: atBottom ? 120 : 0, opacity: atBottom ? 0 : 1 }}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-5 py-3 bg-[#4A86E8] text-white text-sm font-semibold rounded-full shadow-lg hover:bg-[#3a70d0] hover:shadow-xl transition-colors duration-200 group"
-        aria-label="Get In Touch"
-        style={{ pointerEvents: atBottom ? "none" : "auto" }}
-      >
-        <span>Get In Touch</span>
-        <span className="text-white/70 group-hover:translate-x-0.5 transition-transform">→</span>
-      </motion.button>
-
       <AnimatePresence>
         {open && (
           <>

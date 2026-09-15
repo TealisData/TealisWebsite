@@ -9,9 +9,9 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
   const reduce = useReducedMotion();
   return (
     <motion.div
-      initial={reduce ? {} : { opacity: 0, y: 16 }}
+      initial={reduce ? {} : { opacity: 0, y: 12 }}
       animate={reduce ? {} : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+      transition={{ duration: 0.55, delay, ease: "easeOut" }}
       className={className}
     >
       {children}
@@ -23,113 +23,84 @@ export default function HomePage() {
   const openContact = () => window.dispatchEvent(new CustomEvent("tealis:open-contact"));
 
   return (
-    <div className="relative min-h-screen flex flex-col pt-14 md:pt-[69px]">
+    /* Full-viewport split: left = content, right = canvas */
+    <div className="relative h-screen flex flex-col pt-14 md:pt-[69px] overflow-hidden">
+
+      {/* Canvas fills the entire background */}
       <CanvasParticleBackground />
 
-      {/* Main content — centered, fills viewport */}
-      <main className="relative z-10 flex-1 flex flex-col justify-center max-w-3xl mx-auto w-full px-6 sm:px-8 py-16 gap-16">
+      {/* Content — left half on desktop, full width on mobile */}
+      <div className="relative z-10 flex-1 flex flex-col justify-center px-8 sm:px-12 lg:px-20 max-w-2xl">
 
-        {/* Badge */}
-        <FadeIn delay={0.05}>
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--bg-surface)] w-fit">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] animate-pulse" />
-            <span className="text-xs font-semibold tracking-widest uppercase text-[var(--color-brand)]">
-              Microsoft Data &amp; Analytics Partner
-            </span>
-          </div>
-        </FadeIn>
+        <div className="flex flex-col gap-10">
 
-        {/* Hero headline */}
-        <FadeIn delay={0.15}>
-          <h1
-            className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.08] tracking-tight text-[var(--text-primary)]"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Acceleration through Data.
-            <span className="text-[var(--color-brand)]">&#x25CF;</span>
-          </h1>
-        </FadeIn>
-
-        {/* Intro */}
-        <FadeIn delay={0.25}>
-          <p className="text-lg md:text-xl text-[var(--text-muted)] leading-relaxed max-w-xl">
-            Tealis is your Microsoft data partner — combining engineering, analytics and training
-            with real-world expertise. Founded in Tallinn by a team of certified Microsoft specialists.
-          </p>
-        </FadeIn>
-
-        {/* Services */}
-        <FadeIn delay={0.35}>
-          <div className="flex flex-col gap-3">
-            <p
-              className="text-xl font-semibold text-[var(--text-primary)]"
+          {/* Headline */}
+          <FadeIn delay={0.05}>
+            <h1
+              className="text-4xl md:text-5xl lg:text-[3.25rem] font-bold leading-[1.1] tracking-tight text-[var(--text-primary)]"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              Services.
-            </p>
-            <p className="text-[var(--text-muted)] leading-relaxed max-w-xl">
-              With deep specialization in Microsoft Fabric, Power BI and Power Platform,
-              we cover the full spectrum — from data strategy and engineering to business automation
-              and corporate training. One partner for the entire data journey.{" "}
-              <Link href="/consulting" className="text-[var(--color-brand)] hover:underline">
-                Consulting
-              </Link>{" "}
-              and{" "}
-              <Link href="/formation" className="text-[var(--color-brand)] hover:underline">
-                Formation
-              </Link>
-              .
-            </p>
-          </div>
-        </FadeIn>
+              Acceleration<br />through Data.
+            </h1>
+          </FadeIn>
 
-        {/* Values */}
-        <FadeIn delay={0.45}>
-          <div className="flex flex-col gap-3">
-            <p
-              className="text-xl font-semibold text-[var(--text-primary)]"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Values.
+          {/* Intro */}
+          <FadeIn delay={0.15}>
+            <p className="text-base text-[var(--text-muted)] leading-relaxed max-w-sm">
+              Tealis is your Microsoft data partner — combining engineering, analytics and training
+              with real-world expertise. Based in Tallinn.
             </p>
-            <p className="text-[var(--text-muted)] leading-relaxed max-w-xl">
-              We speak plainly, move fast and keep things transparent. No black boxes, no jargon.
-              Our goal is not just to deliver projects — it is to build capability inside your team
-              so you stay autonomous long after we&apos;re gone.
-            </p>
-          </div>
-        </FadeIn>
+          </FadeIn>
 
-        {/* Get in touch */}
-        <FadeIn delay={0.55}>
-          <div className="flex flex-col gap-3">
-            <p
-              className="text-xl font-semibold text-[var(--text-primary)]"
-              style={{ fontFamily: "var(--font-heading)" }}
-            >
-              Get in touch.
-            </p>
-            <p className="text-[var(--text-muted)] leading-relaxed">
-              If you&apos;d like to have a chat, you can{" "}
-              <button
-                onClick={openContact}
-                className="text-[var(--color-brand)] hover:underline"
-              >
-                book a meeting
-              </button>{" "}
-              or{" "}
-              <a
-                href="mailto:info@tealisdata.com"
-                className="text-[var(--color-brand)] hover:underline"
-              >
-                send us an email
-              </a>
-              .
-            </p>
-          </div>
-        </FadeIn>
+          {/* Sections */}
+          <div className="flex flex-col gap-6">
 
-      </main>
+            <FadeIn delay={0.25}>
+              <div className="flex flex-col gap-1.5">
+                <p className="text-sm font-semibold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
+                  Services.
+                </p>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-sm">
+                  Microsoft Fabric, Power BI, Power Platform — end-to-end.{" "}
+                  <Link href="/consulting" className="text-[var(--color-brand)] hover:underline">Consulting</Link>{" "}
+                  and{" "}
+                  <Link href="/formation" className="text-[var(--color-brand)] hover:underline">Formation</Link>.
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.32}>
+              <div className="flex flex-col gap-1.5">
+                <p className="text-sm font-semibold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
+                  Values.
+                </p>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed max-w-sm">
+                  Plain language, fast delivery, no black boxes. We build capability inside your team,
+                  not dependency on us.
+                </p>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.39}>
+              <div className="flex flex-col gap-1.5">
+                <p className="text-sm font-semibold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
+                  Get in touch.
+                </p>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                  <button onClick={openContact} className="text-[var(--color-brand)] hover:underline">
+                    Book a meeting
+                  </button>
+                  {" "}or{" "}
+                  <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand)] hover:underline">
+                    send us an email
+                  </a>.
+                </p>
+              </div>
+            </FadeIn>
+
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

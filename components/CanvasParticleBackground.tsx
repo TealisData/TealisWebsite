@@ -53,7 +53,9 @@ export default function CanvasParticleBackground() {
       const isMobile = w < 768;
       const targetW = isMobile ? Math.min(w * 0.85, 450) : Math.min(w * 0.46, 580);
       const scale = targetW / 1263;
-      const logoX = isMobile ? (w - targetW) / 2 : w * 0.52;
+      // On desktop: logo sits in the right half of the viewport
+      // On mobile: centered
+      const logoX = isMobile ? (w - targetW) / 2 : w * 0.54;
       const logoY = h * 0.5 - (541 * scale) / 2;
 
       const off = document.createElement("canvas");
