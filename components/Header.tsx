@@ -27,7 +27,7 @@ function EtlAnimatedText() {
 
   return (
     <div className="hidden md:flex items-center gap-2 select-none" aria-label="Extract Transform Load">
-      <div className="relative h-5 w-32 overflow-hidden">
+      <div className="relative h-5 w-40 overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.span
             key={ETL_WORDS[index]}
@@ -79,6 +79,7 @@ export default function Header() {
               width={80}
               height={22}
               priority
+              unoptimized
             />
           </Link>
 
@@ -107,7 +108,7 @@ export default function Header() {
 
           {/* Mobile toggle */}
           <button
-            className="md:hidden p-2 text-[#22252A]"
+            className="md:hidden p-3 text-[#22252A]"
             onClick={() => setMobileOpen((v) => !v)}
             aria-label="Toggle menu"
           >

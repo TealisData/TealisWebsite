@@ -83,7 +83,8 @@ export default function Footer() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 16 }}
                   transition={{ duration: 0.35, ease: "easeInOut" }}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-[#4A86E8] text-white text-sm font-semibold rounded-full shadow-lg hover:bg-[#3a70d0] transition-colors group"
+                  className="flex items-center gap-2 px-5 py-3 bg-[#4A86E8] text-white text-sm font-semibold rounded-full shadow-lg hover:bg-[#3a70d0] transition-colors group"
+                  aria-label="Open contact form"
                 >
                   <span>Get In Touch</span>
                   <span className="group-hover:translate-x-0.5 transition-transform">→</span>
@@ -157,7 +158,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/40">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/60">
           <p>© 2026 Tealisdata OÜ</p>
           <p>VAT Number EE102990636</p>
         </div>
