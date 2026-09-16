@@ -86,8 +86,8 @@ export default function Header() {
             />
           </Link>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8" aria-label="Primary navigation">
+          {/* Desktop nav — right-aligned, sits between logo and theme toggle */}
+          <nav className="hidden md:flex items-center gap-8 ml-auto mr-6" aria-label="Primary navigation">
             {NAV_LINKS.map(({ href, label }) => {
               const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
               return (

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 
 const socials = [
   {
@@ -40,16 +39,8 @@ export default function Footer() {
     <footer className="relative z-10 border-t border-[var(--border-subtle)] bg-[var(--bg-primary)] shrink-0">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 
-        {/* Left — brand + institutional */}
-        <div className="flex items-center gap-4">
-          <Image
-            src="/logos/logo-tealis-full.svg"
-            alt="Tealis"
-            width={72}
-            height={20}
-            unoptimized
-            className="opacity-55"
-          />
+        {/* Left — institutional */}
+        <div className="flex items-center">
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
             Tealisdata OÜ · Tallinn, Estonia · VAT EE102990636
           </p>
