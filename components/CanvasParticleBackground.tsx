@@ -19,7 +19,7 @@ interface Particle {
   y: number;
   vx: number;
   vy: number;
-  color: string;
+  isRoof: boolean;
   radius: number;
   density: number;
 }
@@ -79,10 +79,6 @@ export default function CanvasParticleBackground() {
       const pathBook = new Path2D(RAW_PATH_BOOK);
       const step = isMobile ? 10 : 12;
 
-      const dark = isDark();
-      const roofColor = dark ? "#5D97F5" : "#4A86E8";
-      const bookColor = dark ? "#CBD5E1" : "#22252A";
-
       const raw: Particle[] = [];
 
       for (let y = 0; y < h; y += step) {
@@ -90,11 +86,11 @@ export default function CanvasParticleBackground() {
           const inRoof = offCtx.isPointInPath(pathRoof, x, y);
           const inBook = offCtx.isPointInPath(pathBook, x, y);
           if (inRoof) {
-            raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, color: roofColor, radius: 2, density: 25 });
+            raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, isRoof: true, radius: 2, density: 25 });
           } else if (inBook) {
             // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
             if (x > logoX + targetW - step * 1.5) continue;
-            raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, color: bookColor, radius: 2, density: 25 });
+            raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, isRoof: false, radius: 2, density: 25 });
           }
         }
       }
@@ -135,6 +131,9 @@ export default function CanvasParticleBackground() {
       ctx.fillStyle = dark ? "#0A0C10" : "#FDFDFE";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      const roofColor = dark ? "#5D97F5" : "#4A86E8";
+      const bookColor = dark ? "#E2E8F0" : "#22252A";
+
       for (const p of particles) {
         if (!assembled) {
           // Interpolate from scatter to base position
@@ -161,7 +160,7 @@ export default function CanvasParticleBackground() {
 
         ctx.beginPath();
         ctx.arc(Math.round(p.x), Math.round(p.y), p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.color;
+        ctx.fillStyle = p.isRoof ? roofColor : bookColor;
         ctx.fill();
       }
       animId = requestAnimationFrame(render);
@@ -179,6 +178,9 @@ export default function CanvasParticleBackground() {
       resizeTimer = setTimeout(buildParticles, 150);
     };
 
+    const themeObserver = new MutationObserver(() => buildParticles());
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
     buildParticles();
     animId = requestAnimationFrame(render);
 
@@ -190,6 +192,7 @@ export default function CanvasParticleBackground() {
     return () => {
       cancelAnimationFrame(animId);
       clearTimeout(resizeTimer);
+      themeObserver.disconnect();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseleave", onMouseLeave);

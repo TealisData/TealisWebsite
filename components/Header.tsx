@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
+import Logo from "@/components/Logo";
 
 const NAV_LINKS = [
   { href: "/",           label: "Home" },
@@ -44,6 +44,9 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -76,13 +79,10 @@ export default function Header() {
 
           {/* Logo */}
           <Link href="/" aria-label="Tealis home" className="shrink-0">
-            <Image
-              src="/logos/logo-tealis-full.svg"
-              alt="Tealis"
-              width={96}
-              height={26}
-              priority
-              unoptimized
+            <Logo
+              width={140}
+              height={74}
+              variant={mounted && resolvedTheme === "dark" ? "white" : "default"}
             />
           </Link>
 
