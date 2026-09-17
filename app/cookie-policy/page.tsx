@@ -14,7 +14,7 @@ export default function CookiePolicyPage() {
           <h1 className="text-4xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
             Cookie Policy
           </h1>
-          <p className="text-sm text-[var(--text-muted)]">Last updated: January 2026</p>
+          <p className="text-sm text-[var(--text-muted)]">Last updated: September 2026</p>
         </div>
 
         <div className="flex flex-col gap-8 text-[var(--text-muted)] leading-relaxed text-sm">
@@ -29,9 +29,8 @@ export default function CookiePolicyPage() {
           </section>
 
           <section className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-[var(--text-primary)]">Cookies we use</h2>
-            <p>Tealisdata.com uses only strictly necessary cookies. We do not use advertising, tracking or analytics cookies.</p>
-
+            <h2 className="text-base font-semibold text-[var(--text-primary)]">Essential cookies</h2>
+            <p>These cookies are always active as they are necessary for the site to function.</p>
             <div className="overflow-x-auto rounded-xl border border-[var(--border-subtle)]">
               <table className="w-full text-xs">
                 <thead>
@@ -43,8 +42,8 @@ export default function CookiePolicyPage() {
                 </thead>
                 <tbody>
                   {[
+                    { name: "tealis_cookie_consent", purpose: "Stores your cookie preferences", duration: "Persistent" },
                     { name: "theme", purpose: "Stores your light/dark mode preference", duration: "1 year" },
-                    { name: "__vercel_live_token", purpose: "Vercel deployment infrastructure (strictly necessary)", duration: "Session" },
                   ].map((row, i) => (
                     <tr key={row.name} className={i % 2 === 0 ? "" : "bg-[var(--bg-surface)]"}>
                       <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{row.name}</td>
@@ -58,12 +57,32 @@ export default function CookiePolicyPage() {
           </section>
 
           <section className="flex flex-col gap-3">
-            <h2 className="text-base font-semibold text-[var(--text-primary)]">Third-party cookies</h2>
-            <p>
-              We do not load any third-party tracking scripts (Google Analytics, Meta Pixel, etc.).
-              Our fonts are loaded via Google Fonts, which may set a session cookie for font delivery optimization —
-              no personal data is stored or shared.
-            </p>
+            <h2 className="text-base font-semibold text-[var(--text-primary)]">Analytics cookies (optional)</h2>
+            <p>Only set if you consent. Used to understand how visitors use the site — no personal data is collected.</p>
+            <div className="overflow-x-auto rounded-xl border border-[var(--border-subtle)]">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+                    <th className="text-left px-4 py-3 font-semibold text-[var(--text-primary)]">Cookie</th>
+                    <th className="text-left px-4 py-3 font-semibold text-[var(--text-primary)]">Purpose</th>
+                    <th className="text-left px-4 py-3 font-semibold text-[var(--text-primary)]">Duration</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { name: "_ga", purpose: "Google Analytics — distinguishes users", duration: "2 years" },
+                    { name: "_ga_*", purpose: "Google Analytics — session state", duration: "2 years" },
+                  ].map((row, i) => (
+                    <tr key={row.name} className={i % 2 === 0 ? "" : "bg-[var(--bg-surface)]"}>
+                      <td className="px-4 py-3 font-mono text-[var(--text-primary)]">{row.name}</td>
+                      <td className="px-4 py-3">{row.purpose}</td>
+                      <td className="px-4 py-3">{row.duration}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p>Provider: Google LLC. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand)] hover:underline">Google's Privacy Policy</a>.</p>
           </section>
 
           <section className="flex flex-col gap-3">

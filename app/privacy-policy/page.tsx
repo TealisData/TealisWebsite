@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
           <h1 className="text-4xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
             Privacy Policy
           </h1>
-          <p className="text-sm text-[var(--text-muted)]">Last updated: January 2026</p>
+          <p className="text-sm text-[var(--text-muted)]">Last updated: September 2026</p>
         </div>
 
         <div className="flex flex-col gap-8 text-[var(--text-muted)] leading-relaxed text-sm">
@@ -22,8 +22,8 @@ export default function PrivacyPolicyPage() {
           <section className="flex flex-col gap-3">
             <h2 className="text-base font-semibold text-[var(--text-primary)]">1. Controller</h2>
             <p>
-              Tealisdata OÜ, a company incorporated under Estonian law (registry code: 16XXXXXX, VAT EE102990636),
-              with registered address in Tallinn, Estonia, is the data controller for all personal data
+              Tealisdata OÜ, a company incorporated under Estonian law (VAT EE102990636),
+              with registered address at Pärnu mnt 388b, Tallinn, Estonia, is the data controller for all personal data
               processed through the website tealisdata.com.
             </p>
             <p>Contact: <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand)] hover:underline">info@tealisdata.com</a></p>
@@ -41,18 +41,20 @@ export default function PrivacyPolicyPage() {
               ))}
             </ul>
             <p>
-              We do not use tracking pixels, behavioral analytics, or third-party advertising cookies.
-              The only cookies we set are strictly necessary for the site to function (session management, theme preference).
+              If you consent, we also collect anonymous usage data through Google Analytics 4
+              (page views, traffic source, approximate location at country level).
+              No personal data is collected through analytics. You can withdraw consent at any time
+              via the cookie banner at the bottom of any page.
             </p>
           </section>
 
           <section className="flex flex-col gap-3">
             <h2 className="text-base font-semibold text-[var(--text-primary)]">3. Legal basis and purpose</h2>
             <p>
-              Processing is based on your consent (Art. 6(1)(a) GDPR) when you contact us,
+              Processing is based on your consent (Art. 6(1)(a) GDPR) when you contact us or accept analytics cookies,
               and on our legitimate interest (Art. 6(1)(f) GDPR) in responding to business inquiries.
-              Data is used solely to respond to your request and is not sold, rented or shared with third parties
-              for marketing purposes.
+              Data is used solely to respond to your request and improve the website.
+              It is not sold, rented or shared with third parties for marketing purposes.
             </p>
           </section>
 
