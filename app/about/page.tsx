@@ -31,7 +31,7 @@ const TEAM = [
     photo: "/team/gabriele.png" as string | null,
     bio: [
       "I help organizations find the right data solution for their context — and then make sure it actually happens. My background spans communication, business development and consulting, which is what brought me to the Microsoft data ecosystem.",
-      "I'm a Microsoft Certified Trainer and currently also teach data analysis at EPICODE. At Tealisdata I handle client relationships, business development and training.",
+      "I'm a Microsoft Certified Trainer and currently also teach data analysis. At Tealisdata I handle client relationships, business development and training.",
     ],
   },
   {
@@ -42,7 +42,7 @@ const TEAM = [
     // Replace with actual photo: photo: "/team/luca.jpg"
     photo: "/team/luca.png" as string | null,
     bio: [
-      "I've been building data solutions since 2019 — from IT consulting to four years as data analytics trainer and consultant at Netway, then Senior Consultant at Bios Management before co-founding Tealisdata.",
+      "I've been building data solutions since 2019 — from IT consulting to four years as data analytics trainer and consultant, then senior consultant before co-founding Tealisdata.",
       "I handle the full stack: architecture, data engineering, semantic models, dashboards and deployment. Microsoft Certified Trainer, with a strong focus on solutions that are built to last and that teams can actually own.",
     ],
   },

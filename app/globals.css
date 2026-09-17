@@ -11,7 +11,7 @@
   --bg-surface:   #F7F9FC;
 
   --text-primary: #22252A;
-  --text-muted:   #64748B;
+  --text-muted:   #22252A;
 
   --border-subtle: rgba(34, 37, 42, 0.08);
 
@@ -39,8 +39,8 @@
     --bg-primary:   #0A0C10;
     --bg-surface:   #131720;
 
-    --text-primary: #F8FAFC;
-    --text-muted:   #94A3B8;
+    --text-primary: #FFFFFF;
+    --text-muted:   #FFFFFF;
 
     --border-subtle: rgba(255, 255, 255, 0.12);
   }
@@ -54,8 +54,8 @@
   --bg-primary:   #0A0C10;
   --bg-surface:   #131720;
 
-  --text-primary: #F8FAFC;
-  --text-muted:   #94A3B8;
+  --text-primary: #FFFFFF;
+  --text-muted:   #FFFFFF;
 
   --border-subtle: rgba(255, 255, 255, 0.12);
 }

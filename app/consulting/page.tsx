@@ -157,7 +157,7 @@ export default function ConsultingPage() {
                   </div>
                   <button
                     onClick={openContact}
-                    className="shrink-0 px-5 py-2.5 bg-[var(--color-dark)] text-white text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
+                    className="shrink-0 px-5 py-2.5 bg-[var(--color-dark)] text-[var(--bg-primary)] text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
                   >
                     Get in touch
                   </button>
