@@ -24,7 +24,9 @@ export default function HomePage() {
 
   return (
     <div className="relative flex-1 flex flex-col overflow-hidden">
-      <CanvasParticleBackground />
+      <div className="hidden md:block">
+        <CanvasParticleBackground />
+      </div>
 
       {/* Content — aligned with header logo, left half */}
       <div className="relative z-10 flex-1 flex items-center">
@@ -33,7 +35,7 @@ export default function HomePage() {
 
             <FadeIn delay={0.05}>
               <h1
-                className="text-3xl md:text-4xl font-bold leading-tight tracking-tight text-[var(--text-primary)] whitespace-nowrap"
+                className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight tracking-tight text-[var(--text-primary)]"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 Acceleration through Data.

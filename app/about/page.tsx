@@ -51,7 +51,7 @@ const TEAM = [
 export default function AboutPage() {
   return (
     <div className="flex flex-col flex-1 pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col flex-1 min-h-0">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
 
         {/* Header */}
         <div className="py-10 border-b border-[var(--border-subtle)]">
@@ -65,11 +65,11 @@ export default function AboutPage() {
         </div>
 
         {/* Two-column team split */}
-        <div className="flex flex-col lg:flex-row flex-1 min-h-0 overflow-hidden">
+        <div className="flex flex-col lg:flex-row">
           {TEAM.map((member, i) => (
             <div
               key={member.name}
-              className={`flex-1 flex flex-col py-10 overflow-y-auto ${
+              className={`flex-1 flex flex-col py-10 ${
                 i === 0
                   ? "lg:pr-12 border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)]"
                   : "lg:pl-12"

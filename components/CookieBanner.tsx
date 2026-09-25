@@ -67,41 +67,41 @@ export default function CookieBanner() {
           <div className="max-w-4xl mx-auto bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-2xl shadow-xl p-5 sm:p-6">
 
             {!showPrefs ? (
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8">
-                <p className="text-sm text-[var(--text-muted)] leading-relaxed flex-1">
-                  Usiamo i cookie per migliorare la tua esperienza e capire come viene usato il sito.
-                  Puoi scegliere cosa accettare.
+              <div className="flex flex-col gap-4">
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                  We use cookies to improve your experience and understand how the site is used.
+                  You can choose what to accept.
                 </p>
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 shrink-0">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   <button
                     onClick={acceptAll}
-                    className="px-5 py-2.5 bg-[var(--color-brand)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-hover)] transition-colors"
+                    className="px-5 py-2.5 bg-[var(--color-brand)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-hover)] transition-colors text-center"
                   >
-                    Accetta tutto
+                    Accept all
                   </button>
                   <button
                     onClick={acceptEssential}
-                    className="px-5 py-2.5 border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm font-medium rounded-lg hover:border-[var(--color-brand)] transition-colors"
+                    className="px-5 py-2.5 border border-[var(--border-subtle)] text-[var(--text-primary)] text-sm font-medium rounded-lg hover:border-[var(--color-brand)] transition-colors text-center"
                   >
-                    Solo essenziali
+                    Essential only
                   </button>
                   <button
                     onClick={() => setShowPrefs(true)}
-                    className="px-5 py-2.5 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                    className="px-5 py-2.5 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors text-center"
                   >
-                    Preferenze →
+                    Preferences →
                   </button>
                 </div>
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                <p className="text-sm font-semibold text-[var(--text-primary)]">Gestisci le preferenze</p>
+                <p className="text-sm font-semibold text-[var(--text-primary)]">Manage preferences</p>
 
                 {/* Essential — always on */}
                 <div className="flex items-center justify-between py-3 border-t border-[var(--border-subtle)]">
                   <div>
-                    <p className="text-sm font-medium text-[var(--text-primary)]">Cookie essenziali</p>
-                    <p className="text-xs text-[var(--text-muted)] mt-0.5">Necessari per il funzionamento del sito. Sempre attivi.</p>
+                    <p className="text-sm font-medium text-[var(--text-primary)]">Essential cookies</p>
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">Required for the site to function. Always active.</p>
                   </div>
                   <div className="w-10 h-6 bg-[var(--color-brand)] rounded-full opacity-50 cursor-not-allowed" />
                 </div>
@@ -109,8 +109,8 @@ export default function CookieBanner() {
                 {/* Analytics */}
                 <div className="flex items-center justify-between py-3 border-t border-[var(--border-subtle)]">
                   <div>
-                    <p className="text-sm font-medium text-[var(--text-primary)]">Cookie analitici</p>
-                    <p className="text-xs text-[var(--text-muted)] mt-0.5">Ci aiutano a capire come viene usato il sito (Google Analytics).</p>
+                    <p className="text-sm font-medium text-[var(--text-primary)]">Analytics cookies</p>
+                    <p className="text-xs text-[var(--text-muted)] mt-0.5">Help us understand how the site is used (Google Analytics).</p>
                   </div>
                   <button
                     role="switch"
@@ -127,13 +127,13 @@ export default function CookieBanner() {
                     onClick={savePrefs}
                     className="px-5 py-2.5 bg-[var(--color-brand)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-hover)] transition-colors"
                   >
-                    Salva preferenze
+                    Save preferences
                   </button>
                   <button
                     onClick={() => setShowPrefs(false)}
                     className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
                   >
-                    ← Indietro
+                    ← Back
                   </button>
                 </div>
               </div>

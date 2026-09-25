@@ -87,18 +87,91 @@ const services = [
   },
 ];
 
+function ServiceDetail({ service, onBack, openContact }: { service: typeof services[0]; onBack: () => void; openContact: () => void }) {
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors self-start"
+        >
+          <ChevronRight size={14} className="rotate-180" />
+          Back
+        </button>
+        <h2 className="text-2xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+          {service.headline}
+        </h2>
+        <p className="text-base text-[var(--text-muted)]">{service.subtitle}</p>
+        <button
+          onClick={openContact}
+          className="self-start px-5 py-2.5 bg-[var(--color-dark)] text-[var(--bg-primary)] text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
+        >
+          Get in touch
+        </button>
+      </div>
+
+      <hr className="border-[var(--border-subtle)]" />
+
+      <p className="text-base text-[var(--text-muted)] leading-relaxed">
+        {service.description}
+      </p>
+
+      <ul className="flex flex-col gap-3">
+        {service.capabilities.map((cap) => (
+          <li key={cap} className="flex items-start gap-3 text-base text-[var(--text-primary)]">
+            <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
+            {cap}
+          </li>
+        ))}
+      </ul>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">Technologies</p>
+        <div className="flex flex-wrap gap-2">
+          {service.tools.map((t) => (
+            <span key={t} className="px-3 py-1 text-sm rounded-md border border-[var(--border-subtle)] text-[var(--text-muted)]">
+              {t}
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ConsultingPage() {
   const [active, setActive] = useState(services[0].id);
+  const [mobileDetail, setMobileDetail] = useState<string | null>(null);
   const current = services.find((s) => s.id === active)!;
+  const mobileService = services.find((s) => s.id === mobileDetail);
   const openContact = () => window.dispatchEvent(new CustomEvent("tealis:open-contact"));
 
   return (
     <div className="flex flex-col flex-1 pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
+
+      {/* ── Mobile detail overlay ── */}
+      <AnimatePresence>
+        {mobileDetail && mobileService && (
+          <motion.div
+            key={mobileDetail}
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ duration: 0.28, ease: [0.32, 0, 0.67, 0] }}
+            className="md:hidden fixed inset-0 z-40 pt-14 bg-[var(--bg-primary)] overflow-y-auto"
+          >
+            <div className="px-4 py-6">
+              <ServiceDetail service={mobileService} onBack={() => setMobileDetail(null)} openContact={openContact} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row flex-1 min-h-0 overflow-hidden">
 
         {/* ── Left column ── */}
-        <div className="lg:w-80 shrink-0 border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)] overflow-y-auto">
-          <div className="py-12 lg:pr-12 flex flex-col gap-8">
+        <div className="lg:w-80 shrink-0 lg:border-r border-[var(--border-subtle)] overflow-y-auto">
+          <div className="py-6 lg:py-12 lg:pr-12 flex flex-col gap-8">
 
             <div className="flex flex-col gap-4">
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">Consulting</p>
@@ -115,7 +188,7 @@ export default function ConsultingPage() {
                 {services.map((s) => (
                   <li key={s.id} className="border-b border-[var(--border-subtle)]">
                     <button
-                      onClick={() => setActive(s.id)}
+                      onClick={() => { setActive(s.id); setMobileDetail(s.id); }}
                       className={`w-full text-left py-4 flex items-center justify-between gap-3 transition-colors duration-150 group ${
                         active === s.id ? "text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
                       }`}
@@ -133,12 +206,16 @@ export default function ConsultingPage() {
               </ul>
             </nav>
 
+            <p className="md:hidden text-xs text-[var(--text-muted)] opacity-60">
+              Tap a service to learn more
+            </p>
+
           </div>
         </div>
 
-        {/* ── Right column ── */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="py-12 lg:pl-12">
+        {/* ── Right column (desktop only) ── */}
+        <div className="hidden md:block flex-1 overflow-y-auto">
+          <div className="py-6 lg:py-12 lg:pl-12">
             <AnimatePresence mode="wait">
               <motion.div
                 key={current.id}
@@ -148,19 +225,19 @@ export default function ConsultingPage() {
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 className="flex flex-col gap-8"
               >
-                <div className="flex items-start justify-between gap-6">
-                  <div>
+                <div className="flex flex-col gap-4">
+                  <div className="flex items-start justify-between gap-4">
                     <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
                       {current.headline}
                     </h2>
-                    <p className="mt-2 text-base text-[var(--text-muted)]">{current.subtitle}</p>
+                    <button
+                      onClick={openContact}
+                      className="shrink-0 px-5 py-2.5 bg-[var(--color-dark)] text-[var(--bg-primary)] text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
+                    >
+                      Get in touch
+                    </button>
                   </div>
-                  <button
-                    onClick={openContact}
-                    className="shrink-0 px-5 py-2.5 bg-[var(--color-dark)] text-[var(--bg-primary)] text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
-                  >
-                    Get in touch
-                  </button>
+                  <p className="text-base text-[var(--text-muted)]">{current.subtitle}</p>
                 </div>
 
                 <hr className="border-[var(--border-subtle)]" />

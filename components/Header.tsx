@@ -16,15 +16,14 @@ const NAV_LINKS = [
   { href: "/contact",    label: "Contact" },
 ];
 
+
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
-  if (!mounted) {
-    return <div className="w-11 h-11" />;
-  }
+  if (!mounted) return <div className="w-11 h-11" />;
 
   const isDark = resolvedTheme === "dark";
 
@@ -54,22 +53,16 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   const mobileVariants = shouldReduceMotion
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
-    : {
-        initial:  { opacity: 0, height: 0 },
-        animate:  { opacity: 1, height: "auto" },
-        exit:     { opacity: 0, height: 0 },
-      };
+    : { initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: "auto" }, exit: { opacity: 0, height: 0 } };
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
+        scrolled || pathname !== "/"
           ? "bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-subtle)]"
           : "bg-transparent"
       }`}
@@ -80,13 +73,14 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" aria-label="Tealis home" className="shrink-0">
             <Logo
-              width={140}
-              height={74}
+              width={100}
+              height={53}
+              className="md:w-[140px] md:h-[74px]"
               variant={mounted && resolvedTheme === "dark" ? "white" : "default"}
             />
           </Link>
 
-          {/* Desktop nav — right-aligned, sits between logo and theme toggle */}
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8 ml-auto mr-6" aria-label="Primary navigation">
             {NAV_LINKS.map(({ href, label }) => {
               const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -114,7 +108,6 @@ export default function Header() {
           {/* Right side: dark mode toggle + mobile hamburger */}
           <div className="flex items-center gap-1">
             <ThemeToggle />
-
             <button
               className="md:hidden flex items-center justify-center w-11 h-11 text-[var(--text-primary)]"
               onClick={() => setMobileOpen((v) => !v)}
