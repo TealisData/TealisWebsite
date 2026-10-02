@@ -14,8 +14,7 @@ const GATHER_STAGGER = 400; // ms — max random delay before each particle star
 const GATHER_DURATION = 1500; // ms
 const ASSEMBLY_DURATION = EXPLODE_DURATION + GATHER_STAGGER + GATHER_DURATION;
 const MAX_LOGO_W = 860;
-const CONTAINER_W = 1280; // matches the hero's max-w-7xl container
-const EDGE_MARGIN = 32; // matches the container's lg:px-8 padding
+const EDGE_MARGIN = 48;
 const TEXT_GAP = 36;
 
 interface Particle {
@@ -114,13 +113,10 @@ export default function CanvasParticleBackground() {
       const pathRoof = new Path2D(RAW_PATH_ROOF);
       const pathBook = new Path2D(RAW_PATH_BOOK);
 
-      // Desktop: logo sits on the left, aligned with the page container's left edge
-      const leftAnchor = Math.max((w - CONTAINER_W) / 2, 0) + EDGE_MARGIN;
-
-      // Sample the logo shape at a given width, anchored left (desktop) or centered (mobile)
+      // Sample the logo shape at a given width, anchored to the right edge (desktop) or centered (mobile)
       function sample(targetW: number) {
         const scale = targetW / 1263;
-        const logoX = isMobile ? (w - targetW) / 2 : leftAnchor;
+        const logoX = isMobile ? (w - targetW) / 2 : w - EDGE_MARGIN - targetW;
         const logoY = h * 0.5 - (541 * scale) / 2;
         off.setTransform(1, 0, 0, 1, 0, 0);
         off.translate(logoX, logoY);

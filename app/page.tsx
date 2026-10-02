@@ -27,11 +27,11 @@ export default function HomePage() {
         <CanvasParticleBackground />
       </div>
 
-      {/* Content — mobile: aligned with header logo; desktop: right column, particle logo on the left */}
+      {/* Content — aligned with header logo, left half */}
       <div className="relative z-10 flex-1 flex items-center">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-          {/* Logo SVG has ~27% inner left whitespace (x=108/400); mobile offset matches it */}
-          <div data-particle-avoid className="max-w-2xl flex flex-col gap-7 pl-[27px] md:pl-0 md:ml-auto md:w-fit">
+          {/* Logo SVG has ~27% inner left whitespace (x=108/400); offset matches it */}
+          <div data-particle-avoid className="max-w-2xl flex flex-col gap-7 pl-[27px] md:pl-[38px]">
 
             <FadeIn delay={0.05}>
               <h1
