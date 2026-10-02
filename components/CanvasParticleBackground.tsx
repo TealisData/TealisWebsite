@@ -8,13 +8,13 @@ const RAW_PATH_ROOF =
 const RAW_PATH_BOOK =
   "M 228.476562 713.023438 L 708.789062 713.023438 C 727.085938 713.023438 738.523438 724.460938 743.097656 747.335938 L 749.957031 795.375 L 756.820312 747.335938 C 761.394531 724.460938 772.832031 713.023438 791.128906 713.023438 L 1271.441406 713.023438 L 1381.226562 795.375 L 900.914062 795.375 C 855.167969 795.375 823.148438 804.523438 804.851562 822.824219 C 768.253906 859.425781 731.660156 859.425781 695.066406 822.824219 C 676.765625 804.523438 644.746094 795.375 599.003906 795.375 L 118.6875 795.375 Z";
 
-// Intro: big-bang burst from the logo center across the whole page, then a slow regroup
-const EXPLODE_DURATION = 1600; // ms — fast burst that decelerates
-const GATHER_STAGGER = 800; // ms — max random delay before each particle starts regrouping
-const GATHER_DURATION = 2400; // ms
+// Intro: big-bang burst from the logo center across the whole page, then a regroup
+const EXPLODE_DURATION = 1200; // ms — fast burst that decelerates
+const GATHER_STAGGER = 400; // ms — max random delay before each particle starts regrouping
+const GATHER_DURATION = 1500; // ms
 const ASSEMBLY_DURATION = EXPLODE_DURATION + GATHER_STAGGER + GATHER_DURATION;
-const DRIFT_RAMP = 3000; // ms — eases the continuous drift in after assembly
-const DRIFT_WINDOW = 0.25; // fraction of each particle's cycle spent away from home
+const FLOAT_RAMP = 2000; // ms — eases the soft logo float in after assembly
+const STAR_DENSITY = 7000; // px² of page per background star
 const MAX_LOGO_W = 860;
 const EDGE_MARGIN = 48;
 const TEXT_GAP = 36;
@@ -34,13 +34,21 @@ interface Particle {
   isRoof: boolean;
   radius: number;
   density: number;
-  // Continuous drift: each particle periodically wanders off and returns home
-  period: number;
-  phase: number;
-  cycle: number;
-  angle: number;
-  reach: number;
   wobble: number;
+}
+
+/** Faint background dot: born in the big bang, then drifts slowly across the page */
+interface Star {
+  originX: number;
+  originY: number;
+  homeX: number;
+  homeY: number;
+  vx: number;
+  vy: number;
+  radius: number;
+  alpha: number;
+  twinkle: number;
+  isRoof: boolean;
 }
 
 function easeOutExpo(t: number) {
@@ -95,6 +103,7 @@ export default function CanvasParticleBackground() {
     }
 
     let particles: Particle[] = [];
+    let stars: Star[] = [];
     let animId: number;
     let assemblyStart: number | null = null;
     // Play the big bang only on first load, not on every resize or theme change
@@ -146,7 +155,7 @@ export default function CanvasParticleBackground() {
               baseX: x, baseY: y, originX: 0, originY: 0, scatterX: 0, scatterY: 0, gatherDelay: 0,
               x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
-              period: 0, phase: 0, cycle: -1, angle: 0, reach: 0, wobble: 0,
+              wobble: 0,
             });
           }
         }
@@ -184,40 +193,34 @@ export default function CanvasParticleBackground() {
         p.gatherDelay = Math.random() * GATHER_STAGGER;
         p.x = p.originX;
         p.y = p.originY;
-        p.period = 9000 + Math.random() * 6000;
-        p.phase = Math.random();
-        p.cycle = -1;
-        p.angle = 0;
-        p.reach = 0;
         p.wobble = Math.random() * Math.PI * 2;
       }
-    }
 
-    /** Offset from home for the slow wander-and-return cycle (0 while the particle is home) */
-    function driftOffset(p: Particle, time: number, strength: number) {
-      const u = time / p.period + p.phase;
-      const cycle = Math.floor(u);
-      if (cycle !== p.cycle) {
-        // New cycle: pick a fresh direction and distance for the next excursion
-        p.cycle = cycle;
-        p.angle = Math.random() * Math.PI * 2;
-        p.reach = 40 + Math.random() * 110;
+      // Universe: faint dots spread over the whole page, drifting very slowly
+      stars = [];
+      const starCount = Math.round((w * h) / STAR_DENSITY);
+      for (let i = 0; i < starCount; i++) {
+        const dir = Math.random() * Math.PI * 2;
+        const speed = 0.04 + Math.random() * 0.12;
+        stars.push({
+          originX: logoCx,
+          originY: logoCy,
+          homeX: Math.random() * w,
+          homeY: Math.random() * h,
+          vx: Math.cos(dir) * speed,
+          vy: Math.sin(dir) * speed,
+          radius: 0.6 + Math.random() * 1,
+          alpha: 0.12 + Math.random() * 0.28,
+          twinkle: Math.random() * Math.PI * 2,
+          isRoof: Math.random() < 0.3,
+        });
       }
-      const f = u - cycle;
-      const away = f < DRIFT_WINDOW ? Math.pow(Math.sin((Math.PI * f) / DRIFT_WINDOW), 2) * strength : 0;
-      // Gentle idle wobble keeps the assembled logo alive
-      const wob = 1.5 * strength;
-      return {
-        dx: Math.cos(p.angle) * p.reach * away + Math.cos(time / 1700 + p.wobble) * wob,
-        dy: Math.sin(p.angle) * p.reach * away + Math.sin(time / 2100 + p.wobble) * wob,
-        away,
-      };
     }
 
     function render(timestamp: number) {
       if (!canvas || !ctx) return;
       if (assemblyStart === null) {
-        assemblyStart = introPlayed ? timestamp - ASSEMBLY_DURATION - DRIFT_RAMP : timestamp;
+        assemblyStart = introPlayed ? timestamp - ASSEMBLY_DURATION - FLOAT_RAMP : timestamp;
         if (introPlayed) for (const p of particles) { p.x = p.baseX; p.y = p.baseY; }
         introPlayed = true;
       }
@@ -233,11 +236,33 @@ export default function CanvasParticleBackground() {
       const roofColor = dark ? "#5D97F5" : "#4A86E8";
       const bookColor = dark ? "#E2E8F0" : "#22252A";
 
-      const driftTime = elapsed - ASSEMBLY_DURATION;
-      const driftStrength = assembled ? Math.min(driftTime / DRIFT_RAMP, 1) : 0;
+      // Background universe: burst out with the big bang, then drift and twinkle softly
+      const w = canvas.width;
+      const h = canvas.height;
+      for (const s of stars) {
+        s.homeX += s.vx;
+        s.homeY += s.vy;
+        if (s.homeX < -4) s.homeX += w + 8;
+        else if (s.homeX > w + 4) s.homeX -= w + 8;
+        if (s.homeY < -4) s.homeY += h + 8;
+        else if (s.homeY > h + 4) s.homeY -= h + 8;
+        const sx = s.originX + (s.homeX - s.originX) * burst;
+        const sy = s.originY + (s.homeY - s.originY) * burst;
+        ctx.globalAlpha = s.alpha * (0.7 + 0.3 * Math.sin(timestamp / 1600 + s.twinkle));
+        ctx.beginPath();
+        ctx.arc(sx, sy, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = s.isRoof ? roofColor : bookColor;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+
+      // Soft float of the whole logo once assembled
+      const floatTime = elapsed - ASSEMBLY_DURATION;
+      const floatStrength = assembled ? easeInOutCubic(Math.min(floatTime / FLOAT_RAMP, 1)) : 0;
+      const floatX = Math.cos(floatTime / 4200) * 4 * floatStrength;
+      const floatY = Math.sin(floatTime / 3300) * 7 * floatStrength;
 
       for (const p of particles) {
-        let alpha = 1;
         if (!assembled) {
           const gatherT = (elapsed - EXPLODE_DURATION - p.gatherDelay) / GATHER_DURATION;
           if (gatherT <= 0) {
@@ -251,10 +276,9 @@ export default function CanvasParticleBackground() {
             p.y = p.scatterY + (p.baseY - p.scatterY) * g;
           }
         } else {
-          const { dx: ox, dy: oy, away } = driftOffset(p, driftTime, driftStrength);
-          const homeX = p.baseX + ox;
-          const homeY = p.baseY + oy;
-          alpha = 1 - away * 0.55;
+          // Home follows the logo float plus a tiny per-dot shimmer
+          const homeX = p.baseX + floatX + Math.cos(floatTime / 1900 + p.wobble) * floatStrength;
+          const homeY = p.baseY + floatY + Math.sin(floatTime / 2300 + p.wobble) * floatStrength;
           // Normal interactive physics
           const dx = mouse.x - p.x;
           const dy = mouse.y - p.y;
@@ -273,13 +297,11 @@ export default function CanvasParticleBackground() {
           p.y += p.vy;
         }
 
-        ctx.globalAlpha = alpha;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.isRoof ? roofColor : bookColor;
         ctx.fill();
       }
-      ctx.globalAlpha = 1;
       animId = requestAnimationFrame(render);
     }
 
