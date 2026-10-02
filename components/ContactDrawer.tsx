@@ -122,12 +122,17 @@ export default function ContactDrawer() {
     setTimeout(() => { setSubmitted(false); setForm(INITIAL); setErrors({}); setSubmitError(null); }, 400);
   };
 
+  const fieldBase =
+    "text-sm text-[var(--text-primary)] placeholder:text-[var(--text-primary)]/40 rounded-xl border transition-colors outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30";
+
   const inputClass = (field: keyof FormErrors) =>
-    `w-full px-4 py-3 rounded-xl border text-sm transition-colors outline-none focus:ring-2 focus:ring-[#4A86E8]/30 ${
+    `w-full px-4 py-3 ${fieldBase} ${
       errors[field]
-        ? "border-red-400 bg-red-50 focus:border-red-400"
-        : "border-gray-200 bg-gray-50 focus:border-[#4A86E8] focus:bg-white"
+        ? "border-red-400 bg-red-500/10 focus:border-red-400"
+        : "border-[var(--border-subtle)] bg-[var(--bg-surface)] focus:border-[var(--color-brand)] focus:bg-[var(--bg-primary)]"
     }`;
+
+  const labelClass = "block text-xs font-semibold text-[var(--text-primary)]/70 mb-1.5";
 
   return (
     <>
@@ -151,19 +156,19 @@ export default function ContactDrawer() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl flex flex-col"
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-[var(--bg-primary)] border-l border-[var(--border-subtle)] z-50 shadow-2xl flex flex-col"
             >
-              <div className="flex items-center justify-between p-6 border-b border-gray-100">
+              <div className="flex items-center justify-between p-6 border-b border-[var(--border-subtle)]">
                 <div>
-                  <h2 className="text-xl font-bold text-[#22252A]">Get In Touch</h2>
-                  <p className="text-sm text-gray-400 mt-0.5">We'll get back to you within 24 hours</p>
+                  <h2 className="text-xl font-bold text-[var(--text-primary)]">Get In Touch</h2>
+                  <p className="text-sm text-[var(--text-primary)]/50 mt-0.5">We&apos;ll get back to you within 24 hours</p>
                 </div>
                 <button
                   onClick={handleClose}
-                  className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                  className="p-2 rounded-xl hover:bg-[var(--border-subtle)] transition-colors"
                   aria-label="Close"
                 >
-                  <X size={20} className="text-gray-500" />
+                  <X size={20} className="text-[var(--text-primary)]/60" />
                 </button>
               </div>
 
@@ -174,18 +179,18 @@ export default function ContactDrawer() {
                     animate={{ opacity: 1, scale: 1 }}
                     className="flex flex-col items-center justify-center h-full text-center gap-6 py-16"
                   >
-                    <div className="w-16 h-16 rounded-full bg-[#EEF3FA] flex items-center justify-center">
-                      <CheckCircle2 size={32} className="text-[#4A86E8]" />
+                    <div className="w-16 h-16 rounded-full bg-[var(--color-brand)]/10 flex items-center justify-center">
+                      <CheckCircle2 size={32} className="text-[var(--color-brand)]" />
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-[#22252A]">Request Sent!</h3>
-                      <p className="text-gray-500 mt-2 text-sm leading-relaxed">
+                      <h3 className="text-2xl font-bold text-[var(--text-primary)]">Request Sent!</h3>
+                      <p className="text-[var(--text-primary)]/60 mt-2 text-sm leading-relaxed">
                         Thank you for reaching out. A Tealis consultant will contact you shortly.
                       </p>
                     </div>
                     <button
                       onClick={handleClose}
-                      className="px-6 py-3 bg-[#4A86E8] text-white rounded-xl font-semibold text-sm hover:bg-[#3a70d0] transition-colors"
+                      className="px-6 py-3 bg-[var(--color-brand)] text-white rounded-xl font-semibold text-sm hover:bg-[var(--color-brand-hover)] transition-colors"
                     >
                       Close
                     </button>
@@ -194,7 +199,7 @@ export default function ContactDrawer() {
                   <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                        <label className={labelClass}>
                           First Name <span className="text-red-400">*</span>
                         </label>
                         <input
@@ -211,7 +216,7 @@ export default function ContactDrawer() {
                         )}
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                        <label className={labelClass}>
                           Last Name <span className="text-red-400">*</span>
                         </label>
                         <input
@@ -230,7 +235,7 @@ export default function ContactDrawer() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                      <label className={labelClass}>
                         Email <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -249,18 +254,18 @@ export default function ContactDrawer() {
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">
-                        Mobile Number <span className="text-gray-400 font-normal">(optional)</span>
+                      <label className={labelClass}>
+                        Mobile Number <span className="text-[var(--text-primary)]/40 font-normal">(optional)</span>
                       </label>
                       <div className="flex gap-2">
                         <select
                           name="countryCode"
                           value={form.countryCode}
                           onChange={handleChange}
-                          className="px-3 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:ring-2 focus:ring-[#4A86E8]/30 focus:border-[#4A86E8] outline-none transition-colors min-w-[90px]"
+                          className={`px-3 py-3 ${fieldBase} border-[var(--border-subtle)] bg-[var(--bg-surface)] focus:border-[var(--color-brand)] min-w-[90px]`}
                         >
                           {COUNTRY_CODES.map(({ code, label }) => (
-                            <option key={code} value={code}>{label}</option>
+                            <option key={code} value={code} className="bg-[var(--bg-primary)] text-[var(--text-primary)]">{label}</option>
                           ))}
                         </select>
                         <input
@@ -269,13 +274,13 @@ export default function ContactDrawer() {
                           value={form.mobile}
                           onChange={handleChange}
                           placeholder="123 456 7890"
-                          className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm focus:ring-2 focus:ring-[#4A86E8]/30 focus:border-[#4A86E8] focus:bg-white outline-none transition-colors"
+                          className={`flex-1 px-4 py-3 ${fieldBase} border-[var(--border-subtle)] bg-[var(--bg-surface)] focus:border-[var(--color-brand)] focus:bg-[var(--bg-primary)]`}
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+                      <label className={labelClass}>
                         Message <span className="text-red-400">*</span>
                       </label>
                       <textarea
@@ -294,7 +299,7 @@ export default function ContactDrawer() {
                     </div>
 
                     {submitError && (
-                      <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-sm text-red-600">
+                      <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-400/40 rounded-xl text-sm text-red-500">
                         <AlertCircle size={14} className="shrink-0" />
                         {submitError}
                       </div>
@@ -303,7 +308,7 @@ export default function ContactDrawer() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 bg-[#4A86E8] text-white font-semibold rounded-xl hover:bg-[#3a70d0] transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                      className="w-full py-3.5 bg-[var(--color-brand)] text-white font-semibold rounded-xl hover:bg-[var(--color-brand-hover)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
                     >
                       {loading ? (
                         <>
@@ -316,7 +321,7 @@ export default function ContactDrawer() {
                       ) : "Send Request"}
                     </button>
 
-                    <p className="text-xs text-gray-400 text-center">
+                    <p className="text-xs text-[var(--text-primary)]/50 text-center">
                       By submitting, you agree to our privacy policy. We never share your data.
                     </p>
                   </form>
