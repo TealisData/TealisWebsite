@@ -30,27 +30,30 @@ export default function HomePage() {
       {/* Content — aligned with header logo, left half */}
       <div className="relative z-10 flex-1 flex items-center">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-lg flex flex-col gap-7">
+          {/* Logo SVG has ~27% inner left whitespace (x=108/400); offset matches it */}
+          <div className="max-w-2xl flex flex-col gap-7 pl-[27px] md:pl-[38px]">
 
             <FadeIn delay={0.05}>
               <h1
                 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight tracking-tight text-[var(--text-primary)]"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                Your Data Partner: Engineering Solutions, Training Teams
+                Your Data Partner:
+                <br />
+                Engineering Solutions, Training Teams
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-                We build scalable data and AI solutions and, as Microsoft Certified
-                Trainers, train your team along the way, turning every project into
-                a step toward internal autonomy.
+              <p className="max-w-lg text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
+                We build scalable data and AI solutions while training your team as
+                Microsoft Certified Trainers — turning every project into a step
+                toward internal autonomy.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.25}>
-              <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+              <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
                 <button onClick={openContact} className="text-[var(--color-brand)] hover:underline">
                   Book a meeting
                 </button>
