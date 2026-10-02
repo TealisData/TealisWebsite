@@ -8,8 +8,12 @@ const RAW_PATH_ROOF =
 const RAW_PATH_BOOK =
   "M 228.476562 713.023438 L 708.789062 713.023438 C 727.085938 713.023438 738.523438 724.460938 743.097656 747.335938 L 749.957031 795.375 L 756.820312 747.335938 C 761.394531 724.460938 772.832031 713.023438 791.128906 713.023438 L 1271.441406 713.023438 L 1381.226562 795.375 L 900.914062 795.375 C 855.167969 795.375 823.148438 804.523438 804.851562 822.824219 C 768.253906 859.425781 731.660156 859.425781 695.066406 822.824219 C 676.765625 804.523438 644.746094 795.375 599.003906 795.375 L 118.6875 795.375 Z";
 
-const ASSEMBLY_DURATION = 1800; // ms
-const DRIFT_RAMP = 3000; // ms â€” eases the continuous drift in after assembly
+// Intro: big-bang burst from the logo center across the whole page, then a slow regroup
+const EXPLODE_DURATION = 1600; // ms — fast burst that decelerates
+const GATHER_STAGGER = 800; // ms — max random delay before each particle starts regrouping
+const GATHER_DURATION = 2400; // ms
+const ASSEMBLY_DURATION = EXPLODE_DURATION + GATHER_STAGGER + GATHER_DURATION;
+const DRIFT_RAMP = 3000; // ms — eases the continuous drift in after assembly
 const DRIFT_WINDOW = 0.25; // fraction of each particle's cycle spent away from home
 const MAX_LOGO_W = 860;
 const EDGE_MARGIN = 48;
@@ -18,8 +22,11 @@ const TEXT_GAP = 36;
 interface Particle {
   baseX: number;
   baseY: number;
+  originX: number;
+  originY: number;
   scatterX: number;
   scatterY: number;
+  gatherDelay: number;
   x: number;
   y: number;
   vx: number;
@@ -36,8 +43,12 @@ interface Particle {
   wobble: number;
 }
 
-function easeOutCubic(t: number) {
-  return 1 - Math.pow(1 - t, 3);
+function easeOutExpo(t: number) {
+  return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+}
+
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
 type Rect = { left: number; top: number; right: number; bottom: number };
@@ -86,6 +97,8 @@ export default function CanvasParticleBackground() {
     let particles: Particle[] = [];
     let animId: number;
     let assemblyStart: number | null = null;
+    // Play the big bang only on first load, not on every resize or theme change
+    let introPlayed = false;
     const mouse = { x: -1000, y: -1000, radius: 90 };
 
     const isDark = () =>
@@ -130,7 +143,8 @@ export default function CanvasParticleBackground() {
             // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
             if (inBook && x > logoX + targetW - step * 1.5) continue;
             pts.push({
-              baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0,
+              baseX: x, baseY: y, originX: 0, originY: 0, scatterX: 0, scatterY: 0, gatherDelay: 0,
+              x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
               period: 0, phase: 0, cycle: -1, angle: 0, reach: 0, wobble: 0,
             });
@@ -151,7 +165,7 @@ export default function CanvasParticleBackground() {
       }
       const { pts: raw, logoX, logoY, scale } = layout;
 
-      // Remove isolated particles (no neighbor within 2Ã—step)
+      // Remove isolated particles (no neighbor within 2×step)
       const neighborDist = step * 2.5;
       particles = raw.filter(p =>
         raw.some(o => o !== p &&
@@ -159,17 +173,17 @@ export default function CanvasParticleBackground() {
           Math.abs(o.baseY - p.baseY) <= neighborDist)
       );
 
-      // Assign random scatter start positions
+      // Big bang: every particle starts at the logo center and bursts to a random spot on the page
       const logoCx = logoX + targetW / 2;
       const logoCy = logoY + (541 * scale) / 2;
       for (const p of particles) {
-        // Start from a random position near the logo center with spread
-        const angle = Math.random() * Math.PI * 2;
-        const dist = Math.random() * Math.min(w, h) * 0.5 + 80;
-        p.scatterX = logoCx + Math.cos(angle) * dist;
-        p.scatterY = logoCy + Math.sin(angle) * dist;
-        p.x = p.scatterX;
-        p.y = p.scatterY;
+        p.originX = logoCx + (Math.random() - 0.5) * 6;
+        p.originY = logoCy + (Math.random() - 0.5) * 6;
+        p.scatterX = (Math.random() * 1.1 - 0.05) * w;
+        p.scatterY = (Math.random() * 1.1 - 0.05) * h;
+        p.gatherDelay = Math.random() * GATHER_STAGGER;
+        p.x = p.originX;
+        p.y = p.originY;
         p.period = 9000 + Math.random() * 6000;
         p.phase = Math.random();
         p.cycle = -1;
@@ -202,12 +216,15 @@ export default function CanvasParticleBackground() {
 
     function render(timestamp: number) {
       if (!canvas || !ctx) return;
-      if (assemblyStart === null) assemblyStart = timestamp;
+      if (assemblyStart === null) {
+        assemblyStart = introPlayed ? timestamp - ASSEMBLY_DURATION - DRIFT_RAMP : timestamp;
+        if (introPlayed) for (const p of particles) { p.x = p.baseX; p.y = p.baseY; }
+        introPlayed = true;
+      }
 
       const elapsed = timestamp - assemblyStart;
-      const rawT = Math.min(elapsed / ASSEMBLY_DURATION, 1);
-      const t = easeOutCubic(rawT);
-      const assembled = rawT >= 1;
+      const assembled = elapsed >= ASSEMBLY_DURATION;
+      const burst = easeOutExpo(Math.min(elapsed / EXPLODE_DURATION, 1));
 
       const dark = isDark();
       ctx.fillStyle = dark ? "#0A0C10" : "#FDFDFE";
@@ -222,9 +239,17 @@ export default function CanvasParticleBackground() {
       for (const p of particles) {
         let alpha = 1;
         if (!assembled) {
-          // Interpolate from scatter to base position
-          p.x = p.scatterX + (p.baseX - p.scatterX) * t;
-          p.y = p.scatterY + (p.baseY - p.scatterY) * t;
+          const gatherT = (elapsed - EXPLODE_DURATION - p.gatherDelay) / GATHER_DURATION;
+          if (gatherT <= 0) {
+            // Burst outward: very fast at first, decelerating to rest
+            p.x = p.originX + (p.scatterX - p.originX) * burst;
+            p.y = p.originY + (p.scatterY - p.originY) * burst;
+          } else {
+            // Slowly regroup into the logo
+            const g = easeInOutCubic(Math.min(gatherT, 1));
+            p.x = p.scatterX + (p.baseX - p.scatterX) * g;
+            p.y = p.scatterY + (p.baseY - p.scatterY) * g;
+          }
         } else {
           const { dx: ox, dy: oy, away } = driftOffset(p, driftTime, driftStrength);
           const homeX = p.baseX + ox;
