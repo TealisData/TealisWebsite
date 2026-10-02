@@ -38,7 +38,7 @@ export default function HomePage() {
                 className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight tracking-tight text-[var(--text-primary)]"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                Acceleration through Data.
+                Your Data Partner: Engineering Solutions, Training Teams
               </h1>
             </FadeIn>
 
