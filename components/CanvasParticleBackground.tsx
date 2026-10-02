@@ -13,10 +13,9 @@ const EXPLODE_DURATION = 1200; // ms — fast burst that decelerates
 const GATHER_STAGGER = 400; // ms — max random delay before each particle starts regrouping
 const GATHER_DURATION = 1500; // ms
 const ASSEMBLY_DURATION = EXPLODE_DURATION + GATHER_STAGGER + GATHER_DURATION;
-const FLOAT_RAMP = 2000; // ms — eases the soft logo float in after assembly
-const STAR_DENSITY = 7000; // px² of page per background star
 const MAX_LOGO_W = 860;
-const EDGE_MARGIN = 48;
+const CONTAINER_W = 1280; // matches the hero's max-w-7xl container
+const EDGE_MARGIN = 32; // matches the container's lg:px-8 padding
 const TEXT_GAP = 36;
 
 interface Particle {
@@ -34,21 +33,6 @@ interface Particle {
   isRoof: boolean;
   radius: number;
   density: number;
-  wobble: number;
-}
-
-/** Faint background dot: born in the big bang, then drifts slowly across the page */
-interface Star {
-  originX: number;
-  originY: number;
-  homeX: number;
-  homeY: number;
-  vx: number;
-  vy: number;
-  radius: number;
-  alpha: number;
-  twinkle: number;
-  isRoof: boolean;
 }
 
 function easeOutExpo(t: number) {
@@ -103,7 +87,6 @@ export default function CanvasParticleBackground() {
     }
 
     let particles: Particle[] = [];
-    let stars: Star[] = [];
     let animId: number;
     let assemblyStart: number | null = null;
     // Play the big bang only on first load, not on every resize or theme change
@@ -131,10 +114,13 @@ export default function CanvasParticleBackground() {
       const pathRoof = new Path2D(RAW_PATH_ROOF);
       const pathBook = new Path2D(RAW_PATH_BOOK);
 
-      // Sample the logo shape at a given width, anchored to the right edge (desktop) or centered (mobile)
+      // Desktop: logo sits on the left, aligned with the page container's left edge
+      const leftAnchor = Math.max((w - CONTAINER_W) / 2, 0) + EDGE_MARGIN;
+
+      // Sample the logo shape at a given width, anchored left (desktop) or centered (mobile)
       function sample(targetW: number) {
         const scale = targetW / 1263;
-        const logoX = isMobile ? (w - targetW) / 2 : w - EDGE_MARGIN - targetW;
+        const logoX = isMobile ? (w - targetW) / 2 : leftAnchor;
         const logoY = h * 0.5 - (541 * scale) / 2;
         off.setTransform(1, 0, 0, 1, 0, 0);
         off.translate(logoX, logoY);
@@ -155,7 +141,6 @@ export default function CanvasParticleBackground() {
               baseX: x, baseY: y, originX: 0, originY: 0, scatterX: 0, scatterY: 0, gatherDelay: 0,
               x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
-              wobble: 0,
             });
           }
         }
@@ -193,34 +178,13 @@ export default function CanvasParticleBackground() {
         p.gatherDelay = Math.random() * GATHER_STAGGER;
         p.x = p.originX;
         p.y = p.originY;
-        p.wobble = Math.random() * Math.PI * 2;
-      }
-
-      // Universe: faint dots spread over the whole page, drifting very slowly
-      stars = [];
-      const starCount = Math.round((w * h) / STAR_DENSITY);
-      for (let i = 0; i < starCount; i++) {
-        const dir = Math.random() * Math.PI * 2;
-        const speed = 0.04 + Math.random() * 0.12;
-        stars.push({
-          originX: logoCx,
-          originY: logoCy,
-          homeX: Math.random() * w,
-          homeY: Math.random() * h,
-          vx: Math.cos(dir) * speed,
-          vy: Math.sin(dir) * speed,
-          radius: 0.6 + Math.random() * 1,
-          alpha: 0.12 + Math.random() * 0.28,
-          twinkle: Math.random() * Math.PI * 2,
-          isRoof: Math.random() < 0.3,
-        });
       }
     }
 
     function render(timestamp: number) {
       if (!canvas || !ctx) return;
       if (assemblyStart === null) {
-        assemblyStart = introPlayed ? timestamp - ASSEMBLY_DURATION - FLOAT_RAMP : timestamp;
+        assemblyStart = introPlayed ? timestamp - ASSEMBLY_DURATION : timestamp;
         if (introPlayed) for (const p of particles) { p.x = p.baseX; p.y = p.baseY; }
         introPlayed = true;
       }
@@ -236,32 +200,6 @@ export default function CanvasParticleBackground() {
       const roofColor = dark ? "#5D97F5" : "#4A86E8";
       const bookColor = dark ? "#E2E8F0" : "#22252A";
 
-      // Background universe: burst out with the big bang, then drift and twinkle softly
-      const w = canvas.width;
-      const h = canvas.height;
-      for (const s of stars) {
-        s.homeX += s.vx;
-        s.homeY += s.vy;
-        if (s.homeX < -4) s.homeX += w + 8;
-        else if (s.homeX > w + 4) s.homeX -= w + 8;
-        if (s.homeY < -4) s.homeY += h + 8;
-        else if (s.homeY > h + 4) s.homeY -= h + 8;
-        const sx = s.originX + (s.homeX - s.originX) * burst;
-        const sy = s.originY + (s.homeY - s.originY) * burst;
-        ctx.globalAlpha = s.alpha * (0.7 + 0.3 * Math.sin(timestamp / 1600 + s.twinkle));
-        ctx.beginPath();
-        ctx.arc(sx, sy, s.radius, 0, Math.PI * 2);
-        ctx.fillStyle = s.isRoof ? roofColor : bookColor;
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-
-      // Soft float of the whole logo once assembled
-      const floatTime = elapsed - ASSEMBLY_DURATION;
-      const floatStrength = assembled ? easeInOutCubic(Math.min(floatTime / FLOAT_RAMP, 1)) : 0;
-      const floatX = Math.cos(floatTime / 4200) * 4 * floatStrength;
-      const floatY = Math.sin(floatTime / 3300) * 7 * floatStrength;
-
       for (const p of particles) {
         if (!assembled) {
           const gatherT = (elapsed - EXPLODE_DURATION - p.gatherDelay) / GATHER_DURATION;
@@ -276,9 +214,6 @@ export default function CanvasParticleBackground() {
             p.y = p.scatterY + (p.baseY - p.scatterY) * g;
           }
         } else {
-          // Home follows the logo float plus a tiny per-dot shimmer
-          const homeX = p.baseX + floatX + Math.cos(floatTime / 1900 + p.wobble) * floatStrength;
-          const homeY = p.baseY + floatY + Math.sin(floatTime / 2300 + p.wobble) * floatStrength;
           // Normal interactive physics
           const dx = mouse.x - p.x;
           const dy = mouse.y - p.y;
@@ -289,8 +224,8 @@ export default function CanvasParticleBackground() {
             p.vx -= Math.cos(angle) * force * 7;
             p.vy -= Math.sin(angle) * force * 7;
           }
-          p.vx += (homeX - p.x) * 0.08;
-          p.vy += (homeY - p.y) * 0.08;
+          p.vx += (p.baseX - p.x) * 0.08;
+          p.vy += (p.baseY - p.y) * 0.08;
           p.vx *= 0.82;
           p.vy *= 0.82;
           p.x += p.vx;
