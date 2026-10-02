@@ -9,6 +9,11 @@ const RAW_PATH_BOOK =
   "M 228.476562 713.023438 L 708.789062 713.023438 C 727.085938 713.023438 738.523438 724.460938 743.097656 747.335938 L 749.957031 795.375 L 756.820312 747.335938 C 761.394531 724.460938 772.832031 713.023438 791.128906 713.023438 L 1271.441406 713.023438 L 1381.226562 795.375 L 900.914062 795.375 C 855.167969 795.375 823.148438 804.523438 804.851562 822.824219 C 768.253906 859.425781 731.660156 859.425781 695.066406 822.824219 C 676.765625 804.523438 644.746094 795.375 599.003906 795.375 L 118.6875 795.375 Z";
 
 const ASSEMBLY_DURATION = 1800; // ms
+const DRIFT_RAMP = 3000; // ms â€” eases the continuous drift in after assembly
+const DRIFT_WINDOW = 0.25; // fraction of each particle's cycle spent away from home
+const MAX_LOGO_W = 860;
+const EDGE_MARGIN = 48;
+const TEXT_GAP = 36;
 
 interface Particle {
   baseX: number;
@@ -22,10 +27,45 @@ interface Particle {
   isRoof: boolean;
   radius: number;
   density: number;
+  // Continuous drift: each particle periodically wanders off and returns home
+  period: number;
+  phase: number;
+  cycle: number;
+  angle: number;
+  reach: number;
+  wobble: number;
 }
 
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
+}
+
+type Rect = { left: number; top: number; right: number; bottom: number };
+
+/** Line boxes of the text inside [data-particle-avoid], in canvas pixel coordinates */
+function avoidRects(canvas: HTMLCanvasElement): Rect[] {
+  const el = document.querySelector("[data-particle-avoid]");
+  if (!el) return [];
+  const box = canvas.getBoundingClientRect();
+  const sx = canvas.width / (box.width || 1);
+  const sy = canvas.height / (box.height || 1);
+  const rects: Rect[] = [];
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const range = document.createRange();
+  while (walker.nextNode()) {
+    const node = walker.currentNode;
+    if (!node.textContent?.trim()) continue;
+    range.selectNodeContents(node);
+    for (const r of range.getClientRects()) {
+      rects.push({
+        left: (r.left - box.left - TEXT_GAP) * sx,
+        right: (r.right - box.left + TEXT_GAP) * sx,
+        top: (r.top - box.top - TEXT_GAP / 2) * sy,
+        bottom: (r.bottom - box.top + TEXT_GAP / 2) * sy,
+      });
+    }
+  }
+  return rects;
 }
 
 export default function CanvasParticleBackground() {
@@ -61,42 +101,57 @@ export default function CanvasParticleBackground() {
       const h = (canvas.height = window.innerHeight);
 
       const isMobile = w < 768;
-      const targetW = isMobile ? Math.min(w * 0.85, 450) : Math.min(w * 0.46, 580);
-      const scale = targetW / 1263;
-      const logoX = isMobile ? (w - targetW) / 2 : w * 0.54;
-      const logoY = h * 0.5 - (541 * scale) / 2;
-
-      const off = document.createElement("canvas");
-      off.width = w;
-      off.height = h;
-      const offCtx = off.getContext("2d")!;
-      offCtx.save();
-      offCtx.translate(logoX, logoY);
-      offCtx.scale(scale, scale);
-      offCtx.translate(-118, -319);
-
+      const step = isMobile ? 10 : 12;
+      const offCanvas = document.createElement("canvas");
+      offCanvas.width = w;
+      offCanvas.height = h;
+      const off = offCanvas.getContext("2d")!;
       const pathRoof = new Path2D(RAW_PATH_ROOF);
       const pathBook = new Path2D(RAW_PATH_BOOK);
-      const step = isMobile ? 10 : 12;
 
-      const raw: Particle[] = [];
+      // Sample the logo shape at a given width, anchored to the right edge (desktop) or centered (mobile)
+      function sample(targetW: number) {
+        const scale = targetW / 1263;
+        const logoX = isMobile ? (w - targetW) / 2 : w - EDGE_MARGIN - targetW;
+        const logoY = h * 0.5 - (541 * scale) / 2;
+        off.setTransform(1, 0, 0, 1, 0, 0);
+        off.translate(logoX, logoY);
+        off.scale(scale, scale);
+        off.translate(-118, -319);
 
-      for (let y = 0; y < h; y += step) {
-        for (let x = 0; x < w; x += step) {
-          const inRoof = offCtx.isPointInPath(pathRoof, x, y);
-          const inBook = offCtx.isPointInPath(pathBook, x, y);
-          if (inRoof) {
-            raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, isRoof: true, radius: 2, density: 25 });
-          } else if (inBook) {
+        const pts: Particle[] = [];
+        const x0 = Math.floor(logoX / step) * step;
+        const y0 = Math.max(0, Math.floor(logoY / step) * step);
+        for (let y = y0; y < Math.min(h, logoY + 541 * scale + step); y += step) {
+          for (let x = x0; x < logoX + targetW + step; x += step) {
+            const inRoof = off.isPointInPath(pathRoof, x, y);
+            const inBook = !inRoof && off.isPointInPath(pathBook, x, y);
+            if (!inRoof && !inBook) continue;
             // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
-            if (x > logoX + targetW - step * 1.5) continue;
-            raw.push({ baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0, isRoof: false, radius: 2, density: 25 });
+            if (inBook && x > logoX + targetW - step * 1.5) continue;
+            pts.push({
+              baseX: x, baseY: y, scatterX: 0, scatterY: 0, x, y, vx: 0, vy: 0,
+              isRoof: inRoof, radius: 2, density: 25,
+              period: 0, phase: 0, cycle: -1, angle: 0, reach: 0, wobble: 0,
+            });
           }
         }
+        return { pts, logoX, logoY, scale };
       }
-      offCtx.restore();
 
-      // Remove isolated particles (no neighbor within 2×step)
+      // Desktop: largest logo whose dots stay clear of the hero text lines
+      const avoid = isMobile ? [] : avoidRects(canvas);
+      const hits = (pts: Particle[]) =>
+        pts.some(p => avoid.some(r => p.baseX >= r.left && p.baseX <= r.right && p.baseY >= r.top && p.baseY <= r.bottom));
+      let targetW = isMobile ? Math.min(w * 0.85, 450) : Math.min(w * 0.62, MAX_LOGO_W);
+      let layout = sample(targetW);
+      while (!isMobile && targetW > 360 && hits(layout.pts)) {
+        targetW -= 16;
+        layout = sample(targetW);
+      }
+      const { pts: raw, logoX, logoY, scale } = layout;
+
+      // Remove isolated particles (no neighbor within 2Ã—step)
       const neighborDist = step * 2.5;
       particles = raw.filter(p =>
         raw.some(o => o !== p &&
@@ -115,7 +170,34 @@ export default function CanvasParticleBackground() {
         p.scatterY = logoCy + Math.sin(angle) * dist;
         p.x = p.scatterX;
         p.y = p.scatterY;
+        p.period = 9000 + Math.random() * 6000;
+        p.phase = Math.random();
+        p.cycle = -1;
+        p.angle = 0;
+        p.reach = 0;
+        p.wobble = Math.random() * Math.PI * 2;
       }
+    }
+
+    /** Offset from home for the slow wander-and-return cycle (0 while the particle is home) */
+    function driftOffset(p: Particle, time: number, strength: number) {
+      const u = time / p.period + p.phase;
+      const cycle = Math.floor(u);
+      if (cycle !== p.cycle) {
+        // New cycle: pick a fresh direction and distance for the next excursion
+        p.cycle = cycle;
+        p.angle = Math.random() * Math.PI * 2;
+        p.reach = 40 + Math.random() * 110;
+      }
+      const f = u - cycle;
+      const away = f < DRIFT_WINDOW ? Math.pow(Math.sin((Math.PI * f) / DRIFT_WINDOW), 2) * strength : 0;
+      // Gentle idle wobble keeps the assembled logo alive
+      const wob = 1.5 * strength;
+      return {
+        dx: Math.cos(p.angle) * p.reach * away + Math.cos(time / 1700 + p.wobble) * wob,
+        dy: Math.sin(p.angle) * p.reach * away + Math.sin(time / 2100 + p.wobble) * wob,
+        away,
+      };
     }
 
     function render(timestamp: number) {
@@ -134,12 +216,20 @@ export default function CanvasParticleBackground() {
       const roofColor = dark ? "#5D97F5" : "#4A86E8";
       const bookColor = dark ? "#E2E8F0" : "#22252A";
 
+      const driftTime = elapsed - ASSEMBLY_DURATION;
+      const driftStrength = assembled ? Math.min(driftTime / DRIFT_RAMP, 1) : 0;
+
       for (const p of particles) {
+        let alpha = 1;
         if (!assembled) {
           // Interpolate from scatter to base position
           p.x = p.scatterX + (p.baseX - p.scatterX) * t;
           p.y = p.scatterY + (p.baseY - p.scatterY) * t;
         } else {
+          const { dx: ox, dy: oy, away } = driftOffset(p, driftTime, driftStrength);
+          const homeX = p.baseX + ox;
+          const homeY = p.baseY + oy;
+          alpha = 1 - away * 0.55;
           // Normal interactive physics
           const dx = mouse.x - p.x;
           const dy = mouse.y - p.y;
@@ -150,19 +240,21 @@ export default function CanvasParticleBackground() {
             p.vx -= Math.cos(angle) * force * 7;
             p.vy -= Math.sin(angle) * force * 7;
           }
-          p.vx += (p.baseX - p.x) * 0.08;
-          p.vy += (p.baseY - p.y) * 0.08;
+          p.vx += (homeX - p.x) * 0.08;
+          p.vy += (homeY - p.y) * 0.08;
           p.vx *= 0.82;
           p.vy *= 0.82;
           p.x += p.vx;
           p.y += p.vy;
         }
 
+        ctx.globalAlpha = alpha;
         ctx.beginPath();
-        ctx.arc(Math.round(p.x), Math.round(p.y), p.radius, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.isRoof ? roofColor : bookColor;
         ctx.fill();
       }
+      ctx.globalAlpha = 1;
       animId = requestAnimationFrame(render);
     }
 
