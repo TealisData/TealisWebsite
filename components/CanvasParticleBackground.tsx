@@ -8,15 +8,15 @@ const RAW_PATH_ROOF =
 const RAW_PATH_BOOK =
   "M 228.476562 713.023438 L 708.789062 713.023438 C 727.085938 713.023438 738.523438 724.460938 743.097656 747.335938 L 749.957031 795.375 L 756.820312 747.335938 C 761.394531 724.460938 772.832031 713.023438 791.128906 713.023438 L 1271.441406 713.023438 L 1381.226562 795.375 L 900.914062 795.375 C 855.167969 795.375 823.148438 804.523438 804.851562 822.824219 C 768.253906 859.425781 731.660156 859.425781 695.066406 822.824219 C 676.765625 804.523438 644.746094 795.375 599.003906 795.375 L 118.6875 795.375 Z";
 
-// Intro: the book opens around its spine, then the roof rises out of it
-const BOOK_DURATION = 1300; // ms — each page dot swings from upright to flat
-const BOOK_STAGGER = 350; // ms — outer page edges trail the spine, so pages bend like paper
-const BOOK_START_ANGLE = Math.PI * 0.45; // closed: pages almost upright
-const PAGE_LIFT = 0.45; // height of an upright page relative to its width
-const FADE_IN = 300; // ms
-const ROOF_DELAY = 1450; // ms — roof starts once the book is (nearly) open
-const ROOF_STAGGER = 550; // ms — roof grows from the center outward
-const ROOF_DURATION = 900; // ms
+// Intro: a closed book lying on a table — the left half rests on the right half and
+// turns over the spine like a page; then the roof rises out of the open book
+const FADE_IN = 400; // ms
+const BOOK_DURATION = 1700; // ms — the turning page travels from right to left
+const BOOK_STAGGER = 450; // ms — the outer edge trails the spine, so the page bends like paper
+const PAGE_LIFT = 0.35; // height of the page arc relative to its width
+const ROOF_DELAY = 2000; // ms — roof starts once the book is (nearly) open
+const ROOF_STAGGER = 700; // ms — roof grows from the center outward
+const ROOF_DURATION = 1150; // ms
 const ASSEMBLY_DURATION = ROOF_DELAY + ROOF_STAGGER + ROOF_DURATION;
 const MAX_LOGO_W = 860;
 const EDGE_MARGIN = 48;
@@ -38,6 +38,10 @@ interface Particle {
 
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
+}
+
+function easeInOutCubic(t: number) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
 const clamp01 = (t: number) => Math.min(Math.max(t, 0), 1);
@@ -208,12 +212,18 @@ export default function CanvasParticleBackground() {
             p.y = bookTopY + (p.baseY - bookTopY) * e;
             alpha = e;
           } else {
-            // Each page dot rotates around the spine from upright to flat
-            const t = clamp01((elapsed - p.spread * BOOK_STAGGER) / BOOK_DURATION);
-            const angle = BOOK_START_ANGLE * (1 - easeOutCubic(t));
             const dx = p.baseX - spineX;
-            p.x = spineX + dx * Math.cos(angle);
-            p.y = p.baseY - Math.abs(dx) * Math.sin(angle) * PAGE_LIFT;
+            if (dx < 0) {
+              // Left half: starts folded onto the right half, turns over the spine in an arc
+              const t = clamp01((elapsed - FADE_IN / 2 - p.spread * BOOK_STAGGER) / BOOK_DURATION);
+              const angle = Math.PI * easeInOutCubic(t); // 0 = closed (on the right), π = open
+              p.x = spineX - dx * Math.cos(angle);
+              p.y = p.baseY + dx * Math.sin(angle) * PAGE_LIFT;
+            } else {
+              // Right half lies still, like the back cover on the table
+              p.x = p.baseX;
+              p.y = p.baseY;
+            }
             alpha = fade;
           }
         } else {
