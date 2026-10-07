@@ -18,6 +18,15 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
+const PILLARS = [
+  { label: "Who we are", text: "A team of Microsoft experts: hands-on consultants and Microsoft Certified Trainers." },
+  {
+    label: "What we do",
+    text: "We design and build modern data architectures, data strategy & governance, and AI & agents — and train the teams who run them.",
+  },
+  { label: "How we work", text: "We transfer skills, not black boxes: every project leaves your team more autonomous." },
+];
+
 export default function HomePage() {
   const openContact = () => window.dispatchEvent(new CustomEvent("tealis:open-contact"));
 
@@ -27,8 +36,8 @@ export default function HomePage() {
         <CanvasParticleBackground />
       </div>
 
-      {/* Content — aligned with header logo, left half */}
-      <div className="relative z-10 flex-1 flex items-center">
+      {/* Content — aligned with header logo, left half; sits in the upper part of the viewport */}
+      <div className="relative z-10 flex-1 flex items-start pt-24 pb-12 md:pt-[14vh]">
         <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
           {/* Logo SVG has ~27% inner left whitespace (x=108/400); offset matches it */}
           <div data-particle-avoid className="max-w-2xl flex flex-col gap-7 pl-[27px] md:pl-[38px]">
@@ -47,11 +56,14 @@ export default function HomePage() {
             </FadeIn>
 
             <FadeIn delay={0.15}>
-              <p className="max-w-lg text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
-                We build scalable data and AI solutions while training your team as
-                Microsoft Certified Trainers — turning every project into a step
-                toward internal autonomy.
-              </p>
+              <dl className="max-w-lg flex flex-col gap-4">
+                {PILLARS.map((p) => (
+                  <div key={p.label} className="flex flex-col gap-1">
+                    <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">{p.label}</dt>
+                    <dd className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">{p.text}</dd>
+                  </div>
+                ))}
+              </dl>
             </FadeIn>
 
             <FadeIn delay={0.25}>
