@@ -171,7 +171,7 @@ const GROUPS: Group[] = [
     id: "data",
     title: "Data stack",
     icon: <Layers size={20} />,
-    summary: "Storage, ingestion, data warehousing, data modeling and BI across the Microsoft data stack.",
+    summary: "Data engineering end to end: storage, ingestion, processing, warehousing and modeling across the Microsoft data stack.",
     items: [
       { name: "Microsoft Fabric", track: "fabric" },
       { name: "Power BI", track: "power-bi" },
