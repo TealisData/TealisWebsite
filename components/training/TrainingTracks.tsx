@@ -96,16 +96,28 @@ const TRACKS: Track[] = [
     label: "Business Apps & Automation",
     headline: "Apps and automation, built by your team.",
     description:
-      "Digitalize business processes with low-code: transactional apps and forms in Power Apps and Power Fx, workflows in Power Automate, data in Dataverse — all governed and maintainable.",
+      "Digitalize business processes with low-code and AI, hands-on: Dataverse data, canvas and model-driven apps, portals, automated workflows, and agents — governed and built to last.",
+    // Merged from AB-410T00 (Build intelligent applications) and PL-900T00 (Power Platform fundamentals)
     modules: [
-      "Canvas & model-driven Power Apps",
-      "Power Fx formulas",
-      "Process automation with Power Automate",
-      "Dataverse essentials",
-      "Governance & application lifecycle",
+      { title: "Business Value & Solution Design", text: "Power Platform capabilities, AI-first solution design, and Plans" },
+      { title: "Dataverse Data Modeling", text: "Tables, columns, and relationships for your business data" },
+      { title: "Dataverse Security", text: "Security roles and access to business data" },
+      { title: "Canvas Apps", text: "Build, customize, publish, and share apps for any device" },
+      { title: "Model-Driven Apps", text: "Data-first apps on Dataverse with charts and dashboards" },
+      { title: "Power Pages", text: "External websites and portals for customers and partners" },
+      { title: "Power Automate", text: "Cloud flows, connectors, and Dataverse triggers and actions" },
+      { title: "Approvals & Process Automation", text: "Approval flows and end-to-end digitalized processes" },
+      { title: "AI Builder & Prompts", text: "Effective generative AI prompts grounded in your Dataverse data" },
+      { title: "Copilot Studio Agents", text: "Agent capabilities that extend your apps and flows" },
+      { title: "Copilot in Power Platform", text: "Building apps and flows with natural language" },
+      { title: "Governance & Administration", text: "Environments, data policies, and platform administration" },
     ],
     levels: ["Beginner", "Intermediate"],
-    certs: ["PL-900 · Power Platform Fundamentals", "PL-400 · Power Platform Developer Associate"],
+    certs: [
+      "PL-900 · Power Platform Fundamentals",
+      "AB-410 · Intelligent Applications Builder Associate",
+      "PL-400 · Power Platform Developer Associate",
+    ],
   },
   {
     id: "ai",
@@ -198,6 +210,7 @@ const GROUPS: Group[] = [
     items: [
       { name: "Power Apps", track: "power-platform" },
       { name: "Power Automate", track: "power-platform" },
+      { name: "Power Pages", track: "power-platform" },
       { name: "Microsoft Dataverse", track: "power-platform" },
     ],
   },
