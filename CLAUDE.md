@@ -40,7 +40,8 @@ app/
   layout.tsx          — root layout: Header, Footer, ContactDrawer, CookieBanner
   page.tsx            — Home (particle background, hero text)
   consulting/page.tsx — Consulting Services (split layout desktop, overlay mobile)
-  training/page.tsx   — Training Programs (same pattern as consulting)
+  training/page.tsx   — Training Programs: hero with wave art, stats, track bento grid + tabbed
+                        program explorer (components/training/), formats, trainers & certifications, CTA
   about/page.tsx      — Team profiles (Gabriele + Luca)
   contact/page.tsx    — Contact page
   privacy-policy/     — Privacy policy (updated Sept 2026 for GA4)
@@ -109,7 +110,8 @@ Always use CSS variables, never hardcoded colors.
 ## Mobile patterns
 
 - **Home:** particle background hidden on mobile (`hidden md:block` wrapper)
-- **Consulting / Training:** on mobile, tapping a category opens a full-screen overlay (`fixed inset-0 z-40`) with a "← Back" button; the desktop split layout is `hidden md:block` on the right column
+- **Consulting:** on mobile, tapping a category opens a full-screen overlay (`fixed inset-0 z-40`) with a "← Back" button; the desktop split layout is `hidden md:block` on the right column
+- **Training:** single scrolling page; track tiles stack to one column on mobile and scroll to the tabbed explorer (tabs scroll horizontally)
 - **Header:** transparent only on `/` (home); all other pages always show `bg-[var(--bg-primary)]/90 backdrop-blur-md`
 - **Logo:** `width={100} height={53}` on mobile, `md:w-[140px] md:h-[74px]` on desktop
 

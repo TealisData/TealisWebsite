@@ -1,306 +1,173 @@
-"use client";
+import type { Metadata } from "next";
+import { Award, GraduationCap, MonitorPlay, Target } from "lucide-react";
+import TrainingHeroArt from "@/components/training/TrainingHeroArt";
+import TrainingTracks from "@/components/training/TrainingTracks";
+import ContactButton from "@/components/training/ContactButton";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight } from "lucide-react";
+export const metadata: Metadata = {
+  title: "Training Programs – Tealis",
+  description:
+    "Official Microsoft courses and custom programs on Microsoft Fabric, Power BI, Azure Databricks, AI & Copilot and Power Platform — led by Microsoft Certified Trainers.",
+};
 
-const courses = [
+const STATS = [
+  { value: "8", label: "Active Microsoft certifications" },
+  { value: "12", label: "Microsoft exams passed" },
+  { value: "2021", label: "Delivering official Microsoft training since" },
+  { value: "MCT", label: "Microsoft Certified Trainers" },
+];
+
+const FORMATS = [
   {
-    id: "power-bi",
-    label: "Power BI",
-    headline: "From data to insight, fast.",
-    subtitle: "From Power Query to certified Power BI Data Analyst — all levels.",
-    description:
-      "Hands-on Power BI training covering the full pipeline — data modeling with DAX and Power Query, building reports, dashboards and semantic models that your business can actually use. Available from beginner to advanced.",
-    modules: [
-      "Power Query & data transformation",
-      "Data modeling best practices",
-      "DAX fundamentals to advanced",
-      "Report design & UX principles",
-      "Row-level security & governance",
-      "Power BI Service & deployment",
-    ],
-    levels: ["Beginner", "Intermediate", "Advanced"],
-    cert: "PL-300 Microsoft Certified: Power BI Data Analyst Associate",
+    icon: <MonitorPlay size={20} />,
+    title: "Official Microsoft courses",
+    text: "Instructor-led Microsoft curriculum, in the classroom or remote, with hands-on labs.",
   },
   {
-    id: "fabric",
-    label: "Microsoft Fabric",
-    headline: "The unified analytics platform.",
-    subtitle: "Lakehouse, pipelines, notebooks and real-time analytics — in one environment.",
-    description:
-      "Microsoft Fabric is the new end-to-end data platform. We teach your team how to work with Lakehouses, data pipelines, notebooks, semantic models and real-time analytics — all within a single governed environment.",
-    modules: [
-      "Fabric architecture & OneLake",
-      "Data ingestion with Data Factory",
-      "Lakehouse & Warehouse design",
-      "Spark notebooks & data engineering",
-      "Real-time analytics & Eventstream",
-      "Semantic models & Power BI in Fabric",
-    ],
-    levels: ["Intermediate", "Advanced"],
-    cert: "DP-600 Microsoft Certified: Fabric Analytics Engineer Associate",
+    icon: <Target size={20} />,
+    title: "Programs on your data",
+    text: "Exercises built on your own tools and datasets, so skills transfer straight to the job.",
   },
   {
-    id: "copilot",
-    label: "Microsoft Copilot",
-    headline: "AI in your daily workflow.",
-    subtitle: "Real business scenarios — so adoption happens fast and sticks.",
-    description:
-      "Practical training to get your team productive with Microsoft 365 Copilot and Copilot Studio. We focus on actual use cases — writing, summarizing, automating — not generic demos.",
-    modules: [
-      "Microsoft 365 Copilot overview",
-      "Copilot in Word, Excel, PowerPoint, Teams",
-      "Prompt engineering for business users",
-      "Copilot Studio: building custom agents",
-      "Governance, security & responsible AI",
-    ],
-    levels: ["Beginner", "Intermediate"],
-    cert: "MS-4004 / MS-4005 Microsoft Applied Skills",
-  },
-  {
-    id: "azure",
-    label: "Azure Data",
-    headline: "Cloud data engineering at scale.",
-    subtitle: "Design and operate modern Azure data solutions.",
-    description:
-      "Azure data training covering storage, compute and orchestration services used in modern data engineering. From Azure Data Factory to Synapse Analytics, we prepare your team for real cloud workloads.",
-    modules: [
-      "Azure storage (ADLS, Blob)",
-      "Azure Data Factory pipelines",
-      "Azure Synapse Analytics",
-      "Azure Databricks fundamentals",
-      "Monitoring, cost & optimization",
-    ],
-    levels: ["Intermediate", "Advanced"],
-    cert: "DP-203 Microsoft Certified: Azure Data Engineer Associate",
-  },
-  {
-    id: "custom",
-    label: "Custom Programs",
-    headline: "Training built around your stack.",
-    subtitle: "Built on your actual tools, data and business context.",
-    description:
-      "Not everything fits a standard curriculum. We design bespoke training programs built around your real infrastructure — delivered in the format that works best for your team, in-person or remote.",
-    modules: [
-      "Requirements discovery workshop",
-      "Custom curriculum design",
-      "Exercises based on your real data",
-      "Delivered in-person or remote",
-      "Ongoing support & Q&A sessions",
-    ],
-    levels: ["All levels"],
-    cert: undefined,
-  },
-  {
-    id: "on-the-job",
-    label: "Training on the Job",
-    headline: "Learn while you ship.",
-    subtitle: "The most effective form of knowledge transfer.",
-    description:
-      "We embed alongside your team during a real project — acting as both implementers and coaches. Your team delivers the work and builds the skills simultaneously. No slides, no theory — just learning by doing.",
-    modules: [
-      "Joint project scoping",
-      "Side-by-side implementation",
-      "Code & design reviews",
-      "Weekly debriefs & retrospectives",
-      "Documentation & knowledge base",
-    ],
-    levels: ["Intermediate", "Advanced"],
-    cert: undefined,
+    icon: <GraduationCap size={20} />,
+    title: "Certification preparation",
+    text: "Gap analysis, exam-style practice and a clear plan to pass with confidence.",
   },
 ];
 
-function CourseDetail({ course, onBack, openContact }: { course: typeof courses[0]; onBack: () => void; openContact: () => void }) {
-  return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-4">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1 text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors self-start"
-        >
-          <ChevronRight size={14} className="rotate-180" />
-          Back
-        </button>
-        <h2 className="text-2xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
-          {course.headline}
-        </h2>
-        <p className="text-base text-[var(--text-muted)]">{course.subtitle}</p>
-        <button
-          onClick={openContact}
-          className="self-start px-5 py-2.5 bg-[var(--color-dark)] text-[var(--bg-primary)] text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
-        >
-          Request a quote
-        </button>
-      </div>
+const CERTIFICATIONS = [
+  "Fabric Analytics Engineer Associate",
+  "Fabric Data Engineer Associate",
+  "Power BI Data Analyst Associate",
+  "AI Transformation Leader",
+  "AI Business Professional",
+  "Azure AI Fundamentals",
+  "Azure Data Fundamentals",
+  "Power Platform Fundamentals",
+];
 
-      <hr className="border-[var(--border-subtle)]" />
+const TRAINERS = [
+  { name: "Luca Canonico", role: "End-to-End Data Architect · Microsoft Certified Trainer", photo: "/team/luca.png" },
+  { name: "Gabriele Nicosia", role: "Business Developer · Microsoft Certified Trainer", photo: "/team/gabriele.png" },
+];
 
-      <div className="flex gap-2 flex-wrap">
-        {course.levels.map((l) => (
-          <span key={l} className="px-3 py-1 text-sm rounded-md border border-[var(--border-subtle)] text-[var(--text-muted)]">
-            {l}
-          </span>
-        ))}
-      </div>
+const labelClass = "text-xs font-semibold uppercase tracking-widest";
 
-      <p className="text-base text-[var(--text-muted)] leading-relaxed">
-        {course.description}
-      </p>
-
-      <ul className="flex flex-col gap-3">
-        {course.modules.map((m) => (
-          <li key={m} className="flex items-start gap-3 text-base text-[var(--text-primary)]">
-            <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
-            {m}
-          </li>
-        ))}
-      </ul>
-
-      {course.cert && (
-        <div className="flex flex-col gap-1.5 pt-2 border-t border-[var(--border-subtle)]">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">Certification path</p>
-          <p className="text-base text-[var(--text-primary)]">{course.cert}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function FormationPage() {
-  const [active, setActive] = useState(courses[0].id);
-  const [mobileDetail, setMobileDetail] = useState<string | null>(null);
-  const current = courses.find((c) => c.id === active)!;
-  const mobileCourse = courses.find((c) => c.id === mobileDetail);
-  const openContact = () => window.dispatchEvent(new CustomEvent("tealis:open-contact"));
-
+export default function TrainingPage() {
   return (
     <div className="flex flex-col flex-1 pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
 
-      {/* ── Mobile detail overlay ── */}
-      <AnimatePresence>
-        {mobileDetail && mobileCourse && (
-          <motion.div
-            key={mobileDetail}
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.28, ease: [0.32, 0, 0.67, 0] }}
-            className="md:hidden fixed inset-0 z-40 pt-14 bg-[var(--bg-primary)] overflow-y-auto"
-          >
-            <div className="px-4 py-6">
-              <CourseDetail course={mobileCourse} onBack={() => setMobileDetail(null)} openContact={openContact} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row flex-1 min-h-0 overflow-hidden">
-
-        {/* ── Left column ── */}
-        <div className="lg:w-80 shrink-0 lg:border-r border-[var(--border-subtle)] overflow-y-auto">
-          <div className="py-6 lg:py-12 lg:pr-12 flex flex-col gap-8">
-
-            <div className="flex flex-col gap-4">
-              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">Training</p>
-              <h1 className="text-2xl font-bold text-[var(--text-primary)] leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
-                Training Programs
+        {/* ── Hero ── */}
+        <section className="pt-8 md:pt-12">
+          <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] grid grid-cols-1 md:grid-cols-2 min-h-[420px]">
+            <div className="relative z-10 flex flex-col justify-center gap-5 p-8 md:p-12">
+              <p className={`${labelClass} text-[var(--color-brand)]`}>Training</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                Microsoft data &amp; AI skills your team keeps.
               </h1>
-              <p className="text-sm text-[var(--text-muted)] leading-relaxed">
-                Official Microsoft curriculum and custom corporate programs — delivered by practitioners, not just instructors.
+              <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed max-w-md">
+                Official Microsoft courses and custom programs on Fabric, Power BI, Databricks, AI and Power Platform —
+                taught by Microsoft Certified Trainers who build these solutions every day.
+              </p>
+              <ContactButton className="self-start mt-2">Plan your training</ContactButton>
+            </div>
+            <TrainingHeroArt
+              id="training-art-hero"
+              className="w-full h-56 md:h-full md:absolute md:inset-y-0 md:right-0 md:w-3/5"
+            />
+          </div>
+        </section>
+
+        {/* ── Stats ── */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 py-10 md:py-12 border-b border-[var(--border-subtle)]">
+          {STATS.map((s) => (
+            <div key={s.label} className="flex flex-col gap-1">
+              <span className="text-3xl md:text-4xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
+                {s.value}
+              </span>
+              <span className="text-sm text-[var(--text-muted)] leading-snug">{s.label}</span>
+            </div>
+          ))}
+        </section>
+
+        <TrainingTracks />
+
+        {/* ── Delivery formats ── */}
+        <section className="py-14 md:py-20 border-b border-[var(--border-subtle)]">
+          <div className="flex flex-col gap-3 mb-10 max-w-2xl">
+            <p className={`${labelClass} text-[var(--color-brand)]`}>How we teach</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+              Practical, hands-on, built to stick.
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {FORMATS.map((f) => (
+              <div key={f.title} className="flex flex-col gap-3 border-t border-[var(--border-subtle)] pt-6">
+                <span className="text-[var(--color-brand)]">{f.icon}</span>
+                <h3 className="text-lg font-semibold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>{f.title}</h3>
+                <p className="text-sm text-[var(--text-muted)] leading-relaxed">{f.text}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Trainers & certifications ── */}
+        <section className="py-14 md:py-20 border-b border-[var(--border-subtle)] grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-3">
+              <p className={`${labelClass} text-[var(--color-brand)]`}>Your trainers</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                Practitioners, not just instructors.
+              </h2>
+              <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed max-w-lg">
+                We design and deliver real projects on the platforms we teach — so every course comes with the lessons
+                learned in production.
               </p>
             </div>
-
-            <nav>
-              <ul className="border-t border-[var(--border-subtle)]">
-                {courses.map((c) => (
-                  <li key={c.id} className="border-b border-[var(--border-subtle)]">
-                    <button
-                      onClick={() => { setActive(c.id); setMobileDetail(c.id); }}
-                      className={`w-full text-left py-4 flex items-center justify-between gap-3 transition-colors duration-150 group ${
-                        active === c.id ? "text-[var(--text-primary)]" : "text-[var(--text-muted)] hover:text-[var(--text-primary)]"
-                      }`}
-                    >
-                      <span className={`text-base leading-snug ${active === c.id ? "font-semibold" : "font-normal"}`}>
-                        {c.label}
-                      </span>
-                      <ChevronRight
-                        size={16}
-                        className={`shrink-0 ${active === c.id ? "text-[var(--text-primary)]" : "text-[var(--border-subtle)] group-hover:text-[var(--text-muted)]"}`}
-                      />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-
-            <p className="md:hidden text-xs text-[var(--text-muted)] opacity-60">
-              Tap a course to learn more
-            </p>
-
-          </div>
-        </div>
-
-        {/* ── Right column (desktop only) ── */}
-        <div className="hidden md:block flex-1 overflow-y-auto">
-          <div className="py-6 lg:py-12 lg:pl-12">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={current.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                className="flex flex-col gap-8"
-              >
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-start justify-between gap-4">
-                    <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                      {current.headline}
-                    </h2>
-                    <button
-                      onClick={openContact}
-                      className="shrink-0 px-5 py-2.5 bg-[var(--color-dark)] text-[var(--bg-primary)] text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
-                    >
-                      Request a quote
-                    </button>
+            <div className="flex flex-col gap-4">
+              {TRAINERS.map((t) => (
+                <div key={t.name} className="flex items-center gap-4">
+                  <img src={t.photo} alt={t.name} width={64} height={64} className="w-16 h-16 rounded-full object-cover border border-[var(--border-subtle)]" />
+                  <div className="flex flex-col">
+                    <span className="text-base font-semibold text-[var(--text-primary)]">{t.name}</span>
+                    <span className="text-sm text-[var(--text-muted)]">{t.role}</span>
                   </div>
-                  <p className="text-base text-[var(--text-muted)]">{current.subtitle}</p>
                 </div>
-
-                <hr className="border-[var(--border-subtle)]" />
-
-                <div className="flex gap-2 flex-wrap">
-                  {current.levels.map((l) => (
-                    <span key={l} className="px-3 py-1 text-sm rounded-md border border-[var(--border-subtle)] text-[var(--text-muted)]">
-                      {l}
-                    </span>
-                  ))}
-                </div>
-
-                <p className="text-base text-[var(--text-muted)] leading-relaxed max-w-2xl">
-                  {current.description}
-                </p>
-
-                <ul className="flex flex-col gap-3">
-                  {current.modules.map((m) => (
-                    <li key={m} className="flex items-start gap-3 text-base text-[var(--text-primary)]">
-                      <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
-                      {m}
-                    </li>
-                  ))}
-                </ul>
-
-                {current.cert && (
-                  <div className="flex flex-col gap-1.5 pt-2 border-t border-[var(--border-subtle)]">
-                    <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)]">Certification path</p>
-                    <p className="text-base text-[var(--text-primary)]">{current.cert}</p>
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
+              ))}
+            </div>
           </div>
-        </div>
+
+          <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 md:p-8 flex flex-col gap-5 self-start">
+            <div className="flex items-center gap-3">
+              <Award size={20} className="text-[var(--color-brand)]" />
+              <p className={`${labelClass} text-[var(--text-muted)]`}>Active Microsoft certifications</p>
+            </div>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
+              {CERTIFICATIONS.map((c) => (
+                <li key={c} className="flex items-start gap-3 text-sm text-[var(--text-primary)]">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
+                  Microsoft Certified: {c}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* ── CTA ── */}
+        <section className="py-14 md:py-20">
+          <div className="rounded-[var(--radius-xl)] bg-[var(--color-dark)] text-[var(--bg-primary)] p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="flex flex-col gap-2 max-w-xl">
+              <h2 className="text-2xl md:text-3xl font-bold leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                Let&apos;s design your team&apos;s learning path.
+              </h2>
+              <p className="text-sm md:text-base opacity-75 leading-relaxed">
+                Tell us your stack and goals — we&apos;ll propose the right mix of courses, labs and certification prep.
+              </p>
+            </div>
+            <ContactButton variant="inverted" className="self-start md:self-auto shrink-0">Request a quote</ContactButton>
+          </div>
+        </section>
 
       </div>
     </div>
