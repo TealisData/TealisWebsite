@@ -35,8 +35,6 @@ interface Particle {
   // Book dots: position in the closed book (flat block with a rounded spine)
   closedX: number;
   closedY: number;
-  // Book dots of the central fold (the logo's V tip), formed by the rounded spine
-  fold: boolean;
   x: number;
   y: number;
   vx: number;
@@ -152,7 +150,7 @@ export default function CanvasParticleBackground() {
             // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
             if (inBook && x > logoX + targetW - step * 1.5) continue;
             pts.push({
-              baseX: x, baseY: y, spread: 0, closedX: x, closedY: y, fold: false,
+              baseX: x, baseY: y, spread: 0, closedX: x, closedY: y,
               x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
             });
@@ -195,7 +193,7 @@ export default function CanvasParticleBackground() {
       const fold: Particle[] = [];
       for (const p of particles) {
         if (p.isRoof) continue;
-        if (p.baseY - bookTopY > slabH) { p.fold = true; fold.push(p); continue; }
+        if (p.baseY - bookTopY > slabH) { fold.push(p); continue; }
         const key = `${p.baseX > spineX ? "R" : "L"}${Math.round(p.baseY)}`;
         if (!rows.has(key)) rows.set(key, []);
         rows.get(key)!.push(p);
@@ -210,13 +208,18 @@ export default function CanvasParticleBackground() {
           p.closedY = right ? bookTopY - dy - step / 2 : bookTopY + dy + step / 2;
         });
       }
-      // Rounded spine: a half-ellipse right of the block, spanning its full thickness
-      fold.sort((a, b) => a.baseX - b.baseX);
-      fold.forEach((p, i) => {
-        const a = -Math.PI / 2 + (Math.PI * (i + 0.5)) / fold.length;
-        p.closedX = spineX + Math.cos(a) * slabH * 0.6;
-        p.closedY = bookTopY + Math.sin(a) * (slabH + step / 2);
-      });
+      // Rounded spine: a half-ellipse right of the block, spanning its full thickness.
+      // It splits at its outermost point: the upper arc belongs to the cover (right half of the V),
+      // the lower arc to the left page (left half of the V). The deepest V dots sit at the split,
+      // so the spine's outermost point becomes the V tip.
+      for (const right of [true, false]) {
+        const arc = fold.filter(p => (p.baseX > spineX) === right).sort((a, b) => b.baseY - a.baseY);
+        arc.forEach((p, i) => {
+          const a = ((right ? -1 : 1) * (Math.PI / 2) * (i + 0.5)) / arc.length;
+          p.closedX = spineX + Math.cos(a) * slabH * 0.6;
+          p.closedY = bookTopY + Math.sin(a) * (slabH + step / 2);
+        });
+      }
 
       // Thin "pages" for the riffle: the top row of the right half
       topRow = particles.filter(p => !p.isRoof && p.baseX > spineX && p.baseY - bookTopY < step);
@@ -277,19 +280,7 @@ export default function CanvasParticleBackground() {
             p.y = bookTopY + (p.baseY - bookTopY) * e;
             alpha = e;
           } else {
-            if (p.fold) {
-              // Fold: the rounded spine turns from facing right (closed) to facing down (open)
-              // while narrowing into the V tip — both halves move together, symmetrically
-              const t = clamp01((elapsed - FADE_IN / 2) / BOOK_DURATION);
-              const e = easeInOutCubic(t);
-              const lx = p.closedX - spineX;
-              const ly = p.closedY - bookTopY;
-              const a = (Math.PI / 2) * e;
-              const rx = spineX + lx * Math.cos(a) - ly * Math.sin(a);
-              const ry = bookTopY + lx * Math.sin(a) + ly * Math.cos(a);
-              p.x = lerp(rx, p.baseX, e);
-              p.y = lerp(ry, p.baseY, e);
-            } else if (p.baseX > spineX) {
+            if (p.baseX > spineX) {
               // Right half (cover): rotates around the spine from closed to flat
               const t = clamp01((elapsed - FADE_IN / 2 - p.spread * BOOK_BEND) / BOOK_DURATION);
               const pos = coverPosition(p, easeInOutCubic(t));
