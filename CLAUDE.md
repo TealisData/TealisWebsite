@@ -39,10 +39,8 @@ Corporate website for **Tealisdata OÜ** — a Microsoft data consulting and tra
 app/
   layout.tsx          — root layout: Header, Footer, ContactDrawer, CookieBanner
   page.tsx            — Home (particle background, hero text)
-  consulting/page.tsx — Consulting Services (split layout desktop, overlay mobile)
-  training/page.tsx   — Training Programs: track groups (Data stack / Business apps / AI & agents) + tabbed
-                        program explorer for the five technology programs (components/training/),
-                        How we teach: official courses + cert prep, custom programs, training on the job; CTA
+  consulting/page.tsx — Consulting: same structure as Training (groups + service explorer, How we work, CTA)
+  training/page.tsx   — Training: track groups + program explorer, How we teach, CTA
   about/page.tsx      — Team profiles (Gabriele + Luca)
   contact/page.tsx    — Contact page
   privacy-policy/     — Privacy policy (updated Sept 2026 for GA4)
@@ -58,6 +56,10 @@ components/
   CookieBanner.tsx            — GDPR cookie consent banner
   GoogleAnalytics.tsx         — GA4 script loader (only when consent given)
   ThemeProvider.tsx           — next-themes wrapper
+  showcase/                   — shared by Training & Consulting: ProgramShowcase (intro, 3 groups,
+                                tabbed explorer), ApproachSection, CtaBand, WaveArt, ContactButton
+  training/trainingContent    — Training groups & programs data
+  consulting/consultingContent — Consulting groups & services data
 
 public/
   team/gabriele.png   — Gabriele Nicosia profile photo
@@ -111,8 +113,7 @@ Always use CSS variables, never hardcoded colors.
 ## Mobile patterns
 
 - **Home:** particle background hidden on mobile (`hidden md:block` wrapper)
-- **Consulting:** on mobile, tapping a category opens a full-screen overlay (`fixed inset-0 z-40`) with a "← Back" button; the desktop split layout is `hidden md:block` on the right column
-- **Training:** single scrolling page; track tiles stack to one column on mobile and scroll to the tabbed explorer (tabs scroll horizontally)
+- **Consulting / Training:** single scrolling page; group cards stack to one column on mobile, technology chips scroll to the tabbed explorer (tabs scroll horizontally)
 - **Header:** transparent only on `/` (home); all other pages always show `bg-[var(--bg-primary)]/90 backdrop-blur-md`
 - **Logo:** `width={100} height={53}` on mobile, `md:w-[140px] md:h-[74px]` on desktop
 

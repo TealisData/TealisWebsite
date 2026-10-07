@@ -1,4 +1,4 @@
-// Abstract "data waves" illustration for the Training hero, drawn in the brand color.
+// Abstract "data waves" illustration (featured group tile), drawn in the brand color.
 // Static by design (no animation), deterministic so server and client render the same SVG.
 
 const LINES = 30;
@@ -18,7 +18,7 @@ function wavePath(i: number) {
   ].join(" ");
 }
 
-export default function TrainingHeroArt({ id = "training-art", className = "" }: { id?: string; className?: string }) {
+export default function WaveArt({ id = "wave-art", className = "" }: { id?: string; className?: string }) {
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
