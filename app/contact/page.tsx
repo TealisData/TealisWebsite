@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, CalendarDays, FileText, Mail, MessageSquare, Users } from "lucide-react";
+import { CalendarDays, FileText, Mail, MessageSquare, Users } from "lucide-react";
 import ApproachSection from "@/components/showcase/ApproachSection";
 import ContactButton from "@/components/showcase/ContactButton";
 import WaveArt from "@/components/showcase/WaveArt";
@@ -32,7 +32,6 @@ const NEXT_STEPS = [
 ];
 
 const cardBase = "relative overflow-hidden rounded-[var(--radius-lg)] border p-6 md:p-8 flex flex-col gap-5";
-const linkClass = "relative self-start inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-brand)] hover:underline";
 
 export default function ContactPage() {
   return (
@@ -66,9 +65,9 @@ export default function ContactPage() {
               </div>
               <Link
                 href="/contact/meet"
-                className="relative mt-auto self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--bg-primary)] text-[var(--text-primary)] hover:opacity-80 transition-opacity"
+                className="relative mt-auto self-start px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--bg-primary)] text-[var(--text-primary)] hover:opacity-80 transition-opacity"
               >
-                Open calendar <ArrowRight size={16} />
+                Open calendar
               </Link>
             </div>
 
@@ -82,12 +81,7 @@ export default function ContactPage() {
                   Tell us about your project and we&apos;ll get back to you within one business day.
                 </p>
               </div>
-              <div className="mt-auto flex flex-col gap-3">
-                <ContactButton className="self-start">Write to us</ContactButton>
-                <a href="mailto:info@tealisdata.com" className={linkClass}>
-                  or email info@tealisdata.com <ArrowRight size={16} />
-                </a>
-              </div>
+              <ContactButton className="mt-auto self-start">Write to us</ContactButton>
             </div>
 
             <div className={`${cardBase} bg-[var(--bg-surface)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
@@ -104,9 +98,9 @@ export default function ContactPage() {
                 href="https://www.linkedin.com/company/tealisdata"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${linkClass} mt-auto`}
+                className="mt-auto self-start px-5 py-2.5 text-sm font-semibold rounded-lg bg-[var(--color-dark)] text-[var(--bg-primary)] hover:opacity-80 transition-opacity"
               >
-                linkedin.com/company/tealisdata <ArrowRight size={16} />
+                Follow us on LinkedIn
               </a>
             </div>
           </div>

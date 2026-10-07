@@ -42,7 +42,10 @@ export default function Footer() {
         {/* Left — institutional */}
         <div className="flex items-center">
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-            Tealisdata OÜ · Tallinn, Estonia · VAT EE102990636
+            Tealisdata OÜ · Tallinn, Estonia · VAT EE102990636 ·{" "}
+            <a href="mailto:info@tealisdata.com" className="hover:text-[var(--color-brand)] transition-colors">
+              info@tealisdata.com
+            </a>
           </p>
         </div>
 
