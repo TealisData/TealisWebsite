@@ -121,7 +121,7 @@ const TRACKS: Track[] = [
       "Governance & application lifecycle",
     ],
     levels: ["Beginner", "Intermediate"],
-    certs: ["PL-900 · Power Platform Fundamentals", "PL-400 / AB-400 · Power Platform Developer Associate"],
+    certs: ["PL-900 · Power Platform Fundamentals", "PL-400 · Power Platform Developer Associate"],
   },
   {
     id: "custom",
