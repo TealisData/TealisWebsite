@@ -208,16 +208,28 @@ export default function CanvasParticleBackground() {
           p.closedY = right ? bookTopY - dy - step / 2 : bookTopY + dy + step / 2;
         });
       }
-      // Rounded spine: a half-ellipse right of the block, spanning its full thickness.
-      // It splits at its outermost point: the upper arc belongs to the cover (right half of the V),
-      // the lower arc to the left page (left half of the V). The deepest V dots sit at the split,
-      // so the spine's outermost point becomes the V tip.
+      // Rounded spine: a filled half-ellipse attached to the block's last column, spanning its
+      // full thickness, on the same dot grid. It splits at its middle row: the upper part belongs
+      // to the cover (right half of the V), the lower part to the left page (left half of the V).
+      // Slots nearest the middle/outermost point take the deepest V dots, so it becomes the V tip.
+      const cx = spineX - step / 2;
+      const ry = slabH + step / 2;
+      const rx = Math.max(step * 1.5, ry * 0.55);
+      const slots: { x: number; y: number; upper: boolean; key: number }[] = [];
+      for (let y = bookTopY - ry + step / 2; y < bookTopY + ry; y += step) {
+        for (let x = cx + step; ((x - cx) / rx) ** 2 + ((y - bookTopY) / ry) ** 2 <= 1; x += step) {
+          // outermost and closest to the middle row first
+          slots.push({ x, y, upper: y < bookTopY, key: Math.abs(y - bookTopY) / ry - (x - cx) / rx });
+        }
+      }
       for (const right of [true, false]) {
-        const arc = fold.filter(p => (p.baseX > spineX) === right).sort((a, b) => b.baseY - a.baseY);
-        arc.forEach((p, i) => {
-          const a = ((right ? -1 : 1) * (Math.PI / 2) * (i + 0.5)) / arc.length;
-          p.closedX = spineX + Math.cos(a) * slabH * 0.6;
-          p.closedY = bookTopY + Math.sin(a) * (slabH + step / 2);
+        const half = slots.filter(sl => sl.upper === right).sort((a, b) => a.key - b.key);
+        const dots = fold.filter(p => (p.baseX > spineX) === right).sort((a, b) => b.baseY - a.baseY);
+        dots.forEach((p, i) => {
+          // more dots than slots: the extras stack on the outermost slots, keeping it saturated
+          const sl = half.length ? half[i % half.length] : { x: cx + step, y: bookTopY };
+          p.closedX = sl.x;
+          p.closedY = sl.y;
         });
       }
 
