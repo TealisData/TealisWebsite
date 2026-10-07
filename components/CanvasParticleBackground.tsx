@@ -8,11 +8,16 @@ const RAW_PATH_ROOF =
 const RAW_PATH_BOOK =
   "M 228.476562 713.023438 L 708.789062 713.023438 C 727.085938 713.023438 738.523438 724.460938 743.097656 747.335938 L 749.957031 795.375 L 756.820312 747.335938 C 761.394531 724.460938 772.832031 713.023438 791.128906 713.023438 L 1271.441406 713.023438 L 1381.226562 795.375 L 900.914062 795.375 C 855.167969 795.375 823.148438 804.523438 804.851562 822.824219 C 768.253906 859.425781 731.660156 859.425781 695.066406 822.824219 C 676.765625 804.523438 644.746094 795.375 599.003906 795.375 L 118.6875 795.375 Z";
 
-// Intro: big-bang burst from the logo center across the whole page, then a regroup
-const EXPLODE_DURATION = 1200; // ms — fast burst that decelerates
-const GATHER_STAGGER = 400; // ms — max random delay before each particle starts regrouping
-const GATHER_DURATION = 1500; // ms
-const ASSEMBLY_DURATION = EXPLODE_DURATION + GATHER_STAGGER + GATHER_DURATION;
+// Intro: the book opens around its spine, then the roof rises out of it
+const BOOK_DURATION = 1300; // ms — each page dot swings from upright to flat
+const BOOK_STAGGER = 350; // ms — outer page edges trail the spine, so pages bend like paper
+const BOOK_START_ANGLE = Math.PI * 0.45; // closed: pages almost upright
+const PAGE_LIFT = 0.45; // height of an upright page relative to its width
+const FADE_IN = 300; // ms
+const ROOF_DELAY = 1450; // ms — roof starts once the book is (nearly) open
+const ROOF_STAGGER = 550; // ms — roof grows from the center outward
+const ROOF_DURATION = 900; // ms
+const ASSEMBLY_DURATION = ROOF_DELAY + ROOF_STAGGER + ROOF_DURATION;
 const MAX_LOGO_W = 860;
 const EDGE_MARGIN = 48;
 const TEXT_GAP = 36;
@@ -20,11 +25,8 @@ const TEXT_GAP = 36;
 interface Particle {
   baseX: number;
   baseY: number;
-  originX: number;
-  originY: number;
-  scatterX: number;
-  scatterY: number;
-  gatherDelay: number;
+  // 0 at the spine/center, 1 at the outer edge: drives the intro stagger
+  spread: number;
   x: number;
   y: number;
   vx: number;
@@ -34,13 +36,11 @@ interface Particle {
   density: number;
 }
 
-function easeOutExpo(t: number) {
-  return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
 }
 
-function easeInOutCubic(t: number) {
-  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-}
+const clamp01 = (t: number) => Math.min(Math.max(t, 0), 1);
 
 type Rect = { left: number; top: number; right: number; bottom: number };
 
@@ -88,7 +88,10 @@ export default function CanvasParticleBackground() {
     let particles: Particle[] = [];
     let animId: number;
     let assemblyStart: number | null = null;
-    // Play the big bang only on first load, not on every resize or theme change
+    // Book spine and top edge of the book in canvas pixels (set in buildParticles)
+    let spineX = 0;
+    let bookTopY = 0;
+    // Play the intro only on first load, not on every resize or theme change
     let introPlayed = false;
     const mouse = { x: -1000, y: -1000, radius: 90 };
 
@@ -134,7 +137,7 @@ export default function CanvasParticleBackground() {
             // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
             if (inBook && x > logoX + targetW - step * 1.5) continue;
             pts.push({
-              baseX: x, baseY: y, originX: 0, originY: 0, scatterX: 0, scatterY: 0, gatherDelay: 0,
+              baseX: x, baseY: y, spread: 0,
               x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
             });
@@ -163,17 +166,14 @@ export default function CanvasParticleBackground() {
           Math.abs(o.baseY - p.baseY) <= neighborDist)
       );
 
-      // Big bang: every particle starts at the logo center and bursts to a random spot on the page
-      const logoCx = logoX + targetW / 2;
-      const logoCy = logoY + (541 * scale) / 2;
+      // Book opening: spine at raw x≈750, book top edge at raw y≈713 (see RAW_PATH_BOOK)
+      spineX = logoX + (749.957 - 118) * scale;
+      bookTopY = logoY + (713.023 - 319) * scale;
+      const maxDx = Math.max(1, ...particles.map(p => Math.abs(p.baseX - spineX)));
       for (const p of particles) {
-        p.originX = logoCx + (Math.random() - 0.5) * 6;
-        p.originY = logoCy + (Math.random() - 0.5) * 6;
-        p.scatterX = (Math.random() * 1.1 - 0.05) * w;
-        p.scatterY = (Math.random() * 1.1 - 0.05) * h;
-        p.gatherDelay = Math.random() * GATHER_STAGGER;
-        p.x = p.originX;
-        p.y = p.originY;
+        p.spread = Math.abs(p.baseX - spineX) / maxDx;
+        p.x = spineX;
+        p.y = p.baseY;
       }
     }
 
@@ -187,7 +187,7 @@ export default function CanvasParticleBackground() {
 
       const elapsed = timestamp - assemblyStart;
       const assembled = elapsed >= ASSEMBLY_DURATION;
-      const burst = easeOutExpo(Math.min(elapsed / EXPLODE_DURATION, 1));
+      const fade = clamp01(elapsed / FADE_IN);
 
       const dark = isDark();
       ctx.fillStyle = dark ? "#0A0C10" : "#FDFDFE";
@@ -197,17 +197,24 @@ export default function CanvasParticleBackground() {
       const bookColor = dark ? "#E2E8F0" : "#22252A";
 
       for (const p of particles) {
+        let alpha = 1;
         if (!assembled) {
-          const gatherT = (elapsed - EXPLODE_DURATION - p.gatherDelay) / GATHER_DURATION;
-          if (gatherT <= 0) {
-            // Burst outward: very fast at first, decelerating to rest
-            p.x = p.originX + (p.scatterX - p.originX) * burst;
-            p.y = p.originY + (p.scatterY - p.originY) * burst;
+          if (p.isRoof) {
+            // Roof rises out of the open book, center first
+            const t = clamp01((elapsed - ROOF_DELAY - p.spread * ROOF_STAGGER) / ROOF_DURATION);
+            if (t === 0) continue;
+            const e = easeOutCubic(t);
+            p.x = p.baseX;
+            p.y = bookTopY + (p.baseY - bookTopY) * e;
+            alpha = e;
           } else {
-            // Slowly regroup into the logo
-            const g = easeInOutCubic(Math.min(gatherT, 1));
-            p.x = p.scatterX + (p.baseX - p.scatterX) * g;
-            p.y = p.scatterY + (p.baseY - p.scatterY) * g;
+            // Each page dot rotates around the spine from upright to flat
+            const t = clamp01((elapsed - p.spread * BOOK_STAGGER) / BOOK_DURATION);
+            const angle = BOOK_START_ANGLE * (1 - easeOutCubic(t));
+            const dx = p.baseX - spineX;
+            p.x = spineX + dx * Math.cos(angle);
+            p.y = p.baseY - Math.abs(dx) * Math.sin(angle) * PAGE_LIFT;
+            alpha = fade;
           }
         } else {
           // Normal interactive physics
@@ -228,11 +235,13 @@ export default function CanvasParticleBackground() {
           p.y += p.vy;
         }
 
+        ctx.globalAlpha = alpha;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = p.isRoof ? roofColor : bookColor;
         ctx.fill();
       }
+      ctx.globalAlpha = 1;
       animId = requestAnimationFrame(render);
     }
 
