@@ -19,12 +19,9 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
 }
 
 const PILLARS = [
-  { label: "Who we are", text: "A team of Microsoft experts: hands-on consultants and Microsoft Certified Trainers." },
-  {
-    label: "What we do",
-    text: "We design and build modern data architectures, data strategy & governance, and AI & agents — and train the teams who run them.",
-  },
-  { label: "How we work", text: "We transfer skills, not black boxes: every project leaves your team more autonomous." },
+  { label: "Who we are", text: "Expert consultants, developers and Microsoft Certified Trainers." },
+  { label: "What we do", text: "Modern Data Architecture, Data Strategy & Governance, AI & Agents, and Microsoft Training." },
+  { label: "Our approach", text: "We transfer skills, not black boxes: your team gains full autonomy." },
 ];
 
 export default function HomePage() {
@@ -44,7 +41,7 @@ export default function HomePage() {
 
             <FadeIn delay={0.05}>
               <h1
-                className="text-2xl sm:text-3xl md:text-4xl font-bold leading-tight tracking-tight text-[var(--text-primary)]"
+                className="text-[28px] sm:text-[32px] md:text-[42px] font-bold leading-tight tracking-tight text-[var(--text-primary)]"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
                 Your Data Partner:
