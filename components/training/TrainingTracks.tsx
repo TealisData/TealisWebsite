@@ -4,12 +4,15 @@ import { useRef, useState } from "react";
 import { Bot, Layers, Workflow } from "lucide-react";
 import TrainingHeroArt from "@/components/training/TrainingHeroArt";
 
+// A module is a short line, or a titled entry with a one-line explanation
+type Module = string | { title: string; text: string };
+
 type Track = {
   id: string;
   label: string;
   headline: string;
   description: string;
-  modules: string[];
+  modules: Module[];
   levels: string[];
   certs: string[];
 };
@@ -20,21 +23,21 @@ const TRACKS: Track[] = [
     label: "Microsoft Fabric",
     headline: "One platform, end to end.",
     description:
-      "The full Microsoft Fabric platform, hands-on: lakehouse and warehouse, data engineering, real-time intelligence, data science and semantic models — plus the AI, security and lifecycle practices to run it in production.",
+      "The full Microsoft Fabric platform, hands-on: storage, ingestion, processing, real-time analytics, AI, and business intelligence — built on enterprise governance, security, and ALM practices.",
+    // Macro topics of the official Microsoft Fabric labs (microsoftlearning.github.io/mslearn-fabric)
     modules: [
-      // Macro topics of the official Microsoft Fabric labs (microsoftlearning.github.io/mslearn-fabric)
-      "Lakehouse & OneLake: shortcuts and the OneLake catalog",
-      "Data engineering with Spark, Delta tables & medallion architecture",
-      "Ingestion with Dataflows Gen2 & data pipelines",
-      "Data warehouse with T-SQL",
-      "Real-Time Intelligence: Eventstream, Eventhouse, KQL & Activator",
-      "Data science & machine learning with MLflow",
-      "Semantic models: DAX, Direct Lake & performance",
-      "SQL database in Fabric & API for GraphQL",
-      "Fabric IQ: ontologies & data agents",
-      "Copilot in Fabric",
-      "Security & governance",
-      "Monitoring & deployment pipelines",
+      { title: "OneLake & Catalog", text: "Unified lakehouse storage, shortcuts, and data discovery" },
+      { title: "Data Ingestion & Orchestration", text: "Low-code Dataflows Gen2 and Data Pipelines" },
+      { title: "Medallion & Lakehouse Architecture", text: "Spark, Delta tables, and scalable data engineering" },
+      { title: "Data Warehouse & Operational DBs", text: "Enterprise T-SQL Data Warehouse, SQL Database, and API for GraphQL" },
+      { title: "Real-Time Intelligence", text: "Eventstream, Eventhouse, KQL, and automated alerts with Activator" },
+      { title: "Data Science & ML", text: "Machine learning lifecycles, experimentation, and model tracking with MLflow" },
+      { title: "Semantic Modeling & BI", text: "High-performance DAX, Direct Lake mode, and reporting" },
+      { title: "Fabric IQ & Data Agents", text: "Domain ontologies, knowledge graphs, and conversational agents over your data" },
+      { title: "Copilot in Fabric", text: "Generative AI assistance for analytics, code generation, and exploration" },
+      { title: "Security & Governance", text: "Fine-grained access control, RLS/OLS, and Microsoft Purview integration" },
+      { title: "Monitoring & Operations", text: "Capacity management, performance tracking, and health metrics" },
+      { title: "Application Lifecycle Management", text: "Deployment Pipelines, Git integration, and CI/CD best practices" },
     ],
     levels: ["Intermediate", "Advanced"],
     certs: ["DP-600 · Fabric Analytics Engineer Associate", "DP-700 · Fabric Data Engineer Associate"],
@@ -297,13 +300,24 @@ export default function TrainingTracks() {
               {current.headline}
             </h3>
             <p className="text-base text-[var(--text-muted)] leading-relaxed max-w-2xl">{current.description}</p>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3">
-              {current.modules.map((m) => (
-                <li key={m} className="flex items-start gap-3 text-base text-[var(--text-primary)]">
-                  <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
-                  {m}
-                </li>
-              ))}
+            {/* CSS columns fill top-to-bottom, so the first half of the list forms column 1 */}
+            <ul className="sm:columns-2 gap-x-8">
+              {current.modules.map((m) => {
+                const key = typeof m === "string" ? m : m.title;
+                return (
+                  <li key={key} className="flex items-start gap-3 mb-3 break-inside-avoid text-base text-[var(--text-primary)]">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
+                    {typeof m === "string" ? (
+                      m
+                    ) : (
+                      <span className="flex flex-col">
+                        <span className="font-semibold">{m.title}</span>
+                        <span className="text-sm text-[var(--text-muted)] leading-relaxed">{m.text}</span>
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
