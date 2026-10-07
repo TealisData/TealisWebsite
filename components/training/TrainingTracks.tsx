@@ -36,7 +36,7 @@ const TRACKS: Track[] = [
       "Semantic models & Power BI in Fabric",
     ],
     levels: ["Intermediate", "Advanced"],
-    certs: ["Microsoft Certified: Fabric Analytics Engineer Associate", "Microsoft Certified: Fabric Data Engineer Associate"],
+    certs: ["DP-600 · Fabric Analytics Engineer Associate", "DP-700 · Fabric Data Engineer Associate"],
   },
   {
     id: "power-bi",
@@ -56,7 +56,7 @@ const TRACKS: Track[] = [
       "Power BI Service & deployment",
     ],
     levels: ["Beginner", "Intermediate", "Advanced"],
-    certs: ["Microsoft Certified: Power BI Data Analyst Associate"],
+    certs: ["PL-300 · Power BI Data Analyst Associate"],
   },
   {
     id: "databricks",
@@ -75,7 +75,7 @@ const TRACKS: Track[] = [
       "Governance with Unity Catalog",
     ],
     levels: ["Intermediate", "Advanced"],
-    certs: [],
+    certs: ["DP-750 · Azure Databricks Data Engineer Associate"],
   },
   {
     id: "ai",
@@ -96,9 +96,12 @@ const TRACKS: Track[] = [
     ],
     levels: ["Beginner", "Intermediate", "Advanced"],
     certs: [
-      "Microsoft Certified: AI Business Professional",
-      "Microsoft Certified: AI Transformation Leader",
-      "Microsoft Certified: Azure AI Fundamentals",
+      "AI-901 · Azure AI Fundamentals",
+      "AB-730 · AI Business Professional",
+      "AB-731 · AI Transformation Leader",
+      "AB-620 · AI Agent Builder Associate",
+      "AI-103 · Azure AI Apps and Agents Developer Associate",
+      "AI-300 · Machine Learning Operations Engineer Associate",
     ],
   },
   {
@@ -118,7 +121,7 @@ const TRACKS: Track[] = [
       "Governance & application lifecycle",
     ],
     levels: ["Beginner", "Intermediate"],
-    certs: ["Microsoft Certified: Power Platform Fundamentals"],
+    certs: ["PL-900 · Power Platform Fundamentals", "PL-400 / AB-400 · Power Platform Developer Associate"],
   },
   {
     id: "custom",
