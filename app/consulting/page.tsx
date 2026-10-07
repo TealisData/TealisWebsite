@@ -8,7 +8,7 @@ import { CONSULTING_GROUPS, CONSULTING_SERVICES } from "@/components/consulting/
 export const metadata: Metadata = {
   title: "Consulting Services – Tealis",
   description:
-    "End-to-end data, business applications and AI solutions on Microsoft Fabric, Power BI, Azure Databricks, Power Platform and Copilot — built for your team to own.",
+    "Modern data architecture, data strategy & governance, and AI & agents on Microsoft Fabric, Azure Databricks, Power BI, Purview and Copilot — built for your team to own.",
 };
 
 const APPROACH = [
@@ -39,7 +39,7 @@ export default function ConsultingPage() {
         <ProgramShowcase
           label="Consulting"
           title="End-to-end Microsoft data & AI solutions, built for your team to own."
-          subtitle="We design, build and deploy data platforms, business applications and AI on the Microsoft stack — with knowledge transfer built in, so you never depend on us."
+          subtitle="We build modern data platforms, put the strategy and governance around them, and bring AI into your daily work — on the Microsoft stack, with knowledge transfer built in, so you never depend on us."
           groups={CONSULTING_GROUPS}
           programs={CONSULTING_SERVICES}
           explorerLabel="Explore our services"
