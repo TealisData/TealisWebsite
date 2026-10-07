@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Bot, Code2, Layers } from "lucide-react";
+import { Bot, Layers, Workflow } from "lucide-react";
 import TrainingHeroArt from "@/components/training/TrainingHeroArt";
 
 type Track = {
@@ -67,14 +67,30 @@ const TRACKS: Track[] = [
     certs: ["DP-750 · Azure Databricks Data Engineer Associate"],
   },
   {
+    id: "power-platform",
+    label: "Business Apps & Automation",
+    headline: "Apps and automation, built by your team.",
+    description:
+      "Digitalize business processes with low-code: transactional apps and forms in Power Apps and Power Fx, workflows in Power Automate, data in Dataverse — all governed and maintainable.",
+    modules: [
+      "Canvas & model-driven Power Apps",
+      "Power Fx formulas",
+      "Process automation with Power Automate",
+      "Dataverse essentials",
+      "Governance & application lifecycle",
+    ],
+    levels: ["Beginner", "Intermediate"],
+    certs: ["PL-900 · Power Platform Fundamentals", "PL-400 · Power Platform Developer Associate"],
+  },
+  {
     id: "ai",
-    label: "AI & Copilot",
+    label: "AI & Agents",
     headline: "Put AI to work, responsibly.",
     description:
       "From identifying where generative AI creates value to building with Copilot Studio, Microsoft Foundry and Azure Machine Learning — with governance and responsible AI built in.",
     modules: [
       "Business value of generative AI",
-      "Microsoft 365 Copilot in daily work",
+      "Microsoft 365 Copilot & Copilot Cowork in daily work",
       "Building agents with Copilot Studio",
       "Microsoft Foundry",
       "Azure Machine Learning fundamentals",
@@ -89,22 +105,6 @@ const TRACKS: Track[] = [
       "AI-103 · Azure AI Apps and Agents Developer Associate",
       "AI-300 · Machine Learning Operations Engineer Associate",
     ],
-  },
-  {
-    id: "power-platform",
-    label: "Power Platform",
-    headline: "Apps and automation, built by your team.",
-    description:
-      "Practical low-code training: build apps with Power Apps and Power Fx, automate processes with Power Automate, and keep it all governed and maintainable.",
-    modules: [
-      "Canvas & model-driven Power Apps",
-      "Power Fx formulas",
-      "Process automation with Power Automate",
-      "Dataverse essentials",
-      "Governance & application lifecycle",
-    ],
-    levels: ["Beginner", "Intermediate"],
-    certs: ["PL-900 · Power Platform Fundamentals", "PL-400 · Power Platform Developer Associate"],
   },
   {
     id: "custom",
@@ -154,7 +154,7 @@ const GROUPS: Group[] = [
     id: "data",
     title: "Data platforms",
     icon: <Layers size={20} />,
-    summary: "Architecture, engineering, modeling and governance across the Microsoft data stack.",
+    summary: "Storage, ingestion, data warehousing, data modeling and BI across the Microsoft data stack.",
     items: [
       { name: "Microsoft Fabric", track: "fabric" },
       { name: "Power BI", track: "power-bi" },
@@ -166,30 +166,27 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    id: "ai",
-    title: "AI & automation",
-    icon: <Bot size={20} />,
-    summary: "From Copilot adoption to custom agents, machine learning and low-code automation.",
+    id: "apps",
+    title: "Business applications & automation",
+    icon: <Workflow size={20} />,
+    summary: "Transactional apps, forms, workflows and the digitalization of business processes.",
     items: [
-      { name: "Microsoft 365 Copilot", track: "ai" },
-      { name: "Copilot Studio", track: "ai" },
-      { name: "Microsoft Foundry", track: "ai" },
-      { name: "Azure Machine Learning", track: "ai" },
       { name: "Power Apps", track: "power-platform" },
       { name: "Power Automate", track: "power-platform" },
+      { name: "Microsoft Dataverse", track: "power-platform" },
     ],
   },
   {
-    id: "languages",
-    title: "Languages",
-    icon: <Code2 size={20} />,
-    summary: "The languages behind every model, pipeline and app we build.",
+    id: "ai",
+    title: "AI & agents",
+    icon: <Bot size={20} />,
+    summary: "The intelligent layer: LLMs, Copilot, custom agents and machine learning models.",
     items: [
-      { name: "DAX", track: "power-bi" },
-      { name: "Power Query M", track: "power-bi" },
-      { name: "SQL", track: "fabric" },
-      { name: "Python", track: "databricks" },
-      { name: "Power Fx", track: "power-platform" },
+      { name: "Microsoft 365 Copilot", track: "ai" },
+      { name: "Copilot Cowork", track: "ai" },
+      { name: "Copilot Studio", track: "ai" },
+      { name: "Microsoft Foundry", track: "ai" },
+      { name: "Azure Machine Learning", track: "ai" },
     ],
   },
 ];
