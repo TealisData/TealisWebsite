@@ -14,12 +14,14 @@ const FADE_IN = 400; // ms
 const BOOK_DURATION = 1700; // ms — the cover travels from left to right
 const BOOK_STAGGER = 450; // ms — the outer edge trails the spine, so the page bends like paper
 const PAGE_LIFT = 0.35; // height of the page arc relative to its width
+const CLOSED_WIDTH = 0.85; // closed book block width relative to one open page
+const UNFOLD_DELAY = 300; // ms — the block under the cover starts unfolding after the cover lifts
 const RIFFLE_PAGES = 4; // translucent pages flipping after the cover
 const RIFFLE_START = 650; // ms — first page leaves while the cover is mid-air
 const RIFFLE_GAP = 260; // ms between pages
 const RIFFLE_DURATION = 1100; // ms per page
 const RIFFLE_ALPHA = 0.35; // peak opacity of a riffling page
-const ROOF_DELAY = 2300; // ms — roof starts once the pages have settled
+const ROOF_DELAY = 2450; // ms — roof starts once the pages have settled
 const ROOF_STAGGER = 700; // ms — roof grows from the center outward
 const ROOF_DURATION = 1150; // ms
 const ASSEMBLY_DURATION = ROOF_DELAY + ROOF_STAGGER + ROOF_DURATION;
@@ -32,6 +34,9 @@ interface Particle {
   baseY: number;
   // 0 at the spine/center, 1 at the outer edge: drives the intro stagger
   spread: number;
+  // Book dots only: position in the closed book block
+  closedX: number;
+  closedY: number;
   x: number;
   y: number;
   vx: number;
@@ -146,7 +151,7 @@ export default function CanvasParticleBackground() {
             // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
             if (inBook && x > logoX + targetW - step * 1.5) continue;
             pts.push({
-              baseX: x, baseY: y, spread: 0,
+              baseX: x, baseY: y, spread: 0, closedX: x, closedY: y,
               x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
             });
@@ -179,17 +184,37 @@ export default function CanvasParticleBackground() {
       spineX = logoX + (749.957 - 118) * scale;
       bookTopY = logoY + (713.023 - 319) * scale;
       const maxDx = Math.max(1, ...particles.map(p => Math.abs(p.baseX - spineX)));
+      for (const p of particles) p.spread = Math.abs(p.baseX - spineX) / maxDx;
+
+      // Closed book: a dense rectangular block left of the spine, filled row by row on the dot grid.
+      // The cover (right half) lies on the same grid, offset half a step up and right to show thickness.
+      const cols = Math.max(2, Math.floor((maxDx * CLOSED_WIDTH) / step) + 1);
+      const blockLeft = spineX - (cols - 1) * step;
+      for (const right of [false, true]) {
+        const half = particles
+          .filter(p => !p.isRoof && (p.baseX > spineX) === right)
+          .sort((a, b) => a.baseY - b.baseY || a.baseX - b.baseX);
+        half.forEach((p, i) => {
+          p.closedX = blockLeft + (i % cols) * step + (right ? step / 2 : 0);
+          p.closedY = bookTopY + Math.floor(i / cols) * step - (right ? step / 2 : 0);
+        });
+      }
       for (const p of particles) {
-        p.spread = Math.abs(p.baseX - spineX) / maxDx;
-        p.x = spineX;
-        p.y = p.baseY;
+        p.x = p.closedX;
+        p.y = p.closedY;
       }
     }
 
-    /** Position of a right-half dot turning over the spine: progress 0 = folded left, 1 = flat right */
-    function turnPosition(p: Particle, dx: number, progress: number, lift: number) {
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+    /** Right-half dot turning over the spine: progress 0 = closed (on the block), 1 = flat on the right */
+    function turnPosition(p: Particle, progress: number, lift: number) {
       const angle = Math.PI * progress;
-      return { x: spineX - dx * Math.cos(angle), y: p.baseY - dx * Math.sin(angle) * lift };
+      const radius = lerp(spineX - p.closedX, p.baseX - spineX, progress);
+      return {
+        x: spineX - radius * Math.cos(angle),
+        y: lerp(p.closedY, p.baseY, progress) - radius * Math.sin(angle) * lift,
+      };
     }
 
     function render(timestamp: number) {
@@ -223,17 +248,18 @@ export default function CanvasParticleBackground() {
             p.y = bookTopY + (p.baseY - bookTopY) * e;
             alpha = e;
           } else {
-            const dx = p.baseX - spineX;
-            if (dx > 0) {
-              // Right half (cover): starts folded onto the left half, turns over the spine in an arc
+            if (p.baseX > spineX) {
+              // Right half (cover): lifts off the closed block and turns over the spine in an arc
               const t = clamp01((elapsed - FADE_IN / 2 - p.spread * BOOK_STAGGER) / BOOK_DURATION);
-              const turn = turnPosition(p, dx, easeInOutCubic(t), PAGE_LIFT);
+              const turn = turnPosition(p, easeInOutCubic(t), PAGE_LIFT);
               p.x = turn.x;
               p.y = turn.y;
             } else {
-              // Left half lies still, like the back cover on the table
-              p.x = p.baseX;
-              p.y = p.baseY;
+              // Left half: the block underneath unfolds into the open left page
+              const t = clamp01((elapsed - FADE_IN / 2 - UNFOLD_DELAY - p.spread * BOOK_STAGGER) / BOOK_DURATION);
+              const e = easeInOutCubic(t);
+              p.x = lerp(p.closedX, p.baseX, e);
+              p.y = lerp(p.closedY, p.baseY, e);
             }
             alpha = fade;
           }
@@ -269,11 +295,10 @@ export default function CanvasParticleBackground() {
           if (elapsed < start || elapsed > start + RIFFLE_DURATION + BOOK_STAGGER) continue;
           const lift = PAGE_LIFT * (0.7 + 0.12 * k);
           for (const p of particles) {
-            const dx = p.baseX - spineX;
-            if (p.isRoof || dx <= 0) continue;
+            if (p.isRoof || p.baseX <= spineX) continue;
             const t = clamp01((elapsed - start - p.spread * BOOK_STAGGER) / RIFFLE_DURATION);
             if (t === 0 || t === 1) continue;
-            const pos = turnPosition(p, dx, easeInOutCubic(t), lift);
+            const pos = turnPosition(p, easeInOutCubic(t), lift);
             // Visible mid-flight, gone as it lands
             ctx.globalAlpha = RIFFLE_ALPHA * Math.sin(Math.PI * t);
             ctx.beginPath();
