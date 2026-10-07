@@ -36,7 +36,7 @@ const TRACKS: Track[] = [
       "Semantic models & Power BI in Fabric",
     ],
     levels: ["Intermediate", "Advanced"],
-    certs: ["DP-600 · Fabric Analytics Engineer Associate", "DP-700 · Fabric Data Engineer Associate"],
+    certs: ["Microsoft Certified: Fabric Analytics Engineer Associate", "Microsoft Certified: Fabric Data Engineer Associate"],
   },
   {
     id: "power-bi",
@@ -56,7 +56,7 @@ const TRACKS: Track[] = [
       "Power BI Service & deployment",
     ],
     levels: ["Beginner", "Intermediate", "Advanced"],
-    certs: ["PL-300 · Power BI Data Analyst Associate"],
+    certs: ["Microsoft Certified: Power BI Data Analyst Associate"],
   },
   {
     id: "databricks",
@@ -96,9 +96,9 @@ const TRACKS: Track[] = [
     ],
     levels: ["Beginner", "Intermediate", "Advanced"],
     certs: [
-      "AB-730 · AI Business Professional",
-      "AB-731 · AI Transformation Leader",
-      "AI-900 · Azure AI Fundamentals",
+      "Microsoft Certified: AI Business Professional",
+      "Microsoft Certified: AI Transformation Leader",
+      "Microsoft Certified: Azure AI Fundamentals",
     ],
   },
   {
@@ -118,7 +118,7 @@ const TRACKS: Track[] = [
       "Governance & application lifecycle",
     ],
     levels: ["Beginner", "Intermediate"],
-    certs: ["PL-900 · Power Platform Fundamentals"],
+    certs: ["Microsoft Certified: Power Platform Fundamentals"],
   },
   {
     id: "custom",
@@ -216,19 +216,7 @@ export default function TrainingTracks() {
                   </h3>
                   <p className={`text-sm leading-relaxed ${featured ? "opacity-80" : "text-[var(--text-primary)]/70"}`}>{t.summary}</p>
                 </div>
-                <div className="relative mt-auto flex items-end justify-between gap-4">
-                  <div className="flex flex-wrap gap-2">
-                    {t.certs.map((c) => (
-                      <span
-                        key={c}
-                        className={`px-2.5 py-1 text-xs font-medium rounded-md border ${
-                          featured ? "border-current/20 opacity-80" : "border-[var(--border-subtle)] text-[var(--text-primary)]/70"
-                        }`}
-                      >
-                        {c.split(" · ")[0]}
-                      </span>
-                    ))}
-                  </div>
+                <div className="relative mt-auto flex justify-end">
                   <ArrowRight size={18} className="shrink-0 text-[var(--color-brand)] transition-transform group-hover:translate-x-1" />
                 </div>
               </button>
