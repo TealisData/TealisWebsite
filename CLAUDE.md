@@ -40,8 +40,8 @@ app/
   layout.tsx          — root layout: Header, Footer, ContactDrawer, CookieBanner
   page.tsx            — Home (particle background, hero text)
   consulting/page.tsx — Consulting Services (split layout desktop, overlay mobile)
-  training/page.tsx   — Training Programs: hero with wave art, stats, track bento grid + tabbed
-                        program explorer (components/training/), formats, trainers & certifications, CTA
+  training/page.tsx   — Training Programs: track groups (Data stack / Business apps / AI & agents) + tabbed
+                        program explorer (components/training/), delivery formats, CTA
   about/page.tsx      — Team profiles (Gabriele + Luca)
   contact/page.tsx    — Contact page
   privacy-policy/     — Privacy policy (updated Sept 2026 for GA4)

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { GraduationCap, MonitorPlay, Target } from "lucide-react";
-import TrainingHeroArt from "@/components/training/TrainingHeroArt";
 import TrainingTracks from "@/components/training/TrainingTracks";
 import ContactButton from "@/components/training/ContactButton";
 
@@ -34,27 +33,6 @@ export default function TrainingPage() {
   return (
     <div className="flex flex-col flex-1 pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
-
-        {/* ── Hero ── */}
-        <section className="pt-8 md:pt-12">
-          <div className="relative overflow-hidden rounded-[var(--radius-xl)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] grid grid-cols-1 md:grid-cols-2 min-h-[420px]">
-            <div className="relative z-10 flex flex-col justify-center gap-5 p-8 md:p-12">
-              <p className={`${labelClass} text-[var(--color-brand)]`}>Training</p>
-              <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                Microsoft data &amp; AI skills your team keeps.
-              </h1>
-              <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed max-w-md">
-                Official Microsoft courses and custom programs on Fabric, Power BI, Databricks, AI and Power Platform —
-                taught by Microsoft Certified Trainers who build these solutions every day.
-              </p>
-              <ContactButton className="self-start mt-2">Plan your training</ContactButton>
-            </div>
-            <TrainingHeroArt
-              id="training-art-hero"
-              className="w-full h-56 md:h-full md:absolute md:inset-y-0 md:right-0 md:w-3/5"
-            />
-          </div>
-        </section>
 
         <TrainingTracks />
 

@@ -124,14 +124,21 @@ const TRACKS: Track[] = [
     label: "AI & Agents",
     headline: "Put AI to work, responsibly.",
     description:
-      "From identifying where generative AI creates value to building with Copilot Studio, Microsoft Foundry and Azure Machine Learning — with governance and responsible AI built in.",
+      "From business adoption to production engineering, hands-on: Copilot at work, AI strategy, Copilot Studio and Azure agents, Microsoft Foundry apps, and MLOps and GenAIOps — with responsible AI throughout.",
+    // Learning paths of AI-901T00, AB-730T00, AB-731T00, AB-620T00, AI-103T00 and AI-300T00
     modules: [
-      "Business value of generative AI",
-      "Microsoft 365 Copilot & Copilot Cowork in daily work",
-      "Building agents with Copilot Studio",
-      "Microsoft Foundry",
-      "Azure Machine Learning fundamentals",
-      "Responsible AI & governance",
+      { title: "AI Fundamentals", text: "Generative AI, agents, language, speech, vision, and retrieval-augmented generation" },
+      { title: "AI Strategy & Business Value", text: "Use cases, business value, responsible AI, and scaling AI across the organization" },
+      { title: "Copilot at Work", text: "Effective prompts, content, data analysis, meetings, and Copilot Cowork" },
+      { title: "Copilot Studio Agents", text: "Topics, tools, generative answers, and Adaptive Cards" },
+      { title: "Multi-Agent Solutions", text: "Child and connected agents, and cross-platform orchestration with Agent2Agent" },
+      { title: "Enterprise Integration & Grounding", text: "Connectors, REST APIs, MCP, and enterprise knowledge with Azure AI Search" },
+      { title: "Generative AI Apps with Microsoft Foundry", text: "Model selection, deployment, chat apps with tools, and evaluation" },
+      { title: "AI Agents on Azure", text: "Microsoft Agent Framework, custom and MCP tools, Foundry IQ, and Microsoft 365 integration" },
+      { title: "Language, Speech & Vision", text: "Text analysis, speech and voice agents, translation, and image and video generation" },
+      { title: "Information Extraction & Knowledge Mining", text: "Content Understanding, Document Intelligence, and Azure AI Search" },
+      { title: "MLOps with Azure Machine Learning", text: "Experiments, MLflow tracking, pipelines, and deployment with GitHub Actions" },
+      { title: "GenAIOps & Responsible AI", text: "Prompt management, automated evaluations, monitoring, and tracing" },
     ],
     levels: ["Beginner", "Intermediate", "Advanced"],
     certs: [
@@ -248,9 +255,13 @@ export default function TrainingTracks() {
       <section className="py-14 md:py-20 border-b border-[var(--border-subtle)]">
         <div className="flex flex-col gap-3 mb-10 max-w-2xl">
           <p className={`${labelClass} text-[var(--color-brand)]`}>Training tracks</p>
-          <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+          <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
             The Microsoft data &amp; AI stack, taught by people who build on it.
-          </h2>
+          </h1>
+          <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
+            Official Microsoft courses and custom programs on Fabric, Power BI, Databricks, AI and Power Platform — taught by
+            Microsoft Certified Trainers who build these solutions every day.
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
