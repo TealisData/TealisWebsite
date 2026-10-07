@@ -32,6 +32,9 @@ interface Particle {
   baseY: number;
   // 0 at the spine/center, 1 at the outer edge: drives the intro stagger
   spread: number;
+  // Book dots: position in the closed book (flat block with a rounded spine)
+  closedX: number;
+  closedY: number;
   x: number;
   y: number;
   vx: number;
@@ -147,7 +150,7 @@ export default function CanvasParticleBackground() {
             // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
             if (inBook && x > logoX + targetW - step * 1.5) continue;
             pts.push({
-              baseX: x, baseY: y, spread: 0,
+              baseX: x, baseY: y, spread: 0, closedX: x, closedY: y,
               x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
             });
@@ -182,27 +185,63 @@ export default function CanvasParticleBackground() {
       const maxDx = Math.max(1, ...particles.map(p => Math.abs(p.baseX - spineX)));
       for (const p of particles) p.spread = Math.abs(p.baseX - spineX) / maxDx;
 
+      // Closed book, seen edge-on: a flat block with a rounded spine on the right.
+      // Left page = lower layer, cover (right half, flipped over the spine) = upper layer.
+      // Rows are packed against the spine; the dots of the central fold form the rounded spine.
+      const slabH = (795.375 - 713.023) * scale; // page thickness (RAW_PATH_BOOK)
+      const rows = new Map<string, Particle[]>();
+      const fold: Particle[] = [];
+      for (const p of particles) {
+        if (p.isRoof) continue;
+        if (p.baseY - bookTopY > slabH) { fold.push(p); continue; }
+        const key = `${p.baseX > spineX ? "R" : "L"}${Math.round(p.baseY)}`;
+        if (!rows.has(key)) rows.set(key, []);
+        rows.get(key)!.push(p);
+      }
+      for (const [key, row] of rows) {
+        const right = key.startsWith("R");
+        // nearest to the spine first
+        row.sort((a, b) => Math.abs(a.baseX - spineX) - Math.abs(b.baseX - spineX));
+        row.forEach((p, k) => {
+          const dy = p.baseY - bookTopY;
+          p.closedX = spineX - step / 2 - k * step;
+          p.closedY = right ? bookTopY - dy - step / 2 : bookTopY + dy + step / 2;
+        });
+      }
+      // Rounded spine: a half-ellipse right of the block, spanning its full thickness
+      fold.sort((a, b) => a.baseX - b.baseX);
+      fold.forEach((p, i) => {
+        const a = -Math.PI / 2 + (Math.PI * (i + 0.5)) / fold.length;
+        p.closedX = spineX + Math.cos(a) * slabH * 0.6;
+        p.closedY = bookTopY + Math.sin(a) * (slabH + step / 2);
+      });
+
       // Thin "pages" for the riffle: the top row of the right half
       topRow = particles.filter(p => !p.isRoof && p.baseX > spineX && p.baseY - bookTopY < step);
       for (const p of particles) {
         if (p.isRoof) continue;
-        const pos = p.baseX > spineX ? rotateAroundSpine(p, Math.PI) : { x: p.baseX, y: p.baseY };
-        p.x = pos.x;
-        p.y = pos.y;
+        p.x = p.closedX;
+        p.y = p.closedY;
       }
     }
 
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
     /**
-     * Rigid rotation of a right-half dot around the spine pivot (spine x, book top edge).
-     * angle 0 = flat on the right (open), π = flipped onto the left half (closed); the path
-     * goes over the top, through the upright position at π/2.
+     * Cover dot at opening progress e (0 = closed, 1 = flat on the right).
+     * Its shape relative to the spine pivot morphs from the closed block to the open page while
+     * the whole cover rotates rigidly from π (flipped over) through upright to 0 (flat).
      */
-    function rotateAroundSpine(p: Particle, angle: number) {
-      const dx = p.baseX - spineX;
-      const dy = p.baseY - bookTopY;
+    function coverPosition(p: Particle, e: number, closedX = p.closedX, closedY = p.closedY) {
+      // Closed position expressed in the cover's own (unrotated) frame: undo the π rotation
+      const cx = -(closedX - spineX);
+      const cy = -(closedY - bookTopY);
+      const lx = lerp(cx, p.baseX - spineX, e);
+      const ly = lerp(cy, p.baseY - bookTopY, e);
+      const angle = Math.PI * (1 - e);
       const c = Math.cos(angle);
       const s = Math.sin(angle);
-      return { x: spineX + dx * c + dy * s, y: bookTopY - dx * s + dy * c };
+      return { x: spineX + lx * c + ly * s, y: bookTopY - lx * s + ly * c };
     }
 
     function render(timestamp: number) {
@@ -239,13 +278,15 @@ export default function CanvasParticleBackground() {
             if (p.baseX > spineX) {
               // Right half (cover): rotates around the spine from closed to flat
               const t = clamp01((elapsed - FADE_IN / 2 - p.spread * BOOK_BEND) / BOOK_DURATION);
-              const pos = rotateAroundSpine(p, Math.PI * (1 - easeInOutCubic(t)));
+              const pos = coverPosition(p, easeInOutCubic(t));
               p.x = pos.x;
               p.y = pos.y;
             } else {
-              // Left half lies still on the table
-              p.x = p.baseX;
-              p.y = p.baseY;
+              // Left half: the lower layer settles into the open left page
+              const t = clamp01((elapsed - FADE_IN / 2 - p.spread * BOOK_BEND) / BOOK_DURATION);
+              const e = easeInOutCubic(t);
+              p.x = lerp(p.closedX, p.baseX, e);
+              p.y = lerp(p.closedY, p.baseY, e);
             }
             alpha = fade;
           }
@@ -282,7 +323,7 @@ export default function CanvasParticleBackground() {
           for (const p of topRow) {
             const t = clamp01((elapsed - start - p.spread * BOOK_BEND) / RIFFLE_DURATION);
             if (t === 0 || t === 1) continue;
-            const pos = rotateAroundSpine(p, Math.PI * (1 - easeInOutCubic(t)));
+            const pos = coverPosition(p, easeInOutCubic(t));
             ctx.globalAlpha = RIFFLE_ALPHA * Math.sin(Math.PI * t);
             ctx.beginPath();
             ctx.arc(pos.x, pos.y, p.radius, 0, Math.PI * 2);
