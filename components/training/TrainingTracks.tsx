@@ -169,7 +169,7 @@ type Group = {
 const GROUPS: Group[] = [
   {
     id: "data",
-    title: "Data platforms",
+    title: "Data stack",
     icon: <Layers size={20} />,
     summary: "Storage, ingestion, data warehousing, data modeling and BI across the Microsoft data stack.",
     items: [
