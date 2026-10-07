@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Award, GraduationCap, MonitorPlay, Target } from "lucide-react";
+import { GraduationCap, MonitorPlay, Target } from "lucide-react";
 import TrainingHeroArt from "@/components/training/TrainingHeroArt";
 import TrainingTracks from "@/components/training/TrainingTracks";
 import ContactButton from "@/components/training/ContactButton";
@@ -9,13 +9,6 @@ export const metadata: Metadata = {
   description:
     "Official Microsoft courses and custom programs on Microsoft Fabric, Power BI, Azure Databricks, AI & Copilot and Power Platform — led by Microsoft Certified Trainers.",
 };
-
-const STATS = [
-  { value: "8", label: "Active Microsoft certifications" },
-  { value: "12", label: "Microsoft exams passed" },
-  { value: "2021", label: "Delivering official Microsoft training since" },
-  { value: "MCT", label: "Microsoft Certified Trainers" },
-];
 
 const FORMATS = [
   {
@@ -33,22 +26,6 @@ const FORMATS = [
     title: "Certification preparation",
     text: "Gap analysis, exam-style practice and a clear plan to pass with confidence.",
   },
-];
-
-const CERTIFICATIONS = [
-  "Fabric Analytics Engineer Associate",
-  "Fabric Data Engineer Associate",
-  "Power BI Data Analyst Associate",
-  "AI Transformation Leader",
-  "AI Business Professional",
-  "Azure AI Fundamentals",
-  "Azure Data Fundamentals",
-  "Power Platform Fundamentals",
-];
-
-const TRAINERS = [
-  { name: "Luca Canonico", role: "End-to-End Data Architect · Microsoft Certified Trainer", photo: "/team/luca.png" },
-  { name: "Gabriele Nicosia", role: "Business Developer · Microsoft Certified Trainer", photo: "/team/gabriele.png" },
 ];
 
 const labelClass = "text-xs font-semibold uppercase tracking-widest";
@@ -79,18 +56,6 @@ export default function TrainingPage() {
           </div>
         </section>
 
-        {/* ── Stats ── */}
-        <section className="grid grid-cols-2 md:grid-cols-4 gap-6 py-10 md:py-12 border-b border-[var(--border-subtle)]">
-          {STATS.map((s) => (
-            <div key={s.label} className="flex flex-col gap-1">
-              <span className="text-3xl md:text-4xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
-                {s.value}
-              </span>
-              <span className="text-sm text-[var(--text-muted)] leading-snug">{s.label}</span>
-            </div>
-          ))}
-        </section>
-
         <TrainingTracks />
 
         {/* ── Delivery formats ── */}
@@ -109,48 +74,6 @@ export default function TrainingPage() {
                 <p className="text-sm text-[var(--text-muted)] leading-relaxed">{f.text}</p>
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* ── Trainers & certifications ── */}
-        <section className="py-14 md:py-20 border-b border-[var(--border-subtle)] grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-3">
-              <p className={`${labelClass} text-[var(--color-brand)]`}>Your trainers</p>
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
-                Practitioners, not just instructors.
-              </h2>
-              <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed max-w-lg">
-                We design and deliver real projects on the platforms we teach — so every course comes with the lessons
-                learned in production.
-              </p>
-            </div>
-            <div className="flex flex-col gap-4">
-              {TRAINERS.map((t) => (
-                <div key={t.name} className="flex items-center gap-4">
-                  <img src={t.photo} alt={t.name} width={64} height={64} className="w-16 h-16 rounded-full object-cover border border-[var(--border-subtle)]" />
-                  <div className="flex flex-col">
-                    <span className="text-base font-semibold text-[var(--text-primary)]">{t.name}</span>
-                    <span className="text-sm text-[var(--text-muted)]">{t.role}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 md:p-8 flex flex-col gap-5 self-start">
-            <div className="flex items-center gap-3">
-              <Award size={20} className="text-[var(--color-brand)]" />
-              <p className={`${labelClass} text-[var(--text-muted)]`}>Active Microsoft certifications</p>
-            </div>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
-              {CERTIFICATIONS.map((c) => (
-                <li key={c} className="flex items-start gap-3 text-sm text-[var(--text-primary)]">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
-                  Microsoft Certified: {c}
-                </li>
-              ))}
-            </ul>
           </div>
         </section>
 
