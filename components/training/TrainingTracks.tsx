@@ -1,15 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ArrowRight, Bot, ChartColumnBig, Database, Layers, Users, Workflow, Wrench } from "lucide-react";
+import { Bot, Code2, Layers } from "lucide-react";
 import TrainingHeroArt from "@/components/training/TrainingHeroArt";
 
 type Track = {
   id: string;
   label: string;
-  category: string;
-  icon: React.ReactNode;
-  summary: string;
   headline: string;
   description: string;
   modules: string[];
@@ -21,9 +18,6 @@ const TRACKS: Track[] = [
   {
     id: "fabric",
     label: "Microsoft Fabric",
-    category: "Data platform",
-    icon: <Layers size={20} />,
-    summary: "Lakehouses, pipelines, notebooks and semantic models in one governed environment.",
     headline: "One platform, end to end.",
     description:
       "Learn to design and run analytics on Microsoft Fabric — from ingestion and Lakehouse design to Spark engineering, real-time data and semantic models that Power BI can trust.",
@@ -34,6 +28,7 @@ const TRACKS: Track[] = [
       "Spark notebooks & data engineering",
       "Real-time intelligence",
       "Semantic models & Power BI in Fabric",
+      "Governance with Microsoft Purview",
     ],
     levels: ["Intermediate", "Advanced"],
     certs: ["DP-600 · Fabric Analytics Engineer Associate", "DP-700 · Fabric Data Engineer Associate"],
@@ -41,9 +36,6 @@ const TRACKS: Track[] = [
   {
     id: "power-bi",
     label: "Power BI",
-    category: "Analytics",
-    icon: <ChartColumnBig size={20} />,
-    summary: "From Power Query to certified analyst — modeling, DAX and reports people use.",
     headline: "From data to decisions.",
     description:
       "The full Power BI workflow: shaping data with Power Query and M, building solid models, writing DAX with confidence, and publishing secure reports your business actually uses.",
@@ -61,9 +53,6 @@ const TRACKS: Track[] = [
   {
     id: "databricks",
     label: "Azure Databricks",
-    category: "Data engineering",
-    icon: <Database size={20} />,
-    summary: "Delta Lake, Delta Live Tables and Workflows for production-grade pipelines.",
     headline: "Lakehouse engineering at scale.",
     description:
       "Hands-on data engineering on Azure Databricks: reliable Delta tables, declarative pipelines, orchestrated workloads and the Python and SQL skills to run them.",
@@ -80,17 +69,14 @@ const TRACKS: Track[] = [
   {
     id: "ai",
     label: "AI & Copilot",
-    category: "Artificial intelligence",
-    icon: <Bot size={20} />,
-    summary: "Copilot, Azure AI Foundry and Azure ML — from business value to working solutions.",
     headline: "Put AI to work, responsibly.",
     description:
-      "From identifying where generative AI creates value to building with Copilot Studio, Azure AI Foundry and Azure Machine Learning — with governance and responsible AI built in.",
+      "From identifying where generative AI creates value to building with Copilot Studio, Microsoft Foundry and Azure Machine Learning — with governance and responsible AI built in.",
     modules: [
       "Business value of generative AI",
       "Microsoft 365 Copilot in daily work",
       "Building agents with Copilot Studio",
-      "Azure AI Foundry",
+      "Microsoft Foundry",
       "Azure Machine Learning fundamentals",
       "Responsible AI & governance",
     ],
@@ -107,9 +93,6 @@ const TRACKS: Track[] = [
   {
     id: "power-platform",
     label: "Power Platform",
-    category: "Low-code & automation",
-    icon: <Workflow size={20} />,
-    summary: "Power Apps, Power Automate and Power Fx — apps and flows your team can own.",
     headline: "Apps and automation, built by your team.",
     description:
       "Practical low-code training: build apps with Power Apps and Power Fx, automate processes with Power Automate, and keep it all governed and maintainable.",
@@ -126,9 +109,6 @@ const TRACKS: Track[] = [
   {
     id: "custom",
     label: "Custom Programs",
-    category: "Tailored",
-    icon: <Wrench size={20} />,
-    summary: "Curricula built on your tools, your data and your business context.",
     headline: "Training built around your stack.",
     description:
       "Not everything fits a standard curriculum. We design programs around your real infrastructure and data — delivered in the format that works best for your team, in person or remote.",
@@ -145,9 +125,6 @@ const TRACKS: Track[] = [
   {
     id: "on-the-job",
     label: "Training on the Job",
-    category: "Learning by doing",
-    icon: <Users size={20} />,
-    summary: "We build alongside your team on a real project — and leave the skills behind.",
     headline: "Learn while you ship.",
     description:
       "We embed with your team during a real project, as implementers and coaches. Your people deliver the work and build the skills at the same time — no black boxes.",
@@ -163,11 +140,59 @@ const TRACKS: Track[] = [
   },
 ];
 
-// Bento layout on desktop: wide tiles for the flagship and the hands-on format
-const SPAN: Record<string, string> = {
-  fabric: "md:col-span-2",
-  "on-the-job": "md:col-span-2",
+type Group = {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  summary: string;
+  // track: the program tab that covers this technology, if any
+  items: { name: string; track?: string }[];
 };
+
+const GROUPS: Group[] = [
+  {
+    id: "data",
+    title: "Data platforms",
+    icon: <Layers size={20} />,
+    summary: "Architecture, engineering, modeling and governance across the Microsoft data stack.",
+    items: [
+      { name: "Microsoft Fabric", track: "fabric" },
+      { name: "Power BI", track: "power-bi" },
+      { name: "Azure Data Factory", track: "fabric" },
+      { name: "Azure Databricks", track: "databricks" },
+      { name: "SQL Server & Azure SQL" },
+      { name: "dbt" },
+      { name: "Microsoft Purview", track: "fabric" },
+    ],
+  },
+  {
+    id: "ai",
+    title: "AI & automation",
+    icon: <Bot size={20} />,
+    summary: "From Copilot adoption to custom agents, machine learning and low-code automation.",
+    items: [
+      { name: "Microsoft 365 Copilot", track: "ai" },
+      { name: "Copilot Studio", track: "ai" },
+      { name: "Microsoft Foundry", track: "ai" },
+      { name: "Azure Machine Learning", track: "ai" },
+      { name: "Power Apps", track: "power-platform" },
+      { name: "Power Automate", track: "power-platform" },
+    ],
+  },
+  {
+    id: "languages",
+    title: "Languages",
+    icon: <Code2 size={20} />,
+    summary: "The languages behind every model, pipeline and app we build.",
+    items: [
+      { name: "DAX", track: "power-bi" },
+      { name: "Power Query M", track: "power-bi" },
+      { name: "SQL", track: "fabric" },
+      { name: "Python", track: "databricks" },
+      { name: "Power Fx", track: "power-platform" },
+    ],
+  },
+];
 
 const labelClass = "text-xs font-semibold uppercase tracking-widest";
 
@@ -194,35 +219,47 @@ export default function TrainingTracks() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {TRACKS.map((t) => {
-            const featured = t.id === "fabric";
+          {GROUPS.map((g, i) => {
+            const featured = i === 0;
+            const chip = featured
+              ? "border-current/20 hover:border-[var(--color-brand)]"
+              : "border-[var(--border-subtle)] bg-[var(--bg-primary)] hover:border-[var(--color-brand)]";
             return (
-              <button
-                key={t.id}
-                onClick={() => explore(t.id)}
-                className={`group relative overflow-hidden text-left rounded-[var(--radius-lg)] border p-6 md:p-8 flex flex-col gap-4 min-h-[240px] transition-shadow hover:shadow-[var(--shadow-card-hover)] ${SPAN[t.id] ?? ""} ${
+              <div
+                key={g.id}
+                className={`relative overflow-hidden rounded-[var(--radius-lg)] border p-6 md:p-8 flex flex-col gap-5 ${
                   featured
                     ? "bg-[var(--color-dark)] text-[var(--bg-primary)] border-transparent"
                     : "bg-[var(--bg-surface)] text-[var(--text-primary)] border-[var(--border-subtle)]"
                 }`}
               >
                 {featured && (
-                  <TrainingHeroArt id="training-art-tile" className="absolute inset-y-0 right-0 w-2/3 h-full opacity-60 pointer-events-none" />
+                  <TrainingHeroArt id="training-art-tile" className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
                 )}
-                <div className="relative flex items-center gap-3">
-                  <span className="text-[var(--color-brand)]">{t.icon}</span>
-                  <span className={`${labelClass} ${featured ? "opacity-70" : "text-[var(--text-primary)]/60"}`}>{t.category}</span>
-                </div>
-                <div className="relative flex flex-col gap-2 max-w-md">
+                <div className="relative flex flex-col gap-3">
+                  <span className="text-[var(--color-brand)]">{g.icon}</span>
                   <h3 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
-                    {t.label}
+                    {g.title}
                   </h3>
-                  <p className={`text-sm leading-relaxed ${featured ? "opacity-80" : "text-[var(--text-primary)]/70"}`}>{t.summary}</p>
+                  <p className={`text-sm leading-relaxed ${featured ? "opacity-80" : "text-[var(--text-primary)]/70"}`}>{g.summary}</p>
                 </div>
-                <div className="relative mt-auto flex justify-end">
-                  <ArrowRight size={18} className="shrink-0 text-[var(--color-brand)] transition-transform group-hover:translate-x-1" />
-                </div>
-              </button>
+                <ul className="relative flex flex-wrap gap-2">
+                  {g.items.map((it) => (
+                    <li key={it.name}>
+                      {it.track ? (
+                        <button
+                          onClick={() => explore(it.track!)}
+                          className={`px-3 py-1.5 text-sm rounded-md border transition-colors ${chip}`}
+                        >
+                          {it.name}
+                        </button>
+                      ) : (
+                        <span className={`inline-block px-3 py-1.5 text-sm rounded-md border ${chip.split(" hover:")[0]}`}>{it.name}</span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             );
           })}
         </div>
