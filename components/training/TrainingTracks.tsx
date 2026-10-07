@@ -150,38 +150,6 @@ const TRACKS: Track[] = [
       "AI-300 · Machine Learning Operations Engineer Associate",
     ],
   },
-  {
-    id: "custom",
-    label: "Custom Programs",
-    headline: "Training built around your stack.",
-    description:
-      "Not everything fits a standard curriculum. We design programs around your real infrastructure and data — delivered in the format that works best for your team, in person or remote.",
-    modules: [
-      "Requirements discovery workshop",
-      "Custom curriculum design",
-      "Exercises on your real data",
-      "In-person or remote delivery",
-      "Follow-up Q&A sessions",
-    ],
-    levels: ["All levels"],
-    certs: [],
-  },
-  {
-    id: "on-the-job",
-    label: "Training on the Job",
-    headline: "Learn while you ship.",
-    description:
-      "We embed with your team during a real project, as implementers and coaches. Your people deliver the work and build the skills at the same time — no black boxes.",
-    modules: [
-      "Joint project scoping",
-      "Side-by-side implementation",
-      "Code & design reviews",
-      "Weekly debriefs",
-      "Documentation & knowledge base",
-    ],
-    levels: ["Intermediate", "Advanced"],
-    certs: [],
-  },
 ];
 
 type Group = {

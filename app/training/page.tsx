@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { GraduationCap, MonitorPlay, Target } from "lucide-react";
+import { GraduationCap, Users, Wrench } from "lucide-react";
 import TrainingTracks from "@/components/training/TrainingTracks";
 import ContactButton from "@/components/training/ContactButton";
 
@@ -11,19 +11,26 @@ export const metadata: Metadata = {
 
 const FORMATS = [
   {
-    icon: <MonitorPlay size={20} />,
-    title: "Official Microsoft courses",
-    text: "Instructor-led Microsoft curriculum, in the classroom or remote, with hands-on labs.",
-  },
-  {
-    icon: <Target size={20} />,
-    title: "Programs on your data",
-    text: "Exercises built on your own tools and datasets, so skills transfer straight to the job.",
-  },
-  {
     icon: <GraduationCap size={20} />,
-    title: "Certification preparation",
-    text: "Gap analysis, exam-style practice and a clear plan to pass with confidence.",
+    title: "Official Microsoft courses",
+    text: "Instructor-led Microsoft curriculum, delivered by Microsoft Certified Trainers.",
+    points: [
+      "Classroom or remote delivery",
+      "Hands-on labs",
+      "Certification preparation: gap analysis, exam-style practice and a clear plan to pass",
+    ],
+  },
+  {
+    icon: <Wrench size={20} />,
+    title: "Custom programs",
+    text: "Training designed around your tools, your data and your business context.",
+    points: ["Discovery workshop on your needs", "Curriculum built on your stack", "Exercises on your real data", "Follow-up Q&A sessions"],
+  },
+  {
+    icon: <Users size={20} />,
+    title: "Training on the job",
+    text: "We build alongside your team on a real project — and leave the skills behind.",
+    points: ["Side-by-side implementation", "Code & design reviews", "Weekly debriefs", "Documentation & knowledge base"],
   },
 ];
 
@@ -50,6 +57,14 @@ export default function TrainingPage() {
                 <span className="text-[var(--color-brand)]">{f.icon}</span>
                 <h3 className="text-lg font-semibold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>{f.title}</h3>
                 <p className="text-sm text-[var(--text-muted)] leading-relaxed">{f.text}</p>
+                <ul className="flex flex-col gap-2 mt-1">
+                  {f.points.map((pt) => (
+                    <li key={pt} className="flex items-start gap-3 text-sm text-[var(--text-primary)]">
+                      <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>

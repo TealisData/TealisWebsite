@@ -41,7 +41,8 @@ app/
   page.tsx            — Home (particle background, hero text)
   consulting/page.tsx — Consulting Services (split layout desktop, overlay mobile)
   training/page.tsx   — Training Programs: track groups (Data stack / Business apps / AI & agents) + tabbed
-                        program explorer (components/training/), delivery formats, CTA
+                        program explorer for the five technology programs (components/training/),
+                        How we teach: official courses + cert prep, custom programs, training on the job; CTA
   about/page.tsx      — Team profiles (Gabriele + Luca)
   contact/page.tsx    — Contact page
   privacy-policy/     — Privacy policy (updated Sept 2026 for GA4)
