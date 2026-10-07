@@ -42,7 +42,7 @@ app/
   consulting/page.tsx — Consulting: same structure as Training (groups + service explorer, How we work, CTA)
   training/page.tsx   — Training: track groups + program explorer, How we teach, CTA
   about/page.tsx      — Team profiles (Gabriele + Luca)
-  contact/page.tsx    — Contact page
+  contact/page.tsx    — Contact: intro, 3 cards (book a meeting / message / LinkedIn), What happens next
   privacy-policy/     — Privacy policy (updated Sept 2026 for GA4)
   cookie-policy/      — Cookie policy (updated Sept 2026 for GA4)
   globals.css         — CSS variables / design tokens
