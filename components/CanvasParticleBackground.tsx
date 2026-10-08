@@ -151,14 +151,30 @@ export default function CanvasParticleBackground() {
             const inRoof = off.isPointInPath(pathRoof, x, y);
             const inBook = !inRoof && off.isPointInPath(pathBook, x, y);
             if (!inRoof && !inBook) continue;
-            // The book's thin outer tips produce stray dots; trim both sides equally
-            if (inBook && Math.abs(x - axis) > halfW - step * 1.5) continue;
             pts.push({
               baseX: x, baseY: y, spread: 0, closedX: x, closedY: y,
               x, y, vx: 0, vy: 0,
               isRoof: inRoof, radius: 2, density: 25,
             });
           }
+        }
+        // The shape's thin extremities are narrower than the grid, so the grid misses them.
+        // Anchor one dot just inside each (raw logo coordinates), unless a dot is already close.
+        const toY = (ry: number) => logoY + (ry - 319) * scale;
+        const inset = step * 0.35;
+        const anchors: { x: number; y: number; isRoof: boolean }[] = [
+          { x: axis - halfW + inset * 1.6, y: toY(795.375) - inset, isRoof: false }, // book left tail
+          { x: axis + halfW - inset * 1.6, y: toY(795.375) - inset, isRoof: false }, // book right tail
+          { x: axis, y: toY(850.3) - inset, isRoof: false }, // V tip under the spine
+          { x: axis, y: toY(325.3) + inset, isRoof: true }, // roof apex
+        ];
+        for (const a of anchors) {
+          if (pts.some(p => p.isRoof === a.isRoof && Math.hypot(p.baseX - a.x, p.baseY - a.y) < step * 0.75)) continue;
+          pts.push({
+            baseX: a.x, baseY: a.y, spread: 0, closedX: a.x, closedY: a.y,
+            x: a.x, y: a.y, vx: 0, vy: 0,
+            isRoof: a.isRoof, radius: 2, density: 25,
+          });
         }
         return { pts, logoX, logoY, scale };
       }
