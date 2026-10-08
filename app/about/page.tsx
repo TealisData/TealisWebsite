@@ -30,8 +30,8 @@ const TEAM = [
     // Replace with actual photo: photo: "/team/gabriele.jpg"
     photo: "/team/gabriele.png" as string | null,
     bio: [
-      "I help organizations find the right data solution for their context — and then make sure it actually happens. My background spans communication, business development and consulting, which is what brought me to the Microsoft data ecosystem.",
-      "I'm a Microsoft Certified Trainer and currently also teach data analysis. At Tealisdata I handle client relationships, business development and training.",
+      "I help organizations find the right data solution for their context — and then make sure it actually happens.",
+      "With a background in communication, business development and consulting, I bridge business needs and technology. As a Microsoft Certified Trainer who also teaches data analysis, I know the tools we recommend from the inside. At Tealisdata I'm your main point of contact, from the first conversation to training your team.",
     ],
   },
   {
