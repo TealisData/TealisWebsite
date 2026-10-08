@@ -5,22 +5,6 @@ export const metadata: Metadata = {
   description: "We are a team of certified Microsoft specialists based in Tallinn, Estonia.",
 };
 
-const SKILLS = [
-  "Microsoft Fabric",
-  "Power BI",
-  "Azure Data Factory",
-  "Azure Databricks",
-  "Microsoft Copilot",
-  "Purview",
-  "SQL Server",
-  "Power Platform",
-  "Azure ML",
-  "dbt",
-  "Python",
-  "DAX",
-  "Data Governance",
-];
-
 const TEAM = [
   {
     initials: "GN",
@@ -129,21 +113,6 @@ export default function AboutPage() {
               </a>
             </div>
           ))}
-        </div>
-
-        {/* Shared skills */}
-        <div className="border-t border-[var(--border-subtle)] py-8 shrink-0">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--text-muted)] mb-4">Skills</p>
-          <div className="flex flex-wrap gap-2">
-            {SKILLS.map((skill) => (
-              <span
-                key={skill}
-                className="text-xs px-3 py-1.5 rounded-full border border-[var(--border-subtle)] text-[var(--text-muted)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand-text)] transition-colors"
-              >
-                {skill}
-              </span>
-            ))}
-          </div>
         </div>
 
       </div>
