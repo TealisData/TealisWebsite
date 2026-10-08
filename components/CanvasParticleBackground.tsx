@@ -143,7 +143,6 @@ export default function CanvasParticleBackground() {
         // Logo is symmetric about the spine (raw x≈750): put a grid column exactly on the spine so
         // both halves — and the central V — are sampled as mirror images
         const axis = logoX + (749.957 - 118) * scale;
-        const halfW = (1381.226 - 749.957) * scale;
         const x0 = axis - Math.ceil((axis - logoX) / step) * step;
         const y0 = Math.max(0, Math.floor(logoY / step) * step);
         for (let y = y0; y < Math.min(h, logoY + 541 * scale + step); y += step) {
