@@ -55,7 +55,7 @@ export default function AboutPage() {
               key={member.name}
               className={`flex-1 flex flex-col py-10 ${
                 i === 0
-                  ? "lg:pr-12 lg:border-r border-[var(--border-subtle)]"
+                  ? "lg:pr-12"
                   : "lg:pl-12"
               }`}
             >
