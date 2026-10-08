@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import CanvasParticleBackground from "@/components/CanvasParticleBackground";
 
 function FadeIn({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -25,8 +26,6 @@ const PILLARS = [
 ];
 
 export default function HomePage() {
-  const openContact = () => window.dispatchEvent(new CustomEvent("tealis:open-contact"));
-
   return (
     <div className="relative flex-1 flex flex-col overflow-hidden">
       <div className="hidden md:block">
@@ -65,9 +64,9 @@ export default function HomePage() {
 
             <FadeIn delay={0.25}>
               <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
-                <button onClick={openContact} className="text-[var(--color-brand)] hover:underline">
+                <Link href="/contact/meet" className="text-[var(--color-brand)] hover:underline">
                   Book a meeting
-                </button>
+                </Link>
                 {" "}or{" "}
                 <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand)] hover:underline">
                   send us an email
