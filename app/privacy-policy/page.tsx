@@ -78,6 +78,11 @@ export default function PrivacyPolicyPage() {
               Our website is hosted on Vercel Inc. (USA). Data transfers to the US are covered by
               Vercel&apos;s Standard Contractual Clauses pursuant to EU Commission Decision 2021/914.
             </p>
+            <p>
+              Messages sent through our contact form are delivered to our inbox by Web3Forms, a
+              form-to-email service, and may be processed outside the EU. We do not store contact
+              form submissions on our website.
+            </p>
           </section>
 
           <section className="flex flex-col gap-3">

@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, AlertCircle } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+
+// Web3Forms delivers each submission by email to info@tealisdata.com.
+// The access key is public by design (it only allows sending to that inbox).
+const WEB3FORMS_ACCESS_KEY = "a9b3448c-ea54-437d-bdf0-dbcd758b86d7";
 
 interface FormData {
   firstName: string;
@@ -59,6 +62,8 @@ export default function ContactDrawer() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Spam trap: hidden from people, bots tend to fill it; Web3Forms rejects submissions where it is set
+  const [honeypot, setHoneypot] = useState(false);
 
   useEffect(() => {
     const handler = () => setOpen(true);
@@ -89,17 +94,33 @@ export default function ContactDrawer() {
     }
     setLoading(true);
     setSubmitError(null);
-    const { error } = await supabase.from("contact_requests").insert({
-      first_name: form.firstName,
-      last_name: form.lastName,
-      email: form.email,
-      message: form.message,
-      country_code: form.countryCode || null,
-      mobile: form.mobile || null,
-    });
+    const name = `${form.firstName.trim()} ${form.lastName.trim()}`;
+    const phone = form.mobile.trim() ? `${form.countryCode.replace("-CA", "")} ${form.mobile.trim()}` : "—";
+    let ok = false;
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `New contact request from tealisdata.com — ${name}`,
+          from_name: "Tealis website",
+          replyto: form.email.trim(),
+          botcheck: honeypot,
+          Name: name,
+          Email: form.email.trim(),
+          Phone: phone,
+          Message: form.message.trim(),
+        }),
+      });
+      const data = await res.json();
+      ok = res.ok && data.success === true;
+    } catch {
+      ok = false;
+    }
     setLoading(false);
-    if (error) {
-      setSubmitError("Something went wrong. Please try again.");
+    if (!ok) {
+      setSubmitError("Something went wrong. Please try again or email us at info@tealisdata.com.");
       return;
     }
     setSubmitted(true);
@@ -185,6 +206,16 @@ export default function ContactDrawer() {
                   </motion.div>
                 ) : (
                   <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
+                    <input
+                      type="checkbox"
+                      name="botcheck"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="hidden"
+                      checked={honeypot}
+                      onChange={(e) => setHoneypot(e.target.checked)}
+                    />
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className={labelClass}>
