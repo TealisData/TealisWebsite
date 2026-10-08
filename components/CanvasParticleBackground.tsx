@@ -140,15 +140,19 @@ export default function CanvasParticleBackground() {
         off.translate(-118, -319);
 
         const pts: Particle[] = [];
-        const x0 = Math.floor(logoX / step) * step;
+        // Logo is symmetric about the spine (raw x≈750): put a grid column exactly on the spine so
+        // both halves — and the central V — are sampled as mirror images
+        const axis = logoX + (749.957 - 118) * scale;
+        const halfW = (1381.226 - 749.957) * scale;
+        const x0 = axis - Math.ceil((axis - logoX) / step) * step;
         const y0 = Math.max(0, Math.floor(logoY / step) * step);
         for (let y = y0; y < Math.min(h, logoY + 541 * scale + step); y += step) {
           for (let x = x0; x < logoX + targetW + step; x += step) {
             const inRoof = off.isPointInPath(pathRoof, x, y);
             const inBook = !inRoof && off.isPointInPath(pathBook, x, y);
             if (!inRoof && !inBook) continue;
-            // The SVG book path has an extreme-right tip at logoX+targetW that produces stray dots on wider screens
-            if (inBook && x > logoX + targetW - step * 1.5) continue;
+            // The book's thin outer tips produce stray dots; trim both sides equally
+            if (inBook && Math.abs(x - axis) > halfW - step * 1.5) continue;
             pts.push({
               baseX: x, baseY: y, spread: 0, closedX: x, closedY: y,
               x, y, vx: 0, vy: 0,
