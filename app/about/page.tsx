@@ -44,7 +44,7 @@ export default function AboutPage() {
             className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            The team.
+            Meet the founders.
           </h1>
         </div>
 
