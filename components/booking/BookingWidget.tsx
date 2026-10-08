@@ -120,10 +120,10 @@ export default function BookingWidget() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
       {/* ── Summary ── */}
-      <aside className="relative overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-dark)] text-[var(--bg-primary)] p-6 md:p-8 flex flex-col gap-5">
+      <aside className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-feature)] bg-[var(--bg-feature)] text-[var(--text-on-feature)] p-6 md:p-8 flex flex-col gap-5">
         <WaveArt id="wave-art-booking" className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
         <div className="relative flex flex-col gap-3">
-          <CalendarDays size={20} className="text-[var(--color-brand)]" />
+          <CalendarDays size={20} className="text-[var(--color-brand-text)]" />
           <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
             {data?.serviceName ?? "Discovery call"}
           </h2>
@@ -148,7 +148,7 @@ export default function BookingWidget() {
       <div ref={panelRef} className={`${cardClass} p-6 md:p-8 min-h-[420px] scroll-mt-20`}>
         {loadError ? (
           <div className="flex flex-col items-start gap-4 max-w-md">
-            <AlertCircle size={24} className="text-[var(--color-brand)]" />
+            <AlertCircle size={24} className="text-[var(--color-brand-text)]" />
             <h3 className="text-lg font-semibold text-[var(--text-primary)]">Online booking is temporarily unavailable</h3>
             <p className="text-sm text-[var(--text-muted)] leading-relaxed">
               You can still pick a time on our Microsoft Bookings page, or send us a message and we&apos;ll get back to you within one business day.
@@ -165,7 +165,7 @@ export default function BookingWidget() {
         ) : step === "done" && slot ? (
           <div className="flex flex-col items-start gap-4 max-w-md">
             <div className="w-12 h-12 rounded-full bg-[var(--color-brand)]/10 flex items-center justify-center">
-              <CheckCircle2 size={26} className="text-[var(--color-brand)]" />
+              <CheckCircle2 size={26} className="text-[var(--color-brand-text)]" />
             </div>
             <h3 className="text-2xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>You&apos;re booked!</h3>
             <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
@@ -175,7 +175,7 @@ export default function BookingWidget() {
           </div>
         ) : step === "details" && slot ? (
           <form onSubmit={submit} className="flex flex-col gap-5 max-w-xl" noValidate>
-            <button type="button" onClick={() => { setStep("pick"); setError(null); }} className="self-start flex items-center gap-1 text-sm text-[var(--color-brand)] hover:underline">
+            <button type="button" onClick={() => { setStep("pick"); setError(null); }} className="self-start flex items-center gap-1 text-sm text-[var(--color-brand-text)] hover:underline">
               <ChevronLeft size={16} /> Change time
             </button>
             <h3 className="text-lg font-semibold text-[var(--text-primary)]">Your details</h3>
@@ -253,7 +253,7 @@ export default function BookingWidget() {
                           onClick={() => { setDay(key); setError(null); }}
                           className={`aspect-square max-h-12 w-full rounded-lg text-sm transition-colors ${
                             selected
-                              ? "bg-[var(--color-brand)] text-white font-semibold"
+                              ? "bg-[var(--color-brand-solid)] text-white font-semibold"
                               : available
                                 ? "bg-[var(--bg-tint-2)] text-[var(--text-primary)] font-semibold hover:bg-[var(--bg-tint-3)]"
                                 : "text-[var(--text-muted)]/50 cursor-default"
@@ -276,7 +276,7 @@ export default function BookingWidget() {
                   <button
                     key={s}
                     onClick={() => { setSlot(s); setStep("details"); setError(null); }}
-                    className="px-3 py-2.5 rounded-lg border border-[var(--border-subtle)] text-sm font-medium text-[var(--text-primary)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)] transition-colors"
+                    className="px-3 py-2.5 rounded-lg border border-[var(--border-subtle)] text-sm font-medium text-[var(--text-primary)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand-text)] transition-colors"
                   >
                     {fmtTime(s)}
                   </button>

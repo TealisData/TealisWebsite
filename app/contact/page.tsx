@@ -40,7 +40,7 @@ export default function ContactPage() {
 
         <section className="band [--band:var(--bg-tint-1)] py-8 md:py-12">
           <div className="flex flex-col gap-3 mb-6 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">Contact</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)]">Contact</p>
             <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
               Let&apos;s talk about your data &amp; AI goals.
             </h1>
@@ -52,10 +52,10 @@ export default function ContactPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Featured: book a meeting */}
-            <div className={`${cardBase} bg-[var(--color-dark)] text-[var(--bg-primary)] border-transparent`}>
+            <div className={`${cardBase} bg-[var(--bg-feature)] text-[var(--text-on-feature)] border-[var(--border-feature)]`}>
               <WaveArt id="wave-art-contact" className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
               <div className="relative flex flex-col gap-3">
-                <CalendarDays size={20} className="text-[var(--color-brand)]" />
+                <CalendarDays size={20} className="text-[var(--color-brand-text)]" />
                 <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
                   Book a meeting
                 </h2>
@@ -65,7 +65,7 @@ export default function ContactPage() {
               </div>
               <Link
                 href="/contact/meet"
-                className="relative mt-auto self-start px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--bg-primary)] text-[var(--text-primary)] hover:opacity-80 transition-opacity"
+                className="relative mt-auto self-start px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--text-on-feature)] text-[var(--bg-feature)] hover:opacity-80 transition-opacity"
               >
                 Open calendar
               </Link>
@@ -73,7 +73,7 @@ export default function ContactPage() {
 
             <div className={`${cardBase} bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
               <div className="flex flex-col gap-3">
-                <MessageSquare size={20} className="text-[var(--color-brand)]" />
+                <MessageSquare size={20} className="text-[var(--color-brand-text)]" />
                 <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
                   Send a message
                 </h2>
@@ -86,7 +86,7 @@ export default function ContactPage() {
 
             <div className={`${cardBase} bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
               <div className="flex flex-col gap-3">
-                <Users size={20} className="text-[var(--color-brand)]" />
+                <Users size={20} className="text-[var(--color-brand-text)]" />
                 <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
                   Connect on LinkedIn
                 </h2>

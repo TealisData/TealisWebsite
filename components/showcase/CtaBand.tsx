@@ -4,7 +4,7 @@ import ContactButton from "@/components/showcase/ContactButton";
 export default function CtaBand({ title, text, button }: { title: string; text: string; button: string }) {
   return (
     <section className="band [--band:var(--bg-primary)] py-8 md:py-12">
-      <div className="rounded-[var(--radius-xl)] bg-[var(--color-dark)] text-[var(--bg-primary)] p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div className="rounded-[var(--radius-xl)] border border-[var(--border-feature)] bg-[var(--bg-feature)] text-[var(--text-on-feature)] p-8 md:p-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div className="flex flex-col gap-2 max-w-xl">
           <h2 className="text-2xl md:text-3xl font-bold leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
             {title}

@@ -12,7 +12,7 @@ export default function MeetPage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
         <section className="band [--band:var(--bg-tint-1)] py-8 md:py-12">
           <div className="flex flex-col gap-3 mb-6 max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">Book a meeting</p>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)]">Book a meeting</p>
             <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
               Pick a time that works for you.
             </h1>

@@ -1,6 +1,6 @@
 "use client";
 
-/** CTA that opens the global ContactDrawer; "inverted" is for use on --color-dark backgrounds */
+/** CTA that opens the global ContactDrawer; "inverted" is for use on --bg-feature surfaces */
 export default function ContactButton({
   children,
   variant = "default",
@@ -12,7 +12,7 @@ export default function ContactButton({
 }) {
   const colors =
     variant === "inverted"
-      ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
+      ? "bg-[var(--text-on-feature)] text-[var(--bg-feature)]"
       : "bg-[var(--color-dark)] text-[var(--bg-primary)]";
   return (
     <button

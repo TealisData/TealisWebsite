@@ -55,7 +55,7 @@ export default function AboutPage() {
 
         {/* Header */}
         <div className="py-10 border-b border-[var(--border-subtle)]">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)] mb-2">About</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)] mb-2">About</p>
           <h1
             className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight"
             style={{ fontFamily: "var(--font-heading)" }}
@@ -86,7 +86,7 @@ export default function AboutPage() {
                 ) : (
                   <div
                     className="w-14 h-14 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                    style={{ backgroundColor: "var(--color-brand)" }}
+                    style={{ backgroundColor: "var(--color-brand-solid)" }}
                   >
                     {member.initials}
                   </div>
@@ -98,7 +98,7 @@ export default function AboutPage() {
                   >
                     {member.name}
                   </p>
-                  <p className="text-xs font-semibold text-[var(--color-brand)] mt-0.5">
+                  <p className="text-xs font-semibold text-[var(--color-brand-text)] mt-0.5">
                     {member.title}
                   </p>
                 </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
                 href={member.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-semibold text-[var(--color-brand)] hover:underline mt-auto inline-flex items-center gap-1.5"
+                className="text-xs font-semibold text-[var(--color-brand-text)] hover:underline mt-auto inline-flex items-center gap-1.5"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
@@ -138,7 +138,7 @@ export default function AboutPage() {
             {SKILLS.map((skill) => (
               <span
                 key={skill}
-                className="text-xs px-3 py-1.5 rounded-full border border-[var(--border-subtle)] text-[var(--text-muted)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand)] transition-colors"
+                className="text-xs px-3 py-1.5 rounded-full border border-[var(--border-subtle)] text-[var(--text-muted)] hover:border-[var(--color-brand)] hover:text-[var(--color-brand-text)] transition-colors"
               >
                 {skill}
               </span>

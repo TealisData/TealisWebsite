@@ -189,7 +189,7 @@ export default function ContactDrawer() {
                     className="flex flex-col items-center justify-center h-full text-center gap-6 py-16"
                   >
                     <div className="w-16 h-16 rounded-full bg-[var(--color-brand)]/10 flex items-center justify-center">
-                      <CheckCircle2 size={32} className="text-[var(--color-brand)]" />
+                      <CheckCircle2 size={32} className="text-[var(--color-brand-text)]" />
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-[var(--text-primary)]">Request Sent!</h3>
@@ -199,7 +199,7 @@ export default function ContactDrawer() {
                     </div>
                     <button
                       onClick={handleClose}
-                      className="px-6 py-3 bg-[var(--color-brand)] text-white rounded-xl font-semibold text-sm hover:bg-[var(--color-brand-hover)] transition-colors"
+                      className="px-6 py-3 bg-[var(--color-brand-solid)] text-white rounded-xl font-semibold text-sm hover:bg-[var(--color-brand-solid-hover)] transition-colors"
                     >
                       Close
                     </button>
@@ -327,7 +327,7 @@ export default function ContactDrawer() {
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full py-3.5 bg-[var(--color-brand)] text-white font-semibold rounded-xl hover:bg-[var(--color-brand-hover)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                      className="w-full py-3.5 bg-[var(--color-brand-solid)] text-white font-semibold rounded-xl hover:bg-[var(--color-brand-solid-hover)] transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
                     >
                       {loading ? (
                         <>

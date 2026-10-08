@@ -10,7 +10,7 @@ export default function CookiePolicyPage() {
       <div className="max-w-3xl mx-auto px-6 sm:px-8 py-20 flex flex-col gap-10">
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)]">Legal</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-text)]">Legal</p>
           <h1 className="text-4xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
             Cookie Policy
           </h1>
@@ -82,7 +82,7 @@ export default function CookiePolicyPage() {
                 </tbody>
               </table>
             </div>
-            <p>Provider: Google LLC. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand)] hover:underline">Google&apos;s Privacy Policy</a>.</p>
+            <p>Provider: Google LLC. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-text)] hover:underline">Google&apos;s Privacy Policy</a>.</p>
           </section>
 
           <section className="flex flex-col gap-3">
@@ -92,7 +92,7 @@ export default function CookiePolicyPage() {
               Note that disabling strictly necessary cookies may affect the functionality of this site
               (e.g., your theme preference will not be remembered).
               For guidance on managing cookies in your browser, visit{" "}
-              <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand)] hover:underline">allaboutcookies.org</a>.
+              <a href="https://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-text)] hover:underline">allaboutcookies.org</a>.
             </p>
           </section>
 
@@ -100,7 +100,7 @@ export default function CookiePolicyPage() {
             <h2 className="text-base font-semibold text-[var(--text-primary)]">Contact</h2>
             <p>
               If you have questions about our use of cookies, contact us at{" "}
-              <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand)] hover:underline">info@tealisdata.com</a>.
+              <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand-text)] hover:underline">info@tealisdata.com</a>.
             </p>
           </section>
 

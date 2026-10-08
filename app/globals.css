@@ -6,6 +6,16 @@
   --color-brand-hover:  #3B74D1;
   --color-brand-accent: #2563EB;
   --color-dark:         #22252A;
+  /* Brand color for text and icons: darker than --color-brand in light mode for 4.5:1 on light backgrounds */
+  --color-brand-text:   #2A66C9;
+  /* Filled brand buttons with white text (≥ 4.5:1 in both themes) */
+  --color-brand-solid:       #2A66C9;
+  --color-brand-solid-hover: #2257AE;
+
+  /* Featured surfaces (highlighted cards, closing CTA band) */
+  --bg-feature:      #22252A;
+  --text-on-feature: #FDFDFE;
+  --border-feature:  transparent;
 
   --bg-primary:   #FDFDFE;
   --bg-surface:   #F7F9FC;
@@ -40,16 +50,25 @@
     --color-brand-hover:  #7CABFF;
     --color-brand-accent: #60A5FA;
     --color-dark:         #F8FAFC;
+    --color-brand-text:   #5D97F5;
+    --color-brand-solid:       #3B74D1;
+    --color-brand-solid-hover: #2F6FD6;
+
+    /* Featured surfaces stay dark (brand-tinted) instead of inverting to a bright block */
+    --bg-feature:      #132036;
+    --text-on-feature: #E8EAED;
+    --border-feature:  rgba(93, 151, 245, 0.35);
 
     --bg-primary:   #0A0C10;
     --bg-surface:   #131720;
 
-    --bg-tint-1:    #0E1219;
-    --bg-tint-2:    #121824;
-    --bg-tint-3:    #171F2E;
+    --bg-tint-1:    #11161F;
+    --bg-tint-2:    #161D2A;
+    --bg-tint-3:    #1C2435;
 
-    --text-primary: #FFFFFF;
-    --text-muted:   #FFFFFF;
+    /* Off-white text (pure white glares on near-black); muted is a real secondary tone */
+    --text-primary: #E8EAED;
+    --text-muted:   #A8B0BD;
 
     --border-subtle: rgba(255, 255, 255, 0.12);
   }
@@ -59,16 +78,25 @@
   --color-brand-hover:  #7CABFF;
   --color-brand-accent: #60A5FA;
   --color-dark:         #F8FAFC;
+  --color-brand-text:   #5D97F5;
+  --color-brand-solid:       #3B74D1;
+  --color-brand-solid-hover: #2F6FD6;
+
+  /* Featured surfaces stay dark (brand-tinted) instead of inverting to a bright block */
+  --bg-feature:      #132036;
+  --text-on-feature: #E8EAED;
+  --border-feature:  rgba(93, 151, 245, 0.35);
 
   --bg-primary:   #0A0C10;
   --bg-surface:   #131720;
 
-  --bg-tint-1:    #0E1219;
-  --bg-tint-2:    #121824;
-  --bg-tint-3:    #171F2E;
+  --bg-tint-1:    #11161F;
+  --bg-tint-2:    #161D2A;
+  --bg-tint-3:    #1C2435;
 
-  --text-primary: #FFFFFF;
-  --text-muted:   #FFFFFF;
+  /* Off-white text (pure white glares on near-black); muted is a real secondary tone */
+  --text-primary: #E8EAED;
+  --text-muted:   #A8B0BD;
 
   --border-subtle: rgba(255, 255, 255, 0.12);
 }

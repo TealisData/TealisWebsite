@@ -75,18 +75,25 @@ Always use CSS variables, never hardcoded colors.
 
 ```css
 /* Brand */
---color-brand         /* #4A86E8 light / #5D97F5 dark */
+--color-brand         /* #4A86E8 light / #5D97F5 dark — fills, dots, underlines, decorative art */
 --color-brand-hover
+--color-brand-text    /* #2A66C9 light / #5D97F5 dark — brand-colored TEXT and icons (≥ 4.5:1) */
+--color-brand-solid   /* #2A66C9 light / #3B74D1 dark — filled buttons with white text (+ -hover) */
 --color-dark          /* #22252A light / #F8FAFC dark — used for CTA button backgrounds */
+
+/* Featured surfaces (highlighted card, closing CTA band, booking summary) */
+--bg-feature          /* #22252A light / #132036 dark (stays dark, brand-tinted) */
+--text-on-feature     /* #FDFDFE light / #E8EAED dark */
+--border-feature      /* transparent light / brand 35% dark */
 
 /* Backgrounds */
 --bg-primary          /* #FDFDFE light / #0A0C10 dark */
 --bg-surface          /* slightly elevated surface */
---bg-tint-1/2/3       /* section bands: very light brand-tinted scale (dark-mode equivalents defined) */
+--bg-tint-1/2/3       /* section bands: very light brand-tinted scale (dark: #11161F / #161D2A / #1C2435) */
 
 /* Text */
---text-primary        /* #22252A light / #FFFFFF dark */
---text-muted          /* same as text-primary (both black/white by mode) */
+--text-primary        /* #22252A light / #E8EAED dark (off-white, no glare) */
+--text-muted          /* #22252A light / #A8B0BD dark (secondary text) */
 
 /* Borders */
 --border-subtle       /* rgba with low opacity */
@@ -102,11 +109,18 @@ primary / tint-2 / primary. Cards on tinted bands use `bg-[var(--bg-primary)]`.
 
 **CTA buttons** use `bg-[var(--color-dark)] text-[var(--bg-primary)]` — this auto-inverts correctly in both themes.
 
+**Featured cards/bands** use `bg-[var(--bg-feature)] text-[var(--text-on-feature)] border-[var(--border-feature)]`
+(never `--color-dark` as a surface: it inverts to a bright block in dark mode). Buttons on them use
+`bg-[var(--text-on-feature)] text-[var(--bg-feature)]` (ContactButton `variant="inverted"`).
+
+**Accessibility:** text must reach WCAG AA (4.5:1, 3:1 for large text) in both themes — use
+`--color-brand-text` for brand-colored text, `--color-brand-solid` behind white text.
+
 ---
 
 ## Hard rules — do not break these
 
-1. **Do not change any colors.** The design tokens are final. Never introduce new color values outside of `globals.css`.
+1. **Do not change any colors** unless the user explicitly asks. The design tokens are final (last revised for dark-mode accessibility, Oct 2026). Never introduce new color values outside of `globals.css`.
 2. **Do not change typography or section label style.** Font sizes, weights, spacing, and the `text-xs font-semibold uppercase tracking-widest` section label pattern are intentional.
 3. **Mobile-first.** When fixing mobile issues, do not touch desktop layout. Use `md:` breakpoints to isolate.
 4. **Always ask for review before committing and pushing.** Never run `git commit` + `git push` without explicit user approval of the changes.

@@ -55,7 +55,7 @@ export default function HomePage() {
               <dl className="max-w-lg flex flex-col gap-4">
                 {PILLARS.map((p) => (
                   <div key={p.label} className="flex flex-col gap-1">
-                    <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">{p.label}</dt>
+                    <dt className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)]">{p.label}</dt>
                     <dd className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">{p.text}</dd>
                   </div>
                 ))}
@@ -64,11 +64,11 @@ export default function HomePage() {
 
             <FadeIn delay={0.25}>
               <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
-                <Link href="/contact/meet" className="text-[var(--color-brand)] hover:underline">
+                <Link href="/contact/meet" className="text-[var(--color-brand-text)] hover:underline">
                   Book a meeting
                 </Link>
                 {" "}or{" "}
-                <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand)] hover:underline">
+                <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand-text)] hover:underline">
                   send us an email
                 </a>.
               </p>

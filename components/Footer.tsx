@@ -43,7 +43,7 @@ export default function Footer() {
         <div className="flex items-center">
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
             Tealisdata OÜ · Tallinn, Estonia · VAT EE102990636 ·{" "}
-            <a href="mailto:info@tealisdata.com" className="hover:text-[var(--color-brand)] transition-colors">
+            <a href="mailto:info@tealisdata.com" className="hover:text-[var(--color-brand-text)] transition-colors">
               info@tealisdata.com
             </a>
           </p>
@@ -59,7 +59,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="text-[var(--text-muted)] hover:text-[var(--color-brand)] transition-colors"
+                className="text-[var(--text-muted)] hover:text-[var(--color-brand-text)] transition-colors"
               >
                 {icon}
               </a>

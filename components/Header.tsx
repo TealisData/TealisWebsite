@@ -93,8 +93,8 @@ export default function Header() {
                   href={href}
                   className={`text-sm font-medium transition-colors duration-200 relative group ${
                     active
-                      ? "text-[var(--color-brand)]"
-                      : "text-[var(--text-primary)] hover:text-[var(--color-brand)]"
+                      ? "text-[var(--color-brand-text)]"
+                      : "text-[var(--text-primary)] hover:text-[var(--color-brand-text)]"
                   }`}
                 >
                   {label}
@@ -143,7 +143,7 @@ export default function Header() {
                     href={href}
                     className={`text-sm font-medium py-3 px-2 rounded-lg transition-colors duration-150 ${
                       active
-                        ? "text-[var(--color-brand)] bg-[var(--bg-surface)]"
+                        ? "text-[var(--color-brand-text)] bg-[var(--bg-surface)]"
                         : "text-[var(--text-primary)] hover:bg-[var(--bg-surface)]"
                     }`}
                   >

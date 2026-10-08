@@ -10,7 +10,7 @@ export default function PrivacyPolicyPage() {
       <div className="max-w-3xl mx-auto px-6 sm:px-8 py-20 flex flex-col gap-10">
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand)]">Legal</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-text)]">Legal</p>
           <h1 className="text-4xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
             Privacy Policy
           </h1>
@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
               with registered address at Pärnu mnt 388b, Tallinn, Estonia, is the data controller for all personal data
               processed through the website tealisdata.com.
             </p>
-            <p>Contact: <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand)] hover:underline">info@tealisdata.com</a></p>
+            <p>Contact: <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand-text)] hover:underline">info@tealisdata.com</a></p>
           </section>
 
           <section className="flex flex-col gap-3">
@@ -68,8 +68,8 @@ export default function PrivacyPolicyPage() {
 
           <section className="flex flex-col gap-3">
             <h2 className="text-base font-semibold text-[var(--text-primary)]">5. Your rights</h2>
-            <p>Under GDPR, you have the right to: access your data, request correction or deletion, object to processing, and request data portability. To exercise any of these rights, contact us at <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand)] hover:underline">info@tealisdata.com</a>.</p>
-            <p>You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon) at <a href="https://www.aki.ee" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand)] hover:underline">aki.ee</a>.</p>
+            <p>Under GDPR, you have the right to: access your data, request correction or deletion, object to processing, and request data portability. To exercise any of these rights, contact us at <a href="mailto:info@tealisdata.com" className="text-[var(--color-brand-text)] hover:underline">info@tealisdata.com</a>.</p>
+            <p>You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate (Andmekaitse Inspektsioon) at <a href="https://www.aki.ee" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand-text)] hover:underline">aki.ee</a>.</p>
           </section>
 
           <section className="flex flex-col gap-3">

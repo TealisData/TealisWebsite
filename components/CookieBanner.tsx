@@ -88,7 +88,7 @@ export default function CookieBanner() {
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                   <button
                     onClick={acceptAll}
-                    className="px-5 py-2.5 bg-[var(--color-brand)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-hover)] transition-colors text-center"
+                    className="px-5 py-2.5 bg-[var(--color-brand-solid)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-solid-hover)] transition-colors text-center"
                   >
                     Accept all
                   </button>
@@ -138,7 +138,7 @@ export default function CookieBanner() {
                 <div className="flex items-center gap-3 pt-1">
                   <button
                     onClick={savePrefs}
-                    className="px-5 py-2.5 bg-[var(--color-brand)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-hover)] transition-colors"
+                    className="px-5 py-2.5 bg-[var(--color-brand-solid)] text-white text-sm font-semibold rounded-lg hover:bg-[var(--color-brand-solid-hover)] transition-colors"
                   >
                     Save preferences
                   </button>

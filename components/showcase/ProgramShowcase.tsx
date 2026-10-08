@@ -60,7 +60,7 @@ export default function ProgramShowcase({
       {/* ── Groups ── */}
       <section className="band [--band:var(--bg-tint-1)] py-8 md:py-12">
         <div className="flex flex-col gap-3 mb-6 max-w-2xl">
-          <p className={`${labelClass} text-[var(--color-brand)]`}>{label}</p>
+          <p className={`${labelClass} text-[var(--color-brand-text)]`}>{label}</p>
           <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
             {title}
           </h1>
@@ -78,7 +78,7 @@ export default function ProgramShowcase({
                 key={g.id}
                 className={`relative overflow-hidden rounded-[var(--radius-lg)] border p-6 md:p-8 flex flex-col gap-5 ${
                   featured
-                    ? "bg-[var(--color-dark)] text-[var(--bg-primary)] border-transparent"
+                    ? "bg-[var(--bg-feature)] text-[var(--text-on-feature)] border-[var(--border-feature)]"
                     : "bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]"
                 }`}
               >
@@ -86,7 +86,7 @@ export default function ProgramShowcase({
                   <WaveArt id={`wave-art-${g.id}`} className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
                 )}
                 <div className="relative flex flex-col gap-3">
-                  <span className="text-[var(--color-brand)]">{g.icon}</span>
+                  <span className="text-[var(--color-brand-text)]">{g.icon}</span>
                   <h3 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
                     {g.title}
                   </h3>
@@ -117,7 +117,7 @@ export default function ProgramShowcase({
       {/* ── Program explorer ── */}
       <section ref={explorerRef} className="band [--band:var(--bg-primary)] py-8 md:py-12 scroll-mt-20">
         <div className="flex flex-col gap-3 mb-5">
-          <p className={`${labelClass} text-[var(--color-brand)]`}>{explorerLabel}</p>
+          <p className={`${labelClass} text-[var(--color-brand-text)]`}>{explorerLabel}</p>
         </div>
 
         <div className="flex gap-6 overflow-x-auto overflow-y-hidden border-b border-[var(--border-subtle)] -mx-4 px-4 sm:mx-0 sm:px-0" role="tablist">
@@ -128,7 +128,7 @@ export default function ProgramShowcase({
               aria-selected={active === p.id}
               onClick={() => setActive(p.id)}
               className={`relative shrink-0 pb-3 text-sm font-medium transition-colors ${
-                active === p.id ? "text-[var(--color-brand)]" : "text-[var(--text-primary)] hover:text-[var(--color-brand)]"
+                active === p.id ? "text-[var(--color-brand-text)]" : "text-[var(--text-primary)] hover:text-[var(--color-brand-text)]"
               }`}
             >
               {p.label}
