@@ -158,9 +158,55 @@ export default function CanvasParticleBackground() {
             });
           }
         }
+        const toY = (ry: number) => logoY + (ry - 319) * scale;
+        const addDot = (x: number, y: number, isRoof: boolean) =>
+          pts.push({ baseX: x, baseY: y, spread: 0, closedX: x, closedY: y, x, y, vx: 0, vy: 0, isRoof, radius: 2, density: 25 });
+
+        // Sharpen the points the grid cuts off (roof apex upwards, V tip downwards): from the first
+        // row of 7 or fewer dots, each row towards the tip has at least 2 dots fewer than the one
+        // before (centered), and rows keep going until a single dot, e.g. 7 → 5 → 3 → 1.
+        const taper = (isRoof: boolean, dir: -1 | 1) => {
+          const ys = [...new Set(pts.filter(p => p.isRoof === isRoof).map(p => p.baseY))].sort((a, b) => dir * (a - b));
+          const count = (y: number) => pts.filter(p => p.isRoof === isRoof && p.baseY === y).length;
+          const fill = (y: number, n: number) => {
+            for (let k = 0; k < n; k++) {
+              const x = axis + (k - (n - 1) / 2) * step;
+              if (!pts.some(p => p.isRoof === isRoof && p.baseY === y && Math.abs(p.baseX - x) < step / 2)) addDot(x, y, isRoof);
+            }
+          };
+          const start = ys.findIndex(y => count(y) <= 7);
+          if (start < 0) return;
+          let n = count(ys[start]);
+          let y = ys[start];
+          for (const next of ys.slice(start + 1)) {
+            n = Math.max(1, Math.max(count(next), n - 2));
+            fill(next, n);
+            y = next;
+          }
+          while (n > 1) {
+            n -= 2;
+            y += dir * step;
+            fill(y, n);
+          }
+        };
+        taper(true, -1);
+        taper(false, 1);
+
+        // Round the book's outer tails: where a slab row stops 2+ dots short of the row below it,
+        // extend it by one dot (mirrored on both sides) so the edge steps out one dot per row.
+        const slabTop = toY(713.023);
+        const slabBottom = toY(795.375);
+        const slabRows = [...new Set(pts.filter(p => !p.isRoof && p.baseY >= slabTop && p.baseY <= slabBottom).map(p => p.baseY))]
+          .sort((a, b) => a - b);
+        const reach = (y: number) => Math.max(...pts.filter(p => !p.isRoof && p.baseY === y).map(p => Math.abs(p.baseX - axis)));
+        const reaches = slabRows.map(reach);
+        slabRows.forEach((y, i) => {
+          if (i + 1 >= slabRows.length || reaches[i + 1] - reaches[i] < step * 1.5) return;
+          for (const side of [-1, 1]) addDot(axis + side * (reaches[i] + step), y, false);
+        });
+
         // The shape's thin extremities are narrower than the grid, so the grid misses them.
         // Anchor one dot just inside each (raw logo coordinates), unless a dot is already close.
-        const toY = (ry: number) => logoY + (ry - 319) * scale;
         const inset = step * 0.35;
         const anchors: { x: number; y: number; isRoof: boolean }[] = [
           { x: axis - halfW + inset * 1.6, y: toY(795.375) - inset, isRoof: false }, // book left tail
@@ -170,11 +216,7 @@ export default function CanvasParticleBackground() {
         ];
         for (const a of anchors) {
           if (pts.some(p => p.isRoof === a.isRoof && Math.hypot(p.baseX - a.x, p.baseY - a.y) < step * 0.75)) continue;
-          pts.push({
-            baseX: a.x, baseY: a.y, spread: 0, closedX: a.x, closedY: a.y,
-            x: a.x, y: a.y, vx: 0, vy: 0,
-            isRoof: a.isRoof, radius: 2, density: 25,
-          });
+          addDot(a.x, a.y, a.isRoof);
         }
         return { pts, logoX, logoY, scale };
       }
