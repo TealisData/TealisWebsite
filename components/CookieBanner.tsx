@@ -1,15 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore } from "react";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
 type Consent = { analytics: boolean } | null;
 
 const STORAGE_KEY = "tealis_cookie_consent";
+const CHANGE_EVENT = "tealis:consent-change";
 
-function getStored(): Consent {
+// Raw stored value: null on the server/hydration, "" when nothing is stored
+function readRaw(): string {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    return localStorage.getItem(STORAGE_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function subscribe(onChange: () => void) {
+  window.addEventListener("storage", onChange);
+  window.addEventListener(CHANGE_EVENT, onChange);
+  return () => {
+    window.removeEventListener("storage", onChange);
+    window.removeEventListener(CHANGE_EVENT, onChange);
+  };
+}
+
+function parse(raw: string): Consent {
+  try {
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -18,39 +36,34 @@ function getStored(): Consent {
 
 function saveConsent(consent: Consent) {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(consent)); } catch {}
+  window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
 export default function CookieBanner() {
-  const [consent, setConsent] = useState<Consent | undefined>(undefined);
+  const raw = useSyncExternalStore<string | null>(subscribe, readRaw, () => null);
   const [showPrefs, setShowPrefs] = useState(false);
   const [analyticsChecked, setAnalyticsChecked] = useState(true);
 
-  useEffect(() => {
-    setConsent(getStored());
-  }, []);
-
-  if (consent === undefined) return null;
+  if (raw === null) return null;
+  const consent = parse(raw);
 
   const analyticsEnabled = consent?.analytics === true;
 
   const acceptAll = () => {
     const c = { analytics: true };
     saveConsent(c);
-    setConsent(c);
     setShowPrefs(false);
   };
 
   const acceptEssential = () => {
     const c = { analytics: false };
     saveConsent(c);
-    setConsent(c);
     setShowPrefs(false);
   };
 
   const savePrefs = () => {
     const c = { analytics: analyticsChecked };
     saveConsent(c);
-    setConsent(c);
     setShowPrefs(false);
   };
 

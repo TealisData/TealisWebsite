@@ -59,23 +59,11 @@ export default function ContactDrawer() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [atBottom, setAtBottom] = useState(false);
 
   useEffect(() => {
     const handler = () => setOpen(true);
     window.addEventListener("tealis:open-contact", handler);
     return () => window.removeEventListener("tealis:open-contact", handler);
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const nearBottom = window.scrollY + window.innerHeight >= document.body.scrollHeight - 80;
-      setAtBottom(nearBottom);
-      window.dispatchEvent(new CustomEvent("tealis:at-bottom", { detail: nearBottom }));
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {

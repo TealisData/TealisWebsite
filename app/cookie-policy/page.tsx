@@ -82,7 +82,7 @@ export default function CookiePolicyPage() {
                 </tbody>
               </table>
             </div>
-            <p>Provider: Google LLC. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand)] hover:underline">Google's Privacy Policy</a>.</p>
+            <p>Provider: Google LLC. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-[var(--color-brand)] hover:underline">Google&apos;s Privacy Policy</a>.</p>
           </section>
 
           <section className="flex flex-col gap-3">

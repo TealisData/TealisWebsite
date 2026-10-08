@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import Logo from "@/components/Logo";
+import { useMounted } from "@/lib/useMounted";
 
 const NAV_LINKS = [
   { href: "/",           label: "Home" },
@@ -19,9 +20,7 @@ const NAV_LINKS = [
 
 function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useMounted();
 
   if (!mounted) return <div className="w-11 h-11" />;
 
@@ -44,8 +43,7 @@ export default function Header() {
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const mounted = useMounted();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -53,7 +51,12 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  useEffect(() => { setMobileOpen(false); }, [pathname]);
+  // Close the mobile menu when the route changes (adjusting state during render, not in an effect)
+  const [menuPath, setMenuPath] = useState(pathname);
+  if (menuPath !== pathname) {
+    setMenuPath(pathname);
+    setMobileOpen(false);
+  }
 
   const mobileVariants = shouldReduceMotion
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
