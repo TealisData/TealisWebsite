@@ -38,7 +38,7 @@ export default function ContactPage() {
     <div className="flex flex-col flex-1 pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
 
-        <section className="py-8 md:py-12 border-b border-[var(--border-subtle)]">
+        <section className="band [--band:var(--bg-tint-1)] py-8 md:py-12">
           <div className="flex flex-col gap-3 mb-6 max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">Contact</p>
             <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
@@ -71,7 +71,7 @@ export default function ContactPage() {
               </Link>
             </div>
 
-            <div className={`${cardBase} bg-[var(--bg-surface)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
+            <div className={`${cardBase} bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
               <div className="flex flex-col gap-3">
                 <MessageSquare size={20} className="text-[var(--color-brand)]" />
                 <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
@@ -84,7 +84,7 @@ export default function ContactPage() {
               <ContactButton className="mt-auto self-start">Write to us</ContactButton>
             </div>
 
-            <div className={`${cardBase} bg-[var(--bg-surface)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
+            <div className={`${cardBase} bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
               <div className="flex flex-col gap-3">
                 <Users size={20} className="text-[var(--color-brand)]" />
                 <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>

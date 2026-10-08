@@ -82,6 +82,7 @@ Always use CSS variables, never hardcoded colors.
 /* Backgrounds */
 --bg-primary          /* #FDFDFE light / #0A0C10 dark */
 --bg-surface          /* slightly elevated surface */
+--bg-tint-1/2/3       /* section bands: very light brand-tinted scale (dark-mode equivalents defined) */
 
 /* Text */
 --text-primary        /* #22252A light / #FFFFFF dark */
@@ -94,6 +95,10 @@ Always use CSS variables, never hardcoded colors.
 --font-heading        /* Plus Jakarta Sans */
 --font-body           /* Inter */
 ```
+
+**Section bands:** sections are separated by full-width background bands, not divider lines.
+Use the `band` utility with a tint, e.g. `className="band [--band:var(--bg-tint-1)]"`; alternate tint-1 /
+primary / tint-2 / primary. Cards on tinted bands use `bg-[var(--bg-primary)]`.
 
 **CTA buttons** use `bg-[var(--color-dark)] text-[var(--bg-primary)]` — this auto-inverts correctly in both themes.
 

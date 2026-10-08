@@ -58,7 +58,7 @@ export default function ProgramShowcase({
   return (
     <>
       {/* ── Groups ── */}
-      <section className="py-8 md:py-12 border-b border-[var(--border-subtle)]">
+      <section className="band [--band:var(--bg-tint-1)] py-8 md:py-12">
         <div className="flex flex-col gap-3 mb-6 max-w-2xl">
           <p className={`${labelClass} text-[var(--color-brand)]`}>{label}</p>
           <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
@@ -79,7 +79,7 @@ export default function ProgramShowcase({
                 className={`relative overflow-hidden rounded-[var(--radius-lg)] border p-6 md:p-8 flex flex-col gap-5 ${
                   featured
                     ? "bg-[var(--color-dark)] text-[var(--bg-primary)] border-transparent"
-                    : "bg-[var(--bg-surface)] text-[var(--text-primary)] border-[var(--border-subtle)]"
+                    : "bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]"
                 }`}
               >
                 {featured && (
@@ -115,7 +115,7 @@ export default function ProgramShowcase({
       </section>
 
       {/* ── Program explorer ── */}
-      <section ref={explorerRef} className="py-8 md:py-12 border-b border-[var(--border-subtle)] scroll-mt-20">
+      <section ref={explorerRef} className="band [--band:var(--bg-primary)] py-8 md:py-12 scroll-mt-20">
         <div className="flex flex-col gap-3 mb-5">
           <p className={`${labelClass} text-[var(--color-brand)]`}>{explorerLabel}</p>
         </div>
@@ -164,7 +164,7 @@ export default function ProgramShowcase({
             </ul>
           </div>
 
-          <aside className="flex flex-col gap-6 rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-surface)] p-6 self-start">
+          <aside className="flex flex-col gap-6 rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-tint-1)] p-6 self-start">
             {current.facts
               .filter((f) => f.items.length > 0)
               .map((f) => (
