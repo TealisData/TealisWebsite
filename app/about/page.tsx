@@ -42,8 +42,8 @@ const TEAM = [
     // Replace with actual photo: photo: "/team/luca.jpg"
     photo: "/team/luca.png" as string | null,
     bio: [
-      "I've been building data solutions since 2019 — from IT consulting to four years as data analytics trainer and consultant, then senior consultant before co-founding Tealisdata.",
-      "I design and develop end-to-end data solutions — architecture, data engineering, semantic models, dashboards and deployment — and optimise existing ones for performance and cost. Microsoft Certified Trainer, with a strong focus on solutions that are built to last and that teams can actually own.",
+      "I've been working with data since 2019 — as a consultant on client projects and as a Microsoft Certified Trainer — before co-founding Tealisdata.",
+      "I design and develop end-to-end data solutions — architecture, data engineering, semantic models, dashboards and deployment — and optimise existing ones for performance and cost, with a strong focus on solutions that are built to last and that teams can actually own.",
     ],
   },
 ];
