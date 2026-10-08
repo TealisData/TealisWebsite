@@ -58,8 +58,8 @@ export default function ProgramShowcase({
   return (
     <>
       {/* ── Groups ── */}
-      <section className="py-10 md:py-14 border-b border-[var(--border-subtle)]">
-        <div className="flex flex-col gap-3 mb-8 max-w-2xl">
+      <section className="py-8 md:py-12 border-b border-[var(--border-subtle)]">
+        <div className="flex flex-col gap-3 mb-6 max-w-2xl">
           <p className={`${labelClass} text-[var(--color-brand)]`}>{label}</p>
           <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
             {title}
@@ -115,8 +115,8 @@ export default function ProgramShowcase({
       </section>
 
       {/* ── Program explorer ── */}
-      <section ref={explorerRef} className="py-10 md:py-14 border-b border-[var(--border-subtle)] scroll-mt-20">
-        <div className="flex flex-col gap-3 mb-6">
+      <section ref={explorerRef} className="py-8 md:py-12 border-b border-[var(--border-subtle)] scroll-mt-20">
+        <div className="flex flex-col gap-3 mb-5">
           <p className={`${labelClass} text-[var(--color-brand)]`}>{explorerLabel}</p>
         </div>
 
@@ -137,7 +137,7 @@ export default function ProgramShowcase({
           ))}
         </div>
 
-        <div role="tabpanel" className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 pt-8">
+        <div role="tabpanel" className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 pt-6">
           <div className="flex flex-col gap-6">
             <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
               {current.headline}

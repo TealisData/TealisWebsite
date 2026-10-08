@@ -9,8 +9,8 @@ export default function ApproachSection({
   items: { icon: React.ReactNode; title: string; text: string; points: string[] }[];
 }) {
   return (
-    <section className="py-10 md:py-14 border-b border-[var(--border-subtle)]">
-      <div className="flex flex-col gap-3 mb-8 max-w-2xl">
+    <section className="py-8 md:py-12 border-b border-[var(--border-subtle)]">
+      <div className="flex flex-col gap-3 mb-6 max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">{label}</p>
         <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
           {title}
@@ -18,7 +18,7 @@ export default function ApproachSection({
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {items.map((f) => (
-          <div key={f.title} className="flex flex-col gap-3 border-t border-[var(--border-subtle)] pt-6">
+          <div key={f.title} className="flex flex-col gap-3 border-t border-[var(--border-subtle)] pt-5">
             <span className="text-[var(--color-brand)]">{f.icon}</span>
             <h3 className="text-lg font-semibold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>{f.title}</h3>
             <p className="text-sm text-[var(--text-muted)] leading-relaxed">{f.text}</p>
