@@ -36,7 +36,8 @@ let token: { value: string; expires: number } | null = null;
 
 async function getToken() {
   if (token && token.expires > Date.now() + 60_000) return token.value;
-  const { MS_TENANT_ID, MS_CLIENT_ID, MS_CLIENT_SECRET } = process.env;
+  // Trim: values pasted into a dashboard often carry a stray space or newline
+  const [MS_TENANT_ID, MS_CLIENT_ID, MS_CLIENT_SECRET] = ["MS_TENANT_ID", "MS_CLIENT_ID", "MS_CLIENT_SECRET"].map((k) => process.env[k]?.trim());
   if (!MS_TENANT_ID || !MS_CLIENT_ID || !MS_CLIENT_SECRET) throw new BookingError("Booking is not configured");
   const res = await fetch(`https://login.microsoftonline.com/${MS_TENANT_ID}/oauth2/v2.0/token`, {
     method: "POST",
@@ -48,7 +49,12 @@ async function getToken() {
     }),
     cache: "no-store",
   });
-  if (!res.ok) throw new BookingError(`Token request failed (${res.status})`);
+  if (!res.ok) {
+    // Keep only Microsoft's error code (e.g. AADSTS7000215 = invalid secret), never the request
+    const detail = await res.json().catch(() => ({}));
+    const code = /AADSTS\d+/.exec(detail.error_description ?? "")?.[0] ?? detail.error ?? "";
+    throw new BookingError(`Token request failed (${res.status} ${code})`);
+  }
   const data = await res.json();
   token = { value: data.access_token, expires: Date.now() + data.expires_in * 1000 };
   return token.value;
