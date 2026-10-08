@@ -9,8 +9,8 @@ export default function ApproachSection({
   items: { icon: React.ReactNode; title: string; text: string; points: string[] }[];
 }) {
   return (
-    <section className="py-14 md:py-20 border-b border-[var(--border-subtle)]">
-      <div className="flex flex-col gap-3 mb-10 max-w-2xl">
+    <section className="py-10 md:py-14 border-b border-[var(--border-subtle)]">
+      <div className="flex flex-col gap-3 mb-8 max-w-2xl">
         <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">{label}</p>
         <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
           {title}

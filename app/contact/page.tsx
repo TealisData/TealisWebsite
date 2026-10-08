@@ -38,8 +38,8 @@ export default function ContactPage() {
     <div className="flex flex-col flex-1 pt-14 md:pt-[69px] bg-[var(--bg-primary)]">
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
 
-        <section className="py-14 md:py-20 border-b border-[var(--border-subtle)]">
-          <div className="flex flex-col gap-3 mb-10 max-w-2xl">
+        <section className="py-10 md:py-14 border-b border-[var(--border-subtle)]">
+          <div className="flex flex-col gap-3 mb-8 max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand)]">Contact</p>
             <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
               Let&apos;s talk about your data &amp; AI goals.
