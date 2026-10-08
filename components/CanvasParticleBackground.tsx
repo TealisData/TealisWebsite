@@ -176,10 +176,12 @@ export default function CanvasParticleBackground() {
           };
           const start = ys.findIndex(y => count(y) <= 7);
           if (start < 0) return;
-          let n = count(ys[start]);
+          // Rows are centered on the spine column, so a full row has an odd number of dots
+          const odd = (n: number) => (n % 2 ? n : n + 1);
+          let n = odd(count(ys[start]));
           let y = ys[start];
           for (const next of ys.slice(start + 1)) {
-            n = Math.max(1, Math.max(count(next), n - 2));
+            n = Math.max(1, odd(Math.max(count(next), n - 2)));
             fill(next, n);
             y = next;
           }
@@ -209,8 +211,6 @@ export default function CanvasParticleBackground() {
         // Anchor one dot just inside each (raw logo coordinates), unless a dot is already close.
         const inset = step * 0.35;
         const anchors: { x: number; y: number; isRoof: boolean }[] = [
-          { x: axis - halfW + inset * 1.6, y: toY(795.375) - inset, isRoof: false }, // book left tail
-          { x: axis + halfW - inset * 1.6, y: toY(795.375) - inset, isRoof: false }, // book right tail
           { x: axis, y: toY(850.3) - inset, isRoof: false }, // V tip under the spine
           { x: axis, y: toY(325.3) + inset, isRoof: true }, // roof apex
         ];
