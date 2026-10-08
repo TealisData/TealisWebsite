@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { BOOKING_URL } from "@/lib/booking";
 import { CalendarDays, FileText, Mail, MessageSquare, Users } from "lucide-react";
 import ApproachSection from "@/components/showcase/ApproachSection";
 import ContactButton from "@/components/showcase/ContactButton";
@@ -63,12 +63,14 @@ export default function ContactPage() {
                   Pick a time for a 30-minute call on Microsoft Teams to discuss your project or needs.
                 </p>
               </div>
-              <Link
-                href="/contact/meet"
+              <a
+                href={BOOKING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative mt-auto self-start px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--bg-primary)] text-[var(--text-primary)] hover:opacity-80 transition-opacity"
               >
                 Open calendar
-              </Link>
+              </a>
             </div>
 
             <div className={`${cardBase} bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]`}>
