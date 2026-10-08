@@ -38,7 +38,7 @@ export default function AboutPage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
 
         {/* Header */}
-        <div className="py-10 border-b border-[var(--border-subtle)]">
+        <div className="py-10">
           <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)] mb-2">About</p>
           <h1
             className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight"
@@ -55,7 +55,7 @@ export default function AboutPage() {
               key={member.name}
               className={`flex-1 flex flex-col py-10 ${
                 i === 0
-                  ? "lg:pr-12 border-b lg:border-b-0 lg:border-r border-[var(--border-subtle)]"
+                  ? "lg:pr-12 lg:border-r border-[var(--border-subtle)]"
                   : "lg:pl-12"
               }`}
             >
