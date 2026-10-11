@@ -40,84 +40,65 @@ export default function AboutPage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
 
         {/* Header */}
-        <div className="py-10">
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)] mb-2">About</p>
-          <h1
-            className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            Meet the <Scribble>founders</Scribble>.
-          </h1>
-        </div>
+        <section className="band [--band:var(--bg-tint-1)] py-8 md:py-12">
+          <div className="flex flex-col items-start gap-4 mb-8">
+            <span className="caption-box">About</span>
+            <h1 className="text-3xl md:text-[44px] font-bold text-[var(--text-primary)] leading-[1.1] tracking-[-0.02em]" style={{ fontFamily: "var(--font-heading)" }}>
+              Meet the <Scribble>founders</Scribble>.
+            </h1>
+          </div>
 
-        {/* Two-column team split */}
-        <div className="flex flex-col lg:flex-row">
-          {TEAM.map((member, i) => (
-            <div
-              key={member.name}
-              className={`flex-1 flex flex-col py-10 ${
-                i === 0
-                  ? "lg:pr-12"
-                  : "lg:pl-12"
-              }`}
-            >
-              {/* Avatar + name */}
-              <div className="flex items-center gap-4 mb-6">
-                {member.photo ? (
-                  <img
-                    src={member.photo}
-                    alt={member.name}
-                    className="w-16 h-16 rounded-full object-cover object-top shrink-0 border border-[var(--border-subtle)]"
-                  />
-                ) : (
-                  <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
-                    style={{ backgroundColor: "var(--color-brand-solid)" }}
-                  >
-                    {member.initials}
+          {/* The two founders, one panel each */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {TEAM.map((member) => (
+              <article key={member.name} className="panel overflow-hidden flex flex-col">
+                <div className="flex items-end gap-5 px-6 pt-6 pb-0 bg-[var(--fill-sky)] border-b-[length:var(--line-w)] border-[var(--line)]">
+                  {member.photo ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={member.photo}
+                      alt={member.name}
+                      className="w-28 h-28 md:w-32 md:h-32 object-cover object-top shrink-0 rounded-t-[10px] border-[length:var(--line-w)] border-b-0 border-[var(--line)] bg-[var(--bg-primary)]"
+                    />
+                  ) : (
+                    <div className="w-28 h-28 rounded-t-[10px] flex items-center justify-center text-white text-lg font-bold shrink-0" style={{ backgroundColor: "var(--color-brand-solid)" }}>
+                      {member.initials}
+                    </div>
+                  )}
+                  <div className="pb-5">
+                    <h2 className="text-xl md:text-2xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+                      {member.name}
+                    </h2>
+                    <p className="text-sm font-semibold text-[var(--color-brand-text)] mt-1">{member.title}</p>
                   </div>
-                )}
-                <div>
-                  <p
-                    className="text-lg font-bold text-[var(--text-primary)] leading-tight"
-                    style={{ fontFamily: "var(--font-heading)" }}
-                  >
-                    {member.name}
-                  </p>
-                  <p className="text-xs font-semibold text-[var(--color-brand-text)] mt-0.5">
-                    {member.title}
-                  </p>
                 </div>
-              </div>
+                <div className="flex flex-col gap-4 p-6 flex-1">
+                  {member.bio.map((para, j) => (
+                    <p key={j} className="text-[15px] text-[var(--text-muted)] leading-relaxed">
+                      {para}
+                    </p>
+                  ))}
+                  <a
+                    data-press
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-line mt-auto self-start"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect x="2" y="9" width="4" height="12" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                    LinkedIn
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
 
-              {/* Bio */}
-              <div className="flex flex-col gap-4 mb-8">
-                {member.bio.map((para, j) => (
-                  <p key={j} className="text-sm text-[var(--text-muted)] leading-relaxed">
-                    {para}
-                  </p>
-                ))}
-              </div>
-
-              {/* LinkedIn */}
-              <a
-                href={member.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-semibold text-[var(--color-brand-text)] hover:underline mt-auto inline-flex items-center gap-1.5"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                  <rect x="2" y="9" width="4" height="12"/>
-                  <circle cx="4" cy="4" r="2"/>
-                </svg>
-                LinkedIn →
-              </a>
-            </div>
-          ))}
-        </div>
-
-        <ValuesSection title="What working with us looks like." />
+        <ValuesSection title="What working with us looks like." band="var(--bg-primary)" />
       </div>
     </div>
   );

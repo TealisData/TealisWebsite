@@ -1,3 +1,4 @@
+import { SceneAI, SceneApps, SceneDataStack } from "@/components/clearline/Scenes";
 import { Bot, Layers, Workflow } from "lucide-react";
 import type { Group, Module, Program } from "@/components/showcase/ProgramShowcase";
 
@@ -151,6 +152,7 @@ export const TRAINING_GROUPS: Group[] = [
   {
     id: "data",
     title: "Data stack",
+    scene: <SceneDataStack className="w-full h-auto" />,
     icon: <Layers size={20} />,
     summary: "Data engineering end to end: storage, ingestion, processing, warehousing and modeling across the Microsoft data stack.",
     items: [
@@ -166,6 +168,7 @@ export const TRAINING_GROUPS: Group[] = [
   {
     id: "apps",
     title: "Business applications & automation",
+    scene: <SceneApps className="w-full h-auto" />,
     icon: <Workflow size={20} />,
     summary: "Transactional apps, forms, workflows and the digitalization of business processes.",
     items: [
@@ -178,6 +181,7 @@ export const TRAINING_GROUPS: Group[] = [
   {
     id: "ai",
     title: "AI & agents",
+    scene: <SceneAI className="w-full h-auto" />,
     icon: <Bot size={20} />,
     summary: "The intelligent layer: LLMs, Copilot, custom agents and machine learning models.",
     items: [

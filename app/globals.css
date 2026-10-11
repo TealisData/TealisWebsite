@@ -168,3 +168,71 @@ button:not(:disabled):active,
 a[data-press]:active {
   transform: scale(0.97);
 }
+
+/* ─── Clear line ───────────────────────────────────────────────────
+   One even ink line around every panel, flat fills from the palette, no shadows or gradients.
+   Illustrations and panels share the same stroke so the page reads as one drawn album. */
+:root {
+  --line: var(--text-primary);
+  --line-w: 2.5px;
+  --panel-radius: 12px;
+  --fill-sky: var(--bg-tint-2);
+  --fill-sky-deep: var(--bg-tint-3);
+}
+@layer components {
+.panel {
+  border: var(--line-w) solid var(--line);
+  border-radius: var(--panel-radius);
+  background: var(--bg-primary);
+}
+.caption-box {
+  display: inline-flex;
+  align-items: center;
+  border: var(--line-w) solid var(--line);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font: 700 12px/1.2 var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.btn-ink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: var(--line-w) solid var(--line);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--color-dark);
+  color: var(--bg-primary);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.btn-ink:hover { background: var(--color-brand-solid); border-color: var(--color-brand-solid); color: #fff; }
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: var(--line-w) solid var(--line);
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 150ms ease;
+}
+.btn-line:hover { background: var(--fill-sky); }
+.chip-line {
+  display: inline-flex;
+  border: 2px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+}

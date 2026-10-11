@@ -1,3 +1,4 @@
+import { SceneAI, SceneArchitecture, SceneGovernance } from "@/components/clearline/Scenes";
 import { Bot, Layers, ShieldCheck } from "lucide-react";
 import type { Group, Program } from "@/components/showcase/ProgramShowcase";
 
@@ -65,6 +66,7 @@ export const CONSULTING_GROUPS: Group[] = [
   {
     id: "data-architecture",
     title: "Modern data architecture",
+    scene: <SceneArchitecture className="w-full h-auto" />,
     icon: <Layers size={20} />,
     summary: "Lakehouse platforms, reliable pipelines and semantic models — from ingestion to the dashboards your business runs on.",
     items: [
@@ -79,6 +81,7 @@ export const CONSULTING_GROUPS: Group[] = [
   {
     id: "data-strategy",
     title: "Data strategy & governance",
+    scene: <SceneGovernance className="w-full h-auto" />,
     icon: <ShieldCheck size={20} />,
     summary: "Assessment, roadmap and governance that make data a trusted, secure and well-owned asset.",
     items: [
@@ -90,6 +93,7 @@ export const CONSULTING_GROUPS: Group[] = [
   {
     id: "ai",
     title: "AI & agents",
+    scene: <SceneAI className="w-full h-auto" />,
     icon: <Bot size={20} />,
     summary: "From Copilot adoption to custom agents, intelligent automation and machine learning in production.",
     items: [

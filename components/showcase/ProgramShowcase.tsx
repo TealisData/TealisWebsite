@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { ArrowDown } from "lucide-react";
-import WaveArt from "@/components/showcase/WaveArt";
 
 // A module is a short line, or a titled entry with a one-line explanation
 export type Module = string | { title: string; text: string };
@@ -21,14 +20,15 @@ export type Group = {
   id: string;
   title: string;
   icon: React.ReactNode;
+  /** Clear-line illustration shown at the top of the group's panel */
+  scene?: React.ReactNode;
   summary: string;
   // program: the tab that covers this technology, if any
   items: { name: string; program?: string }[];
 };
 
-const labelClass = "text-xs font-semibold uppercase tracking-widest";
-
-/** Page intro + technology groups + tabbed program explorer, shared by Training and Consulting */
+/** Page intro + technology groups + tabbed program explorer, shared by Training and Consulting.
+ *  Drawn in the clear-line style: inked panels, flat fills, caption boxes. */
 export default function ProgramShowcase({
   label,
   title,
@@ -60,74 +60,48 @@ export default function ProgramShowcase({
     <>
       {/* ── Groups ── */}
       <section className="band [--band:var(--bg-tint-1)] py-8 md:py-12">
-        <div className="flex flex-col gap-3 mb-6 max-w-2xl">
-          <p className={`${labelClass} text-[var(--color-brand-text)]`}>{label}</p>
-          <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
+        <div className="flex flex-col items-start gap-4 mb-8 max-w-2xl">
+          <span className="caption-box">{label}</span>
+          <h1 className="text-3xl md:text-[44px] font-bold text-[var(--text-primary)] leading-[1.1] tracking-[-0.02em]" style={{ fontFamily: "var(--font-heading)" }}>
             {title}
           </h1>
-          <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">{subtitle}</p>
+          <p className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed">{subtitle}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {groups.map((g, i) => {
-            const featured = i === 0;
-            const chip = featured
-              ? "border-current/20 hover:border-[var(--color-brand)]"
-              : "border-[var(--border-subtle)] bg-[var(--bg-primary)] hover:border-[var(--color-brand)]";
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {groups.map((g) => {
+            const target = g.items.find((it) => it.program)?.program;
+            const name = target ? programs.find((p) => p.id === target)?.label : undefined;
             return (
-              <div
-                key={g.id}
-                className={`relative overflow-hidden rounded-[var(--radius-lg)] border p-6 md:p-8 flex flex-col gap-5 ${
-                  featured
-                    ? "bg-[var(--bg-feature)] text-[var(--text-on-feature)] border-[var(--border-feature)]"
-                    : "bg-[var(--bg-primary)] text-[var(--text-primary)] border-[var(--border-subtle)]"
-                }`}
-              >
-                {featured && (
-                  <WaveArt id={`wave-art-${g.id}`} className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
-                )}
-                <div className="relative flex flex-col gap-3">
-                  <span className="text-[var(--color-brand-text)]">{g.icon}</span>
-                  <h3 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
+              <article key={g.id} className="panel overflow-hidden flex flex-col">
+                {g.scene && <div className="bg-[var(--fill-sky)] border-b-[length:var(--line-w)] border-[var(--line)] px-4 pt-3">{g.scene}</div>}
+                <div className="flex flex-col gap-4 p-6 flex-1">
+                  <h2 className="text-xl md:text-2xl font-bold leading-snug text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
                     {g.title}
-                  </h3>
-                  <p className={`text-sm leading-relaxed ${featured ? "opacity-80" : "text-[var(--text-primary)]/70"}`}>{g.summary}</p>
-                </div>
-                <ul className="relative flex flex-wrap gap-2">
-                  {g.items.map((it) => (
-                    <li key={it.name}>
-                      {it.program ? (
-                        <button
-                          onClick={() => explore(it.program!)}
-                          className={`px-3 py-1.5 text-sm rounded-md border transition-colors ${chip}`}
-                        >
-                          {it.name}
-                        </button>
-                      ) : (
-                        <span className={`inline-block px-3 py-1.5 text-sm rounded-md border ${chip.split(" hover:")[0]}`}>{it.name}</span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {/* Straight to this area's detail in the explorer below */}
-                {(() => {
-                  const target = g.items.find((it) => it.program)?.program;
-                  if (!target) return null;
-                  const name = programs.find((p) => p.id === target)?.label;
-                  return (
-                    <button
-                      onClick={() => explore(target)}
-                      aria-label={`See details${name ? `: ${name}` : ""}`}
-                      className={`group/cta relative mt-auto self-start inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-[opacity,transform] duration-150 hover:opacity-85 active:scale-[0.97] ${
-                        featured ? "bg-[var(--text-on-feature)] text-[var(--bg-feature)]" : "bg-[var(--color-dark)] text-[var(--bg-primary)]"
-                      }`}
-                    >
+                  </h2>
+                  <p className="text-sm leading-relaxed text-[var(--text-muted)]">{g.summary}</p>
+                  <ul className="flex flex-wrap gap-2">
+                    {g.items.map((it) => (
+                      <li key={it.name}>
+                        {it.program ? (
+                          <button onClick={() => explore(it.program!)} className="chip-line hover:bg-[var(--fill-sky)] transition-colors">
+                            {it.name}
+                          </button>
+                        ) : (
+                          <span className="chip-line">{it.name}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  {/* Straight to this area's detail in the explorer below */}
+                  {target && (
+                    <button onClick={() => explore(target)} aria-label={`See details${name ? `: ${name}` : ""}`} className="btn-ink group/cta mt-auto self-start">
                       See details
                       <ArrowDown size={16} className="transition-transform duration-200 group-hover/cta:translate-y-0.5" />
                     </button>
-                  );
-                })()}
-              </div>
+                  )}
+                </div>
+              </article>
             );
           })}
         </div>
@@ -135,41 +109,41 @@ export default function ProgramShowcase({
 
       {/* ── Program explorer ── */}
       <section ref={explorerRef} className="band [--band:var(--bg-primary)] py-8 md:py-12 scroll-mt-20">
-        <div className="flex flex-col gap-3 mb-5">
-          <p className={`${labelClass} text-[var(--color-brand-text)]`}>{explorerLabel}</p>
+        <span className="caption-box mb-5">{explorerLabel}</span>
+
+        <div className="flex gap-2 overflow-x-auto overflow-y-hidden pb-1 -mx-4 px-4 sm:mx-0 sm:px-0" role="tablist">
+          {programs.map((p) => {
+            const on = active === p.id;
+            return (
+              <button
+                key={p.id}
+                role="tab"
+                id={`tab-${p.id}`}
+                aria-selected={on}
+                aria-controls="program-panel"
+                tabIndex={on ? 0 : -1}
+                onClick={() => setActive(p.id)}
+                onKeyDown={(e) => {
+                  const i = programs.findIndex((x) => x.id === p.id);
+                  const next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? programs.length - 1 : null;
+                  if (next === null) return;
+                  e.preventDefault();
+                  const t = programs[(next + programs.length) % programs.length];
+                  setActive(t.id);
+                  document.getElementById(`tab-${t.id}`)?.focus();
+                }}
+                className={`shrink-0 rounded-full border-[length:var(--line-w)] border-[var(--line)] px-4 py-2 text-sm font-semibold transition-colors ${
+                  on ? "bg-[var(--color-dark)] text-[var(--bg-primary)]" : "bg-[var(--bg-primary)] text-[var(--text-primary)] hover:bg-[var(--fill-sky)]"
+                }`}
+              >
+                {p.label}
+              </button>
+            );
+          })}
         </div>
 
-        <div className="flex gap-6 overflow-x-auto overflow-y-hidden border-b border-[var(--border-subtle)] -mx-4 px-4 sm:mx-0 sm:px-0" role="tablist">
-          {programs.map((p) => (
-            <button
-              key={p.id}
-              role="tab"
-              id={`tab-${p.id}`}
-              aria-selected={active === p.id}
-              aria-controls="program-panel"
-              tabIndex={active === p.id ? 0 : -1}
-              onClick={() => setActive(p.id)}
-              onKeyDown={(e) => {
-                const i = programs.findIndex((x) => x.id === p.id);
-                const next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? programs.length - 1 : null;
-                if (next === null) return;
-                e.preventDefault();
-                const target = programs[(next + programs.length) % programs.length];
-                setActive(target.id);
-                document.getElementById(`tab-${target.id}`)?.focus();
-              }}
-              className={`relative shrink-0 pb-3 text-sm font-medium transition-colors ${
-                active === p.id ? "text-[var(--color-brand-text)]" : "text-[var(--text-primary)] hover:text-[var(--color-brand-text)]"
-              }`}
-            >
-              {p.label}
-              <span className={`absolute left-0 -bottom-px h-0.5 bg-[var(--color-brand)] transition-all ${active === p.id ? "w-full" : "w-0"}`} />
-            </button>
-          ))}
-        </div>
-
-        <div role="tabpanel" id="program-panel" aria-labelledby={`tab-${current.id}`} className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 pt-6">
-          <div className="flex flex-col gap-6">
+        <div role="tabpanel" id="program-panel" aria-labelledby={`tab-${current.id}`} className="panel mt-5 grid grid-cols-1 lg:grid-cols-[1fr_320px] overflow-hidden">
+          <div className="flex flex-col gap-6 p-6 md:p-8">
             <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
               {current.headline}
             </h3>
@@ -180,7 +154,7 @@ export default function ProgramShowcase({
                 const key = typeof m === "string" ? m : m.title;
                 return (
                   <li key={key} className="flex items-start gap-3 mb-3 break-inside-avoid text-base text-[var(--text-primary)]">
-                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
+                    <span className="mt-[7px] h-2.5 w-2.5 shrink-0 rounded-full border-2 border-[var(--line)] bg-[var(--color-brand)]" />
                     {typeof m === "string" ? (
                       m
                     ) : (
@@ -195,18 +169,16 @@ export default function ProgramShowcase({
             </ul>
           </div>
 
-          <aside className="flex flex-col gap-6 rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-tint-1)] p-6 self-start">
+          <aside className="flex flex-col gap-6 p-6 md:p-8 bg-[var(--fill-sky)] border-t-[length:var(--line-w)] lg:border-t-0 lg:border-l-[length:var(--line-w)] border-[var(--line)]">
             {current.facts
               .filter((f) => f.items.length > 0)
               .map((f) => (
                 <div key={f.label} className="flex flex-col gap-2">
-                  <p className={`${labelClass} text-[var(--text-muted)]`}>{f.label}</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.08em] text-[var(--text-primary)]">{f.label}</p>
                   {f.variant === "chips" ? (
                     <div className="flex gap-2 flex-wrap">
                       {f.items.map((it) => (
-                        <span key={it} className="px-3 py-1 text-sm rounded-md border border-[var(--border-subtle)] text-[var(--text-muted)]">
-                          {it}
-                        </span>
+                        <span key={it} className="chip-line">{it}</span>
                       ))}
                     </div>
                   ) : (
@@ -218,10 +190,7 @@ export default function ProgramShowcase({
                   )}
                 </div>
               ))}
-            <button
-              onClick={openContact}
-              className="px-5 py-2.5 bg-[var(--color-dark)] text-[var(--bg-primary)] text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity"
-            >
+            <button onClick={openContact} className="btn-ink self-start">
               {ctaLabel}
             </button>
           </aside>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SceneBuild, SceneHandover, SceneWorkshop } from "@/components/clearline/Scenes";
 import { Compass, GraduationCap, Rocket } from "lucide-react";
 import ProgramShowcase from "@/components/showcase/ProgramShowcase";
 import ApproachSection from "@/components/showcase/ApproachSection";
@@ -16,18 +17,21 @@ export const metadata: Metadata = {
 const APPROACH = [
   {
     icon: <Compass size={20} />,
+    scene: <SceneWorkshop className="w-full h-auto" />,
     title: "Assess & design",
     text: "We start from your goals and your data, not from a product catalogue.",
     points: ["Discovery workshops", "Target architecture", "Prioritized roadmap"],
   },
   {
     icon: <Rocket size={20} />,
+    scene: <SceneBuild className="w-full h-auto" />,
     title: "Build & deliver",
     text: "End-to-end delivery, from the data platform to dashboards, apps and agents.",
     points: ["Iterative delivery", "Tested, versioned code", "Deployment & monitoring"],
   },
   {
     icon: <GraduationCap size={20} />,
+    scene: <SceneHandover className="w-full h-auto" />,
     title: "Enable & hand over",
     text: "Your team owns the solution — no black boxes, no lock-in.",
     points: ["Documentation", "Training on the job", "Ongoing support when you need it"],

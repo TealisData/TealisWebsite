@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, Clock, Globe, Video } from "lucide-react";
-import WaveArt from "@/components/showcase/WaveArt";
+import { AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, Clock, Globe, Video } from "lucide-react";
+import { SceneCalendar } from "@/components/clearline/Scenes";
 import ContactButton from "@/components/showcase/ContactButton";
 import { BOOKING_URL } from "@/lib/booking";
 
@@ -20,7 +20,7 @@ const fmtDay = (iso: string) => new Intl.DateTimeFormat("en-GB", { weekday: "lon
 const fmtMonth = (y: number, m: number) => new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" }).format(new Date(y, m, 1));
 const keyOf = (y: number, m: number, d: number) => `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 
-const cardClass = "rounded-[var(--radius-lg)] border border-[var(--border-subtle)] bg-[var(--bg-primary)]";
+const cardClass = "panel";
 const labelClass = "block text-xs font-semibold text-[var(--text-primary)]/70 mb-1.5";
 const inputClass =
   "w-full px-4 py-3 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-primary)]/40 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] outline-none transition-colors focus:border-[var(--color-brand)] focus:bg-[var(--bg-primary)] focus:ring-2 focus:ring-[var(--color-brand)]/30";
@@ -120,24 +120,23 @@ export default function BookingWidget() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
       {/* ── Summary ── */}
-      <aside className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-feature)] bg-[var(--bg-feature)] text-[var(--text-on-feature)] p-6 md:p-8 flex flex-col gap-5">
-        <WaveArt id="wave-art-booking" className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
+      <aside className="panel relative overflow-hidden bg-[var(--fill-sky)] text-[var(--text-primary)] p-6 md:p-8 flex flex-col gap-5">
+        <SceneCalendar className="w-40 h-auto -ml-4 -mt-2" />
         <div className="relative flex flex-col gap-3">
-          <CalendarDays size={20} className="text-[var(--color-brand-text)]" />
-          <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
+          <h2 className="text-xl md:text-2xl font-bold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
             {data?.serviceName ?? "Discovery call"}
           </h2>
-          <p className="text-sm leading-relaxed opacity-80">
+          <p className="text-sm leading-relaxed text-[var(--text-muted)]">
             A short call to understand your goals, your data and your team — and see how we can help.
           </p>
         </div>
         <ul className="relative flex flex-col gap-2.5 text-sm">
-          <li className="flex items-center gap-3"><Clock size={16} className="opacity-70" /> {data?.durationMinutes ?? 30} minutes</li>
-          <li className="flex items-center gap-3"><Video size={16} className="opacity-70" /> Microsoft Teams</li>
-          <li className="flex items-center gap-3"><Globe size={16} className="opacity-70" /> Times in your time zone</li>
+          <li className="flex items-center gap-3"><Clock size={16} className="text-[var(--color-brand-text)]" /> {data?.durationMinutes ?? 30} minutes</li>
+          <li className="flex items-center gap-3"><Video size={16} className="text-[var(--color-brand-text)]" /> Microsoft Teams</li>
+          <li className="flex items-center gap-3"><Globe size={16} className="text-[var(--color-brand-text)]" /> Times in your time zone</li>
         </ul>
         {slot && step !== "pick" && (
-          <div className="relative mt-auto rounded-lg border border-current/20 px-4 py-3 text-sm">
+          <div className="relative mt-auto panel px-4 py-3 text-sm">
             <p className="font-semibold">{fmtDay(slot)}</p>
             <p className="opacity-80">{fmtTime(slot)} – {fmtTime(new Date(Date.parse(slot) + (data?.durationMinutes ?? 30) * 60_000).toISOString())}</p>
           </div>

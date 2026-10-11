@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SceneCustom, SceneOnTheJob, SceneTeach } from "@/components/clearline/Scenes";
 import { GraduationCap, Users, Wrench } from "lucide-react";
 import ProgramShowcase from "@/components/showcase/ProgramShowcase";
 import ApproachSection from "@/components/showcase/ApproachSection";
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
 const FORMATS = [
   {
     icon: <GraduationCap size={20} />,
+    scene: <SceneTeach className="w-full h-auto" />,
     title: "Official Microsoft courses",
     text: "Instructor-led Microsoft curriculum, delivered by Microsoft Certified Trainers.",
     points: [
@@ -26,12 +28,14 @@ const FORMATS = [
   },
   {
     icon: <Wrench size={20} />,
+    scene: <SceneCustom className="w-full h-auto" />,
     title: "Custom programs",
     text: "Training designed around your tools, your data and your business context.",
     points: ["Discovery workshop on your needs", "Curriculum built on your stack", "Exercises on your real data", "Follow-up Q&A sessions"],
   },
   {
     icon: <Users size={20} />,
+    scene: <SceneOnTheJob className="w-full h-auto" />,
     title: "Training on the job",
     text: "We build alongside your team on a real project — and leave the skills behind.",
     points: ["Side-by-side implementation", "Code & design reviews", "Weekly debriefs", "Documentation & knowledge base"],
