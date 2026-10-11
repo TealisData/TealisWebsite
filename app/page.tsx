@@ -3,7 +3,10 @@
 import { motion } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import CanvasParticleBackground from "@/components/CanvasParticleBackground";
+import dynamic from "next/dynamic";
+
+// three.js only loads in the browser, after the page itself
+const Logo3D = dynamic(() => import("@/components/Logo3D"), { ssr: false });
 
 function FadeIn({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
   const reduce = useReducedMotion();
@@ -29,7 +32,7 @@ export default function HomePage() {
   return (
     <div className="relative flex-1 flex flex-col overflow-hidden">
       <div className="hidden md:block">
-        <CanvasParticleBackground />
+        <Logo3D />
       </div>
 
       {/* Content — aligned with header logo, left half; sits in the upper part of the viewport */}
