@@ -4,6 +4,7 @@ import { CalendarDays, FileText, Mail, MessageSquare, Users } from "lucide-react
 import ApproachSection from "@/components/showcase/ApproachSection";
 import ContactButton from "@/components/showcase/ContactButton";
 import WaveArt from "@/components/showcase/WaveArt";
+import Scribble from "@/components/handmade/Scribble";
 
 export const metadata: Metadata = {
   title: "Contact – Tealis",
@@ -42,7 +43,7 @@ export default function ContactPage() {
           <div className="flex flex-col gap-3 mb-6 max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)]">Contact</p>
             <h1 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
-              Let&apos;s talk about your data &amp; AI goals.
+              Let&apos;s talk about your data &amp; AI <Scribble>goals</Scribble>.
             </h1>
             <p className="text-sm md:text-base text-[var(--text-muted)] leading-relaxed">
               Whether you have a specific project in mind, want to explore training options, or just want to understand

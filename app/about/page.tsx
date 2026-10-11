@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Scribble from "@/components/handmade/Scribble";
+import ValuesSection from "@/components/handmade/ValuesSection";
 
 export const metadata: Metadata = {
   title: "About – Tealis",
@@ -44,7 +46,7 @@ export default function AboutPage() {
             className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] leading-tight"
             style={{ fontFamily: "var(--font-heading)" }}
           >
-            Meet the founders.
+            Meet the <Scribble>founders</Scribble>.
           </h1>
         </div>
 
@@ -115,6 +117,7 @@ export default function AboutPage() {
           ))}
         </div>
 
+        <ValuesSection title="What working with us looks like." />
       </div>
     </div>
   );

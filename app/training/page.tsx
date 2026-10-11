@@ -3,6 +3,8 @@ import { GraduationCap, Users, Wrench } from "lucide-react";
 import ProgramShowcase from "@/components/showcase/ProgramShowcase";
 import ApproachSection from "@/components/showcase/ApproachSection";
 import CtaBand from "@/components/showcase/CtaBand";
+import Scribble from "@/components/handmade/Scribble";
+import ValuesSection from "@/components/handmade/ValuesSection";
 import { TRAINING_GROUPS, TRAINING_PROGRAMS } from "@/components/training/trainingContent";
 
 export const metadata: Metadata = {
@@ -42,7 +44,7 @@ export default function TrainingPage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
         <ProgramShowcase
           label="Training tracks"
-          title="The Microsoft data & AI stack, taught by people who build on it."
+          title={<>The Microsoft data &amp; AI stack, taught by people who <Scribble>build on it</Scribble>.</>}
           subtitle="Official Microsoft courses and custom programs on Fabric, Power BI, Databricks, AI and Power Platform — taught by Microsoft Certified Trainers who build these solutions every day."
           groups={TRAINING_GROUPS}
           programs={TRAINING_PROGRAMS}
@@ -50,6 +52,7 @@ export default function TrainingPage() {
           ctaLabel="Request a quote"
         />
         <ApproachSection label="How we teach" title="Practical, hands-on, built to stick." items={FORMATS} />
+        <ValuesSection />
         <CtaBand
           title="Let's design your team's learning path."
           text="Tell us your stack and goals — we'll propose the right mix of courses, labs and certification prep."

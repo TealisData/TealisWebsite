@@ -3,6 +3,8 @@ import { Compass, GraduationCap, Rocket } from "lucide-react";
 import ProgramShowcase from "@/components/showcase/ProgramShowcase";
 import ApproachSection from "@/components/showcase/ApproachSection";
 import CtaBand from "@/components/showcase/CtaBand";
+import Scribble from "@/components/handmade/Scribble";
+import ValuesSection from "@/components/handmade/ValuesSection";
 import { CONSULTING_GROUPS, CONSULTING_SERVICES } from "@/components/consulting/consultingContent";
 
 export const metadata: Metadata = {
@@ -38,7 +40,7 @@ export default function ConsultingPage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
         <ProgramShowcase
           label="Consulting"
-          title="End-to-end Microsoft data & AI solutions, built for your team to own."
+          title={<>End-to-end Microsoft data &amp; AI solutions, built for your team to <Scribble>own</Scribble>.</>}
           subtitle="We build modern data platforms, put the strategy and governance around them, and bring AI into your daily work — on the Microsoft stack, with knowledge transfer built in, so you never depend on us."
           groups={CONSULTING_GROUPS}
           programs={CONSULTING_SERVICES}
@@ -46,6 +48,7 @@ export default function ConsultingPage() {
           ctaLabel="Get in touch"
         />
         <ApproachSection label="How we work" title="From first workshop to full ownership." items={APPROACH} />
+        <ValuesSection />
         <CtaBand
           title="Let's talk about your data."
           text="Tell us your goals and current stack — we'll propose the right architecture and a roadmap to get there."

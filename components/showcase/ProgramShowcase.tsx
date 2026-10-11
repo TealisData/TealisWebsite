@@ -38,7 +38,7 @@ export default function ProgramShowcase({
   ctaLabel,
 }: {
   label: string;
-  title: string;
+  title: React.ReactNode;
   subtitle: string;
   groups: Group[];
   programs: Program[];

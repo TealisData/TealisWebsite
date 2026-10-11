@@ -141,3 +141,11 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
+
+/* Hand-drawn underline (components/handmade/Scribble): draws once, like a pen stroke */
+.scribble-stroke {
+  transition: stroke-dashoffset 900ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scribble-stroke { transition: none; stroke-dashoffset: 0 !important; }
+}
