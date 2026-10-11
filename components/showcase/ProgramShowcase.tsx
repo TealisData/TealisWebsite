@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { ArrowDown } from "lucide-react";
 import WaveArt from "@/components/showcase/WaveArt";
 
 // A module is a short line, or a titled entry with a one-line explanation
@@ -108,6 +109,24 @@ export default function ProgramShowcase({
                     </li>
                   ))}
                 </ul>
+                {/* Straight to this area's detail in the explorer below */}
+                {(() => {
+                  const target = g.items.find((it) => it.program)?.program;
+                  if (!target) return null;
+                  const name = programs.find((p) => p.id === target)?.label;
+                  return (
+                    <button
+                      onClick={() => explore(target)}
+                      aria-label={`See details${name ? `: ${name}` : ""}`}
+                      className={`group/cta relative mt-auto self-start inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg transition-[opacity,transform] duration-150 hover:opacity-85 active:scale-[0.97] ${
+                        featured ? "bg-[var(--text-on-feature)] text-[var(--bg-feature)]" : "bg-[var(--color-dark)] text-[var(--bg-primary)]"
+                      }`}
+                    >
+                      See details
+                      <ArrowDown size={16} className="transition-transform duration-200 group-hover/cta:translate-y-0.5" />
+                    </button>
+                  );
+                })()}
               </div>
             );
           })}
