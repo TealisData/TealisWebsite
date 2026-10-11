@@ -2,56 +2,97 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader.js";
 
-/* The Tealis mark in 3D, built from the exact logo paths (raw logo coordinates, 1263 × 541).
-   Intro: the outlines draw in, the faces fill, the book opens on its spine, the roof lands on it,
-   and the mark turns to face the visitor. Afterwards it tilts gently towards the pointer. */
+/* The Tealis mark as a 3D cloud of dots. The front face is the exact logo; behind it the book has
+   real page depth. Intro: the dots gather into a closed book, the cover swings open on the spine
+   with a few pages riffling after it, the roof settles on top, and the mark turns to face the
+   visitor at a gentle three-quarter angle, then tilts towards the pointer. Raw logo units. */
 
 const ROOF =
   "M 297.089844 616.949219 L 688.203125 342.449219 C 729.375 319.574219 770.542969 319.574219 811.710938 342.449219 L 1202.824219 616.949219 L 1106.761719 616.949219 L 832.296875 493.425781 C 777.40625 470.550781 722.511719 470.550781 667.617188 493.425781 L 393.152344 616.949219 Z";
-// The book split on its spine (x = 749.957), so the cover can swing open around it
 const BOOK_LEFT =
   "M 228.476562 713.023438 L 708.789062 713.023438 C 727.085938 713.023438 738.523438 724.460938 743.097656 747.335938 L 749.957031 795.375 L 749.957031 850.28 C 731.66 850.28 713.365 841.125 695.066406 822.824219 C 676.765625 804.523438 644.746094 795.375 599.003906 795.375 L 118.6875 795.375 Z";
 const BOOK_RIGHT =
   "M 749.957031 795.375 L 756.820312 747.335938 C 761.394531 724.460938 772.832031 713.023438 791.128906 713.023438 L 1271.441406 713.023438 L 1381.226562 795.375 L 900.914062 795.375 C 855.167969 795.375 823.148438 804.523438 804.851562 822.824219 C 786.55 841.125 768.25 850.28 749.957031 850.28 Z";
 
-const RAW = { cx: 749.957, cy: 589.5, w: 1263 };
+const RAW = { cx: 749.957, cy: 589.5, w: 1263, minX: 110, maxX: 1390, minY: 315, maxY: 860 };
 const SPINE = { x: 749.957, y: 713.023 };
-const ROOF_CENTER = { x: 749.957, y: 470 };
-const DEPTH = 70; // extrusion, raw units
-const MAX_LOGO_W = 820;
+const PAGE_DEPTH = 180; // how far the pages run back from the logo face
+const ROOF_DEPTH = 48;
+const STEP = 15; // dot spacing, raw units
+const MAX_LOGO_W = 800;
 const EDGE_MARGIN = 48;
 const TEXT_GAP = 56;
+const PAGES = 4;
 
 // Intro timeline (ms)
-const T = { lines: [0, 1100], faces: [700, 1700], open: [900, 2200], roof: [1700, 2800], turn: [600, 3400] };
+const T = { gather: [0, 1000], open: [950, 2350], roof: [2150, 3150], turn: [500, 3500] };
+const PAGE_START = 1250;
+const PAGE_GAP = 170;
+const PAGE_DUR = 1150;
 
 const clamp01 = (t: number) => Math.min(Math.max(t, 0), 1);
 const phase = (ms: number, [a, b]: number[]) => clamp01((ms - a) / (b - a));
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-const easeOutBack = (t: number) => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2);
 
-function shapesOf(d: string) {
-  const data = new SVGLoader().parse(`<svg xmlns="http://www.w3.org/2000/svg"><path d="${d}"/></svg>`);
-  return data.paths.flatMap((p) => SVGLoader.createShapes(p));
+type Kind = 0 | 1 | 2 | 3; // left half, cover (right half), roof, riffle page
+type Dot = { x: number; y: number; z: number; kind: Kind; page: number; sx: number; sy: number; sz: number };
+
+/** Sample the logo: front faces on a grid, page surfaces running back from the top edge, roof depth. */
+function sampleDots(): Dot[] {
+  const c = document.createElement("canvas").getContext("2d")!;
+  const paths = { left: new Path2D(BOOK_LEFT), right: new Path2D(BOOK_RIGHT), roof: new Path2D(ROOF) };
+  const dots: Dot[] = [];
+  const add = (x: number, y: number, z: number, kind: Kind, page = -1) => {
+    dots.push({ x, y, z, kind, page, sx: (Math.random() - 0.5) * 2600, sy: (Math.random() - 0.5) * 1800, sz: (Math.random() - 0.5) * 1600 });
+  };
+  // Grid aligned on the spine so both halves are mirror images
+  const x0 = SPINE.x - Math.ceil((SPINE.x - RAW.minX) / STEP) * STEP;
+  for (let x = x0; x <= RAW.maxX; x += STEP) {
+    let topBook = Infinity;
+    let topRoof = Infinity;
+    for (let y = RAW.minY; y <= RAW.maxY; y += STEP) {
+      if (c.isPointInPath(paths.roof, x, y)) { add(x, y, 0, 2); topRoof = Math.min(topRoof, y); continue; }
+      const side: Kind | null = c.isPointInPath(paths.left, x, y) ? 0 : c.isPointInPath(paths.right, x, y) ? 1 : null;
+      if (side === null) continue;
+      add(x, y, 0, side);
+      topBook = Math.min(topBook, y);
+    }
+    // Pages: the open book's surface runs back from the top edge of each column
+    if (topBook < Infinity) {
+      const side: Kind = x < SPINE.x ? 0 : 1;
+      for (let z = STEP * 2; z <= PAGE_DEPTH; z += STEP * 2) add(x, topBook, -z, side);
+      // Riffle pages: thin sheets of the right half that turn after the cover
+      if (x > SPINE.x + STEP) {
+        for (let k = 0; k < PAGES; k++) {
+          for (let z = STEP; z <= PAGE_DEPTH; z += STEP * 2) add(x, SPINE.y, -z, 3, k);
+        }
+      }
+    }
+    // The roof's top edge gets a little depth, like the hat's brim
+    if (topRoof < Infinity) for (let z = STEP; z <= ROOF_DEPTH; z += STEP) add(x, topRoof, -z, 2);
+  }
+  return dots;
+}
+
+/** Soft round dot sprite */
+function dotTexture() {
+  const s = 64;
+  const cv = document.createElement("canvas");
+  cv.width = cv.height = s;
+  const g = cv.getContext("2d")!;
+  g.fillStyle = "#fff";
+  g.beginPath();
+  g.arc(s / 2, s / 2, s / 2 - 2, 0, Math.PI * 2);
+  g.fill();
+  const tex = new THREE.CanvasTexture(cv);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
 }
 
 function cssColor(name: string, fallback: string) {
-  const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  return v || fallback;
-}
-
-/** One extruded logo piece: flat exact colour on the face, lit sides for depth, and its outline. */
-function piece(d: string, faceMat: THREE.Material, sideMat: THREE.Material, lineMat: THREE.LineBasicMaterial) {
-  const geo = new THREE.ExtrudeGeometry(shapesOf(d), { depth: DEPTH, bevelEnabled: false, curveSegments: 24 });
-  const mesh = new THREE.Mesh(geo, [faceMat, sideMat]);
-  const edges = new THREE.EdgesGeometry(geo, 25);
-  const lines = new THREE.LineSegments(edges, lineMat);
-  const group = new THREE.Group();
-  group.add(mesh, lines);
-  return { group, edges, total: edges.attributes.position.count };
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 }
 
 export default function Logo3D() {
@@ -66,79 +107,66 @@ export default function Logo3D() {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.domElement.style.cssText = "position:absolute;inset:0;width:100%;height:100%";
     host.appendChild(renderer.domElement);
-
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(30, 1, 10, 20000);
-    scene.add(new THREE.AmbientLight(0xffffff, 1.1));
-    const sun = new THREE.DirectionalLight(0xffffff, 1.6);
-    sun.position.set(-0.6, 1, 1.2);
-    scene.add(sun);
+    const camera = new THREE.PerspectiveCamera(32, 1, 10, 20000);
 
-    // Materials (recoloured on theme change)
-    const roofFace = new THREE.MeshBasicMaterial({ transparent: true });
-    const roofSide = new THREE.MeshLambertMaterial({ transparent: true });
-    const bookFace = new THREE.MeshBasicMaterial({ transparent: true });
-    const bookSide = new THREE.MeshLambertMaterial({ transparent: true });
-    const roofLine = new THREE.LineBasicMaterial({ transparent: true });
-    const bookLine = new THREE.LineBasicMaterial({ transparent: true });
+    // One Points object per role so each can carry its own colour and opacity
+    const all = sampleDots();
+    const tex = dotTexture();
+    const makeCloud = (filter: (d: Dot) => boolean) => {
+      const dots = all.filter(filter);
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(dots.length * 3), 3));
+      const mat = new THREE.PointsMaterial({ size: 11, map: tex, transparent: true, alphaTest: 0.2, depthWrite: false, sizeAttenuation: true });
+      return { dots, geo, mat, pts: new THREE.Points(geo, mat) };
+    };
+    const book = makeCloud((d) => d.kind === 0 || d.kind === 1);
+    const roof = makeCloud((d) => d.kind === 2);
+    const pages = makeCloud((d) => d.kind === 3);
+
     const applyTheme = () => {
-      const brand = new THREE.Color(cssColor("--color-brand", "#4A86E8"));
       const ink = new THREE.Color(cssColor("--text-primary", "#22252A"));
-      const dark = document.documentElement.getAttribute("data-theme") === "dark" ||
-        (!document.documentElement.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-      roofFace.color.copy(brand);
-      roofSide.color.copy(brand).multiplyScalar(0.62);
-      bookFace.color.copy(ink);
-      bookSide.color.copy(ink).multiplyScalar(dark ? 0.55 : 1.9);
-      roofLine.color.copy(brand).multiplyScalar(dark ? 1 : 0.8);
-      bookLine.color.copy(ink);
+      const brand = new THREE.Color(cssColor("--color-brand", "#4A86E8"));
+      book.mat.color.copy(ink);
+      pages.mat.color.copy(ink);
+      roof.mat.color.copy(brand);
     };
     applyTheme();
 
-    // Logo in raw coordinates: y flipped (SVG grows downward), centred on the mark
+    // Logo space: raw coordinates, y flipped, centred on the mark
     const logo = new THREE.Group();
     const inner = new THREE.Group();
     inner.scale.set(1, -1, 1);
-    inner.position.set(-RAW.cx, RAW.cy, -DEPTH / 2);
+    inner.position.set(-RAW.cx, RAW.cy, PAGE_DEPTH / 3);
+    inner.add(book.pts, roof.pts, pages.pts);
     logo.add(inner);
-
-    const left = piece(BOOK_LEFT, bookFace, bookSide, bookLine);
-    const right = piece(BOOK_RIGHT, bookFace, bookSide, bookLine);
-    const roof = piece(ROOF, roofFace, roofSide, roofLine);
-    inner.add(left.group);
-    // The cover swings around the spine axis (perpendicular to the face, through the book's top edge)
-    const cover = new THREE.Group();
-    cover.position.set(SPINE.x, SPINE.y, 0);
-    right.group.position.set(-SPINE.x, -SPINE.y, 0);
-    cover.add(right.group);
-    inner.add(cover);
-    const roofPivot = new THREE.Group();
-    roofPivot.position.set(ROOF_CENTER.x, ROOF_CENTER.y, 0);
-    roof.group.position.set(-ROOF_CENTER.x, -ROOF_CENTER.y, 0);
-    roofPivot.add(roof.group);
-    inner.add(roofPivot);
     scene.add(logo);
 
-    // Layout: right of the hero text, as large as fits
-    let w = 0, h = 0;
     const layout = () => {
-      w = host.clientWidth;
-      h = host.clientHeight;
+      const w = host.clientWidth;
+      const h = host.clientHeight;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
-      // 1 world unit = 1 CSS pixel on the z = 0 plane
-      camera.position.set(0, 0, h / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)));
+      camera.position.set(0, 0, h / 2 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))); // 1 unit = 1px at z = 0
       camera.updateProjectionMatrix();
       const text = document.querySelector("[data-particle-avoid]")?.getBoundingClientRect();
-      const hostBox = host.getBoundingClientRect();
-      const textRight = text ? text.right - hostBox.left + TEXT_GAP : 0;
+      const box = host.getBoundingClientRect();
+      const textRight = text ? text.right - box.left + TEXT_GAP : 0;
       const targetW = Math.max(320, Math.min(MAX_LOGO_W, w - EDGE_MARGIN - textRight, w * 0.62));
-      const s = targetW / RAW.w;
-      logo.scale.setScalar(s);
-      const cx = w - EDGE_MARGIN - targetW / 2;
-      logo.position.set(cx - w / 2, -h * 0.02, 0);
+      logo.scale.setScalar(targetW / RAW.w);
+      logo.position.set(w - EDGE_MARGIN - targetW / 2 - w / 2, -h * 0.02, 0);
     };
     layout();
+
+    // Rotate a raw point around the spine axis (parallel to z). Negative angles lift the cover up and over.
+    const p = [0, 0, 0];
+    const swing = (d: Dot, angle: number) => {
+      const dx = d.x - SPINE.x, dy = d.y - SPINE.y;
+      const c = Math.cos(angle), s = Math.sin(angle);
+      p[0] = SPINE.x + dx * c - dy * s;
+      p[1] = SPINE.y + dx * s + dy * c;
+      p[2] = d.z;
+    };
 
     const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
     const onMove = (e: MouseEvent) => {
@@ -147,35 +175,45 @@ export default function Logo3D() {
     };
     const onLeave = () => { pointer.tx = 0; pointer.ty = 0; };
 
+    const write = (cloud: typeof book, ms: number) => {
+      const arr = cloud.geo.attributes.position.array as Float32Array;
+      const gather = easeOutCubic(phase(ms, T.gather));
+      const open = easeInOutCubic(phase(ms, T.open));
+      const roofIn = easeOutCubic(phase(ms, T.roof));
+      cloud.dots.forEach((d, i) => {
+        if (d.kind === 1) swing(d, -Math.PI * (1 - open));
+        else if (d.kind === 3) swing(d, -Math.PI * (1 - easeInOutCubic(clamp01((ms - PAGE_START - d.page * PAGE_GAP) / PAGE_DUR))));
+        else if (d.kind === 2) { p[0] = d.x; p[1] = d.y - 380 * (1 - roofIn); p[2] = d.z; }
+        else { p[0] = d.x; p[1] = d.y; p[2] = d.z; }
+        // The book's dots gather from a loose cloud; the roof's arrive with their own fall
+        const g = d.kind === 2 ? roofIn : gather;
+        arr[i * 3] = p[0] + d.sx * (1 - g);
+        arr[i * 3 + 1] = p[1] + d.sy * (1 - g);
+        arr[i * 3 + 2] = p[2] + d.sz * (1 - g);
+      });
+      cloud.geo.attributes.position.needsUpdate = true;
+    };
+
+    const lastPage = PAGE_START + (PAGES - 1) * PAGE_GAP + PAGE_DUR;
     const start = performance.now();
     let raf = 0;
     const frame = (now: number) => {
       const ms = reduce ? 1e6 : now - start;
+      write(book, ms);
+      write(roof, ms);
+      write(pages, ms);
+      book.mat.opacity = easeOutCubic(phase(ms, [0, 600]));
+      roof.mat.opacity = easeOutCubic(phase(ms, [T.roof[0], T.roof[0] + 500]));
+      // Turning pages are lighter; once they lie flat they merge into the open book
+      pages.mat.opacity = ms < PAGE_START ? 0 : 0.45 * (1 - phase(ms, [lastPage - 200, lastPage + 300]));
 
-      // 1. Outlines draw in
-      const lp = easeOutCubic(phase(ms, T.lines));
-      for (const p of [left, right, roof]) p.edges.setDrawRange(0, Math.floor(p.total * lp));
-      // 2. Faces fill in behind the lines
-      const fp = easeInOutCubic(phase(ms, T.faces));
-      for (const m of [roofFace, roofSide, bookFace, bookSide]) m.opacity = fp;
-      for (const m of [roofLine, bookLine]) m.opacity = 1 - 0.65 * fp;
-      // 3. The book opens: the cover swings 180° around the spine
-      const op = easeInOutCubic(phase(ms, T.open));
-      cover.rotation.z = Math.PI * (1 - op);
-      cover.position.z = 6 * (1 - op); // keeps the closed cover off the page's plane (no z-fighting)
-      // 4. The roof lands on the open book
-      const rp = phase(ms, T.roof);
-      roofPivot.position.y = ROOF_CENTER.y - 420 * (1 - easeOutBack(rp));
-      roofPivot.rotation.x = 0.9 * (1 - easeOutCubic(rp));
-      roof.group.visible = rp > 0;
-      // 5. The whole mark turns from a three-quarter view to face the visitor, then follows the pointer
-      const tp = easeInOutCubic(phase(ms, T.turn));
+      const turn = easeInOutCubic(phase(ms, T.turn));
       pointer.x += (pointer.tx - pointer.x) * 0.05;
       pointer.y += (pointer.ty - pointer.y) * 0.05;
-      const idle = ms > T.turn[1] ? Math.sin((ms - T.turn[1]) / 1800) * 0.04 : 0;
-      // Rest pose stays slightly three-quarter so the depth of the mark remains visible
-      logo.rotation.y = -0.75 * (1 - tp) + tp * (-0.24 + pointer.x * 0.28 + idle);
-      logo.rotation.x = 0.55 * (1 - tp) + tp * (0.16 + pointer.y * 0.16);
+      const idle = ms > T.turn[1] ? Math.sin((ms - T.turn[1]) / 1900) * 0.05 : 0;
+      // From a high three-quarter view to a gentle one that still shows the pages' depth
+      logo.rotation.x = 0.75 * (1 - turn) + turn * (0.2 + pointer.y * 0.12);
+      logo.rotation.y = -0.6 * (1 - turn) + turn * (-0.16 + pointer.x * 0.3 + idle);
 
       renderer.render(scene, camera);
       if (!reduce) raf = requestAnimationFrame(frame);
@@ -195,10 +233,8 @@ export default function Logo3D() {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
-      scene.traverse((o) => {
-        if (o instanceof THREE.Mesh || o instanceof THREE.LineSegments) o.geometry.dispose();
-      });
-      [roofFace, roofSide, bookFace, bookSide, roofLine, bookLine].forEach((m) => m.dispose());
+      for (const c of [book, roof, pages]) { c.geo.dispose(); c.mat.dispose(); }
+      tex.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
