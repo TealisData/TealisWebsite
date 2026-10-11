@@ -1,23 +1,24 @@
 "use client";
 
-/** CTA that opens the global ContactDrawer; "inverted" is for use on --bg-feature surfaces */
+/** Opens the global ContactDrawer. "outline" is the default secondary action; "solid" is reserved
+ *  for views where writing to us is the primary action (one filled control per view). */
 export default function ContactButton({
   children,
-  variant = "default",
+  variant = "outline",
   className = "",
 }: {
   children: React.ReactNode;
-  variant?: "default" | "inverted";
+  variant?: "outline" | "solid";
   className?: string;
 }) {
-  const colors =
-    variant === "inverted"
-      ? "bg-[var(--text-on-feature)] text-[var(--bg-feature)]"
-      : "bg-[var(--color-dark)] text-[var(--bg-primary)]";
+  const style =
+    variant === "solid"
+      ? "bg-[var(--color-dark)] text-[var(--bg-primary)] border-[var(--color-dark)] hover:opacity-85"
+      : "border-[var(--text-primary)] text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)]";
   return (
     <button
       onClick={() => window.dispatchEvent(new CustomEvent("tealis:open-contact"))}
-      className={`px-5 py-2.5 text-sm font-semibold rounded-lg hover:opacity-80 transition-opacity ${colors} ${className}`}
+      className={`px-5 py-2.5 text-sm font-semibold rounded-full border-2 transition-colors ${style} ${className}`}
     >
       {children}
     </button>

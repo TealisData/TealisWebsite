@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertCircle, CalendarDays, CheckCircle2, ChevronLeft, ChevronRight, Clock, Globe, Video } from "lucide-react";
-import WaveArt from "@/components/showcase/WaveArt";
+import { AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, Clock, Globe, Video } from "lucide-react";
 import ContactButton from "@/components/showcase/ContactButton";
 import { BOOKING_URL } from "@/lib/booking";
 
@@ -48,7 +47,14 @@ export default function BookingWidget() {
       const json: SlotsResponse = await res.json();
       setData(json);
       // Open on the first day with free times
-      const first = json.slots[0];
+      // A time picked on another page (?slot=…) opens straight on the details step
+      const wanted = new URLSearchParams(window.location.search).get("slot");
+      const preset = wanted && json.slots.includes(wanted) ? wanted : null;
+      if (preset) {
+        setSlot((current) => current ?? preset);
+        setStep((current) => (current === "pick" ? "details" : current));
+      }
+      const first = preset ?? json.slots[0];
       if (first) {
         const d = new Date(first);
         setDay((current) => current ?? dayKey(first));
@@ -120,26 +126,27 @@ export default function BookingWidget() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4">
       {/* ── Summary ── */}
-      <aside className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-feature)] bg-[var(--bg-feature)] text-[var(--text-on-feature)] p-6 md:p-8 flex flex-col gap-5">
-        <WaveArt id="wave-art-booking" className="absolute inset-0 w-full h-full opacity-40 pointer-events-none" />
-        <div className="relative flex flex-col gap-3">
-          <CalendarDays size={20} className="text-[var(--color-brand-text)]" />
-          <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
-            {data?.serviceName ?? "Discovery call"}
-          </h2>
-          <p className="text-sm leading-relaxed opacity-80">
-            A short call to understand your goals, your data and your team — and see how we can help.
-          </p>
+      <aside className="rounded-[var(--radius-lg)] border-2 border-[var(--line-teach)] bg-[var(--bg-primary)] p-6 md:p-8 flex flex-col gap-5">
+        <div className="flex items-center gap-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/team/gabriele.png" alt="" className="h-16 w-16 rounded-full object-cover object-top border-[5px] border-[var(--line-build)]" />
+          <div className="flex flex-col">
+            <h2 className="text-xl md:text-2xl font-bold leading-snug text-[var(--text-primary)]">{data?.serviceName ?? "Discovery call"}</h2>
+            <p className="text-sm text-[var(--text-muted)]">with Gabriele Nicosia</p>
+          </div>
         </div>
-        <ul className="relative flex flex-col gap-2.5 text-sm">
-          <li className="flex items-center gap-3"><Clock size={16} className="opacity-70" /> {data?.durationMinutes ?? 30} minutes</li>
-          <li className="flex items-center gap-3"><Video size={16} className="opacity-70" /> Microsoft Teams</li>
-          <li className="flex items-center gap-3"><Globe size={16} className="opacity-70" /> Times in your time zone</li>
+        <p className="text-sm leading-relaxed text-[var(--text-muted)]">
+          The first stop on both lines: a short call to understand your goals, your data and your team, and see how we can help.
+        </p>
+        <ul className="flex flex-col gap-2.5 text-sm text-[var(--text-primary)]">
+          <li className="flex items-center gap-3"><Clock size={16} className="text-[var(--color-brand-text)]" /> {data?.durationMinutes ?? 30} minutes, free</li>
+          <li className="flex items-center gap-3"><Video size={16} className="text-[var(--color-brand-text)]" /> Microsoft Teams</li>
+          <li className="flex items-center gap-3"><Globe size={16} className="text-[var(--color-brand-text)]" /> Times in your time zone</li>
         </ul>
         {slot && step !== "pick" && (
-          <div className="relative mt-auto rounded-lg border border-current/20 px-4 py-3 text-sm">
+          <div className="mt-auto rounded-lg bg-[var(--bg-tint-2)] px-4 py-3 text-sm text-[var(--text-primary)]">
             <p className="font-semibold">{fmtDay(slot)}</p>
-            <p className="opacity-80">{fmtTime(slot)} – {fmtTime(new Date(Date.parse(slot) + (data?.durationMinutes ?? 30) * 60_000).toISOString())}</p>
+            <p className="tabular text-[var(--text-muted)]">{fmtTime(slot)} – {fmtTime(new Date(Date.parse(slot) + (data?.durationMinutes ?? 30) * 60_000).toISOString())}</p>
           </div>
         )}
       </aside>
@@ -208,7 +215,7 @@ export default function BookingWidget() {
           <div className="flex flex-col items-start gap-4 max-w-md">
             <h3 className="text-lg font-semibold text-[var(--text-primary)]">No free times right now</h3>
             <p className="text-sm text-[var(--text-muted)] leading-relaxed">Send us a message and we&apos;ll find a time together.</p>
-            <ContactButton>Write to us</ContactButton>
+            <ContactButton variant="solid">Write to us</ContactButton>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-8">

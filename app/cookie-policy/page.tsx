@@ -10,7 +10,6 @@ export default function CookiePolicyPage() {
       <div className="max-w-3xl mx-auto px-6 sm:px-8 py-20 flex flex-col gap-10">
 
         <div className="flex flex-col gap-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-[var(--color-brand-text)]">Legal</p>
           <h1 className="text-4xl font-bold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>
             Cookie Policy
           </h1>

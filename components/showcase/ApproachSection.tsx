@@ -1,38 +1,42 @@
-/** "How we teach / How we work" section: three approaches with key points */
+import Station, { type Line } from "@/components/lines/Station";
+
+/** "How we teach / How we work": the stops of an engagement, in order, as one station */
 export default function ApproachSection({
-  label,
+  line = "both",
+  last = false,
   title,
+  intro,
   items,
 }: {
-  label: string;
+  line?: Line;
+  last?: boolean;
   title: string;
-  items: { icon: React.ReactNode; title: string; text: string; points: string[] }[];
+  intro?: string;
+  items: { title: string; text: string; points: string[] }[];
 }) {
   return (
-    <section className="band [--band:var(--bg-tint-2)] py-8 md:py-12">
-      <div className="flex flex-col gap-3 mb-6 max-w-2xl">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-brand-text)]">{label}</p>
-        <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
-          {title}
-        </h2>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <Station line={line} last={last} title={title} intro={intro} className="band [--band:var(--bg-tint-2)]">
+      <ol className="flex flex-col">
         {items.map((f) => (
-          <div key={f.title} className="flex flex-col gap-3 rounded-[var(--radius-lg)] bg-[var(--bg-primary)] border border-[var(--border-subtle)] p-6">
-            <span className="text-[var(--color-brand-text)]">{f.icon}</span>
-            <h3 className="text-lg font-semibold text-[var(--text-primary)]" style={{ fontFamily: "var(--font-heading)" }}>{f.title}</h3>
-            <p className="text-sm text-[var(--text-muted)] leading-relaxed">{f.text}</p>
-            <ul className="flex flex-col gap-2 mt-1">
-              {f.points.map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-sm text-[var(--text-primary)]">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] shrink-0" />
-                  {pt}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <li
+            key={f.title}
+            className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-x-10 gap-y-2 py-6 border-t border-[var(--border-subtle)] first:border-t-0 first:pt-0"
+          >
+            <h3 className="text-xl font-bold text-[var(--text-primary)]">{f.title}</h3>
+            <div className="flex flex-col gap-3">
+              <p className="text-base text-[var(--text-muted)] leading-relaxed max-w-[62ch]">{f.text}</p>
+              <ul className="flex flex-wrap gap-x-5 gap-y-1.5">
+                {f.points.map((pt) => (
+                  <li key={pt} className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)]">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[var(--line-teach)]" aria-hidden="true" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
         ))}
-      </div>
-    </section>
+      </ol>
+    </Station>
   );
 }
