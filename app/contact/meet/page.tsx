@@ -13,7 +13,6 @@ export default function MeetPage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
         <Station
           first
-          last
           as="h1"
           title="Pick a time that works for you"
           intro="Choose a day and a time below. You'll receive a confirmation e-mail with the Microsoft Teams link."

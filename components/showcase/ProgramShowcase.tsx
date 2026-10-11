@@ -74,35 +74,37 @@ export default function ProgramShowcase({
         intro={subtitle}
         className="band [--band:var(--bg-tint-1)]"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-10">
+        {/* The branches of this line: what each area covers, and the tools you can jump to */}
+        <ul className="flex flex-col">
           {groups.map((g) => (
-            <div key={g.id} className="flex flex-col gap-3">
-              <span className="h-[6px] w-12 rounded-full" style={{ background: color }} aria-hidden="true" />
-              <h2 className="text-xl font-bold text-[var(--text-primary)]">{g.title}</h2>
-              <p className="text-[15px] text-[var(--text-muted)] leading-relaxed">{g.summary}</p>
-              <ul className="flex flex-wrap gap-x-4 gap-y-2 pt-1">
-                {g.items.map((it) => (
-                  <li key={it.name}>
-                    {it.program ? (
-                      <button
-                        onClick={() => explore(it.program!)}
-                        className="group inline-flex items-center gap-2 text-sm font-medium text-[var(--text-primary)] hover:text-[var(--color-brand-text)] transition-colors"
-                      >
-                        <span className="h-2.5 w-2.5 rounded-full border-2 transition-transform duration-200 group-hover:scale-125" style={{ borderColor: color }} aria-hidden="true" />
-                        <span className="underline decoration-[var(--border-subtle)] underline-offset-4 group-hover:decoration-current">{it.name}</span>
-                      </button>
-                    ) : (
-                      <span className="inline-flex items-center gap-2 text-sm text-[var(--text-muted)]">
-                        <span className="h-2.5 w-2.5 rounded-full border-2 border-[var(--border-subtle)]" aria-hidden="true" />
-                        {it.name}
-                      </span>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <li key={g.id} className="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-x-10 gap-y-2 py-5 border-t border-[var(--border-subtle)] first:border-t-0 first:pt-0">
+              <h2 className="flex items-center gap-3 text-lg font-bold text-[var(--text-primary)]">
+                <span className="h-3 w-3 shrink-0 rounded-full border-[3px]" style={{ borderColor: color }} aria-hidden="true" />
+                {g.title}
+              </h2>
+              <div className="flex flex-col gap-2">
+                <p className="text-[15px] text-[var(--text-muted)] leading-relaxed max-w-[62ch]">{g.summary}</p>
+                <p className="flex flex-wrap gap-x-1 gap-y-1 text-sm">
+                  {g.items.map((it, i) => (
+                    <span key={it.name} className="inline-flex items-center gap-1">
+                      {it.program ? (
+                        <button
+                          onClick={() => explore(it.program!)}
+                          className="font-semibold text-[var(--text-primary)] underline decoration-[var(--border-subtle)] underline-offset-4 hover:text-[var(--color-brand-text)] hover:decoration-current transition-colors"
+                        >
+                          {it.name}
+                        </button>
+                      ) : (
+                        <span className="font-semibold text-[var(--text-primary)]">{it.name}</span>
+                      )}
+                      {i < g.items.length - 1 && <span className="text-[var(--text-muted)]" aria-hidden="true">·</span>}
+                    </span>
+                  ))}
+                </p>
+              </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </Station>
 
       <div ref={explorerRef} className="scroll-mt-20">
@@ -169,7 +171,7 @@ export default function ProgramShowcase({
                   <div key={f.label} className="flex flex-col gap-2">
                     <p className="text-sm font-bold text-[var(--text-primary)]">{f.label}</p>
                     {f.variant === "chips" ? (
-                      <p className="text-sm text-[var(--text-muted)] leading-relaxed">{f.items.join(" → ")}</p>
+                      <p className="text-sm text-[var(--text-muted)] leading-relaxed">{f.items.join(f.label === "Levels" ? " → " : " · ")}</p>
                     ) : (
                       <ul className="flex flex-col gap-2">
                         {f.items.map((it) => {

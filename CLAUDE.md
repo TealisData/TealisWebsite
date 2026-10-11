@@ -38,7 +38,7 @@ Corporate website for **Tealisdata OÜ** — a Microsoft data consulting and tra
 ```
 app/
   layout.tsx          — root layout: Header, Footer, ContactDrawer, CookieBanner
-  page.tsx            — Home (particle background, hero text)
+  page.tsx            — Home (Two Lines route map, live free slots, stations)
   consulting/page.tsx — Consulting: same structure as Training (groups + service explorer, How we work, CTA)
   training/page.tsx   — Training: track groups + program explorer, How we teach, CTA
   about/page.tsx      — Team profiles (Gabriele + Luca)
@@ -51,13 +51,13 @@ components/
   Header.tsx                  — Fixed header, logo, nav, theme toggle, mobile hamburger
   Footer.tsx                  — Footer with company info, social links
   Logo.tsx                    — SVG logo component, variant="default"|"white"
-  CanvasParticleBackground    — Animated particle canvas (home page, desktop only)
+  lines/                      — Two Lines system: RouteMap, Station (section rail), NextSlots, LogoMark
   ContactDrawer.tsx           — Slide-in contact form (global, triggered via custom event)
   CookieBanner.tsx            — GDPR cookie consent banner
   GoogleAnalytics.tsx         — GA4 script loader (only when consent given)
   ThemeProvider.tsx           — next-themes wrapper
   showcase/                   — shared by Training & Consulting: ProgramShowcase (intro, 3 groups,
-                                tabbed explorer), ApproachSection, CtaBand, WaveArt, ContactButton
+                                station tab list), ApproachSection, CtaBand, ContactButton
   training/trainingContent    — Training groups & programs data
   consulting/consultingContent — Consulting groups & services data
 
@@ -121,7 +121,7 @@ primary / tint-2 / primary. Cards on tinted bands use `bg-[var(--bg-primary)]`.
 ## Hard rules — do not break these
 
 1. **Do not change any colors** unless the user explicitly asks. The design tokens are final (last revised for dark-mode accessibility, Oct 2026). Never introduce new color values outside of `globals.css`.
-2. **Do not change typography or section label style.** Font sizes, weights, spacing, and the `text-xs font-semibold uppercase tracking-widest` section label pattern are intentional.
+2. **Follow DESIGN.md ("Two Lines").** Sections are `Station`s on the route rail; no eyebrow/kicker labels above headings; one filled control per view ("Book a call").
 3. **Mobile-first.** When fixing mobile issues, do not touch desktop layout. Use `md:` breakpoints to isolate.
 4. **Always ask for review before committing and pushing.** Never run `git commit` + `git push` without explicit user approval of the changes.
 5. **All text must be in English.** No Italian anywhere in the UI.

@@ -48,7 +48,7 @@ export default function HomePage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
 
         {/* ── First viewport: the offer, the action, the route ── */}
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-10 lg:gap-12 items-center pt-10 pb-6 md:pt-14 md:pb-10 lg:min-h-[calc(100svh-180px)]">
+        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)] gap-8 lg:gap-10 items-center pt-8 pb-4 md:pt-16 md:pb-12">
           <div className="flex flex-col gap-7">
             <h1 className="text-[38px] leading-[1.05] sm:text-5xl lg:text-[52px] font-bold tracking-[-0.03em] text-[var(--text-primary)] text-balance">
               We build your data platform. Then we teach your team to run it.
@@ -60,7 +60,7 @@ export default function HomePage() {
             </p>
             <NextSlots />
           </div>
-          <RouteMap />
+          <div className="lg:-mr-6 xl:-mr-10"><RouteMap /></div>
         </section>
 
         {/* ── The route, one station per section ── */}
@@ -92,18 +92,25 @@ export default function HomePage() {
           intro="Development: we design and build the platform, from architecture to the last report."
           className="band [--band:var(--bg-tint-1)]"
         >
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-x-10 gap-y-8">
-            {CONSULTING_SERVICES.map((s) => (
-              <li key={s.id}>
-                <Link href={`/consulting#${s.id}`} className="group flex flex-col gap-3">
-                  <span className="h-[6px] w-12 rounded-full bg-[var(--line-build)] transition-[width] duration-300 group-hover:w-20" aria-hidden="true" />
-                  <span className="text-xl font-bold text-[var(--text-primary)] group-hover:text-[var(--color-brand-text)] transition-colors" style={{ fontFamily: "var(--font-heading)" }}>
-                    {s.label}
-                  </span>
-                  <span className="text-[15px] text-[var(--text-muted)] leading-relaxed">{s.headline}</span>
-                </Link>
-              </li>
-            ))}
+          <ul className="flex flex-col">
+            {CONSULTING_SERVICES.map((sv) => {
+              const tech = sv.facts.find((f) => f.label === "Technologies")?.items ?? [];
+              return (
+                <li key={sv.id} className="border-t border-[var(--border-subtle)] first:border-t-0">
+                  <Link
+                    href={`/consulting#${sv.id}`}
+                    className="group grid grid-cols-1 md:grid-cols-[300px_1fr_auto] items-baseline gap-x-8 gap-y-1 py-4"
+                  >
+                    <span className="flex items-center gap-3 text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--color-brand-text)] transition-colors" style={{ fontFamily: "var(--font-heading)" }}>
+                      <span className="h-3 w-3 rounded-full border-[3px] border-[var(--line-build)] transition-transform duration-200 group-hover:scale-125" aria-hidden="true" />
+                      {sv.label}
+                    </span>
+                    <span className="text-sm font-semibold text-[var(--text-primary)]">{tech.slice(0, 4).join(" · ")}</span>
+                    <span className="text-sm text-[var(--text-muted)]">{sv.headline}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </Station>
 

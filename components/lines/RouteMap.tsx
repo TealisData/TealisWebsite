@@ -118,7 +118,7 @@ export default function RouteMap() {
         @media (prefers-reduced-motion: reduce) { .route-rail { animation: none !important } }`}</style>
 
       {/* Desktop / tablet */}
-      <svg viewBox={`0 0 ${H.w} ${H.h}`} className="hidden md:block w-full h-auto overflow-visible" role="group" aria-label="How a Tealis project travels: Build line and Teach line, from Discovery call to Handover">
+      <svg viewBox={`0 60 ${H.w} ${H.h - 90}`} className="hidden md:block w-full h-auto overflow-visible" role="group" aria-label="How a Tealis project travels: Build line and Teach line, from Discovery call to Handover">
         {rails(H.build, H.teach)}
         <text x={455} y={190} textAnchor="middle" className="fill-[var(--text-muted)]" style={{ font: "700 12px var(--font-body)", letterSpacing: "0.16em" }}>BUILD LINE · DEVELOPMENT</text>
         <text x={455} y={358} textAnchor="middle" className="fill-[var(--color-brand-text)]" style={{ font: "700 12px var(--font-body)", letterSpacing: "0.16em" }}>TEACH LINE · TRAINING</text>

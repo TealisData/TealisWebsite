@@ -43,61 +43,57 @@ export default function AboutPage() {
       <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col">
         <Station
           first
-          last
           as="h1"
           title="Meet the founders"
           intro="Two Microsoft Certified Trainers, one on each line. Together we build your platform and teach your team to run it."
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-14 pt-2">
-            {TEAM.map((member) => (
-              <article key={member.name} className="flex flex-col gap-6">
-                <div className="flex items-center gap-5">
-                  {member.photo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={member.photo}
-                      alt={member.name}
-                      className="w-24 h-24 rounded-full object-cover object-top shrink-0 border-[6px]"
-                      style={{ borderColor: `var(--line-${member.line})` }}
-                    />
-                  ) : (
-                    <div
-                      className="w-24 h-24 rounded-full flex items-center justify-center text-white text-lg font-bold shrink-0"
-                      style={{ backgroundColor: "var(--color-brand-solid)" }}
-                    >
-                      {member.initials}
-                    </div>
-                  )}
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-bold text-[var(--text-primary)] leading-tight">{member.name}</h2>
-                    <p className="text-sm font-semibold text-[var(--color-brand-text)]">{member.title}</p>
-                    <p className="text-xs text-[var(--text-muted)]">{member.lineName}</p>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-4">
-                  {member.bio.map((para, j) => (
-                    <p key={j} className="text-base text-[var(--text-muted)] leading-relaxed max-w-[60ch]">
-                      {para}
-                    </p>
-                  ))}
-                </div>
-                <a
-                  href={member.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="self-start inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-brand-text)] hover:underline"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                    <rect x="2" y="9" width="4" height="12" />
-                    <circle cx="4" cy="4" r="2" />
-                  </svg>
-                  {member.name.split(" ")[0]} on LinkedIn
-                </a>
-              </article>
-            ))}
-          </div>
-        </Station>
+        />
+        {TEAM.map((member, i) => (
+          <Station
+            key={member.name}
+            line={member.line}
+            last={i === TEAM.length - 1}
+            title={member.name}
+            className={i % 2 === 0 ? "band [--band:var(--bg-tint-1)]" : ""}
+            marker={
+              member.photo ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={member.photo}
+                  alt=""
+                  className="block max-w-none w-14 h-14 md:w-[72px] md:h-[72px] rounded-full object-cover object-top border-[5px] bg-[var(--bg-primary)]"
+                  style={{ borderColor: `var(--line-${member.line})` }}
+                />
+              ) : undefined
+            }
+            intro={
+              <span className="flex flex-col gap-1">
+                <span className="font-semibold text-[var(--color-brand-text)]">{member.title}</span>
+                <span className="text-sm">{member.lineName}</span>
+              </span>
+            }
+          >
+            <div className="flex flex-col gap-4">
+              {member.bio.map((para, j) => (
+                <p key={j} className="text-base md:text-lg text-[var(--text-muted)] leading-relaxed max-w-[64ch]">
+                  {para}
+                </p>
+              ))}
+            </div>
+            <a
+              href={member.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="self-start inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-brand-text)] hover:underline"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <rect x="2" y="9" width="4" height="12" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+              {member.name.split(" ")[0]} on LinkedIn
+            </a>
+          </Station>
+        ))}
       </div>
     </div>
   );

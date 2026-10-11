@@ -15,6 +15,7 @@ export default function Station({
   as: Heading = "h2",
   first = false,
   last = false,
+  marker,
   className = "",
   children,
 }: {
@@ -25,6 +26,8 @@ export default function Station({
   as?: "h1" | "h2";
   first?: boolean;
   last?: boolean;
+  /** Replaces the station dot, e.g. a founder's portrait seated on their line */
+  marker?: React.ReactNode;
   className?: string;
   children?: React.ReactNode;
 }) {
@@ -55,22 +58,30 @@ export default function Station({
       ref={ref}
       id={id}
       data-visited={visited}
-      className={`relative grid grid-cols-[28px_1fr] md:grid-cols-[64px_1fr] gap-x-4 md:gap-x-8 scroll-mt-24 [--st-pad:3.5rem] md:[--st-pad:5rem] py-[var(--st-pad)] ${className}`}
+      className={`relative grid grid-cols-[44px_1fr] md:grid-cols-[64px_1fr] gap-x-4 md:gap-x-8 scroll-mt-24 [--st-pad:3.5rem] md:[--st-pad:5rem] py-[var(--st-pad)] ${className}`}
     >
       {/* Rail: positioned on the whole section (padding included) so consecutive stations join */}
-      <div className="absolute inset-y-0 left-[14px] md:left-[32px] w-0" aria-hidden="true">
+      <div className="absolute inset-y-0 left-[24px] md:left-[32px] w-0" aria-hidden="true">
         <div
           className="absolute left-0 -translate-x-1/2 flex gap-[var(--rail-gap)]"
           style={{ top: first ? markerTop : 0, bottom: last ? `calc(100% - ${markerTop})` : 0 }}
         >
           {rails.map((r) => (
-            <span key={r} className={`relative w-[var(--line-w)] h-full rounded-full overflow-hidden ${shown(r) ? "" : "invisible"}`}>
+            <span key={r} className="relative w-[var(--line-w)] h-full rounded-full overflow-hidden">
               <span className="absolute inset-0 opacity-20" style={{ background: `var(--line-${r})` }} />
-              <span className="rail-fill absolute inset-0" style={{ background: `var(--line-${r})` }} />
+              {shown(r) && <span className="rail-fill absolute inset-0" style={{ background: `var(--line-${r})` }} />}
             </span>
           ))}
         </div>
-        <span
+        {marker ? (
+          <span
+            className={`absolute left-0 -translate-x-1/2 -translate-y-1/2 block ${visited ? "station-arrive" : ""}`}
+            style={{ top: markerTop, marginLeft: line === "both" ? 0 : line === "build" ? `calc(-1 * ${railOffset})` : railOffset }}
+          >
+            {marker}
+          </span>
+        ) : (
+          <span
           className={`absolute left-0 -translate-x-1/2 -translate-y-1/2 block bg-[var(--bg-primary)] border-[5px] ${
             line === "both" ? "w-10 h-[26px] rounded-full" : "w-[22px] h-[22px] rounded-full"
           } ${visited ? "station-arrive" : ""}`}
@@ -82,6 +93,7 @@ export default function Station({
               : "color-mix(in srgb, var(--line-build) 30%, transparent)",
           }}
         />
+        )}
       </div>
       <div aria-hidden="true" />
 

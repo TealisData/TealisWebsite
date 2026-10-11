@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-11T12:00:00Z",
+  "title": "Design System: Tealis — Two Lines",
+  "extensions": {
+    "colorMeta": {
+      "brand": { "role": "primary", "displayName": "Teach Line Blue", "canonical": "#4A86E8" },
+      "brand-text": { "role": "primary", "displayName": "Teach Line Text", "canonical": "#2A66C9" },
+      "ink": { "role": "neutral", "displayName": "Build Line Ink", "canonical": "#22252A" },
+      "bg-primary": { "role": "neutral", "displayName": "Paper", "canonical": "#FDFDFE" }
+    },
+    "motion": {
+      "ease-snap": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      "ease-out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "station-arrive": "420ms ease-snap",
+      "rail-fill": "700ms ease-out-expo",
+      "route-draw": "1700ms linear"
+    },
+    "lines": { "line-w": "6px", "rail-gap": "4px", "bends": "45deg only" },
+    "narrative": {
+      "northStar": "The people who build your platform are the people who teach your team.",
+      "keyCharacteristics": [
+        "Two parallel rails (Build ink, Teach blue) structure every page; sections are stations",
+        "The Tealis mark is the Handover interchange",
+        "Founders' portraits are stations on their line",
+        "One filled action: Book a call, with live free slots"
+      ]
+    }
+  }
+}

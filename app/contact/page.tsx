@@ -40,41 +40,51 @@ export default function ContactPage() {
           intro="Whether you have a project in mind, want to explore training, or just want to understand what we do, we're happy to talk. Pick the way that suits you."
           className="band [--band:var(--bg-tint-1)]"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_1fr_1fr] gap-x-12 gap-y-12">
-            <div className="flex flex-col gap-4">
-              <span className="h-[6px] w-12 rounded-full bg-[var(--line-teach)]" aria-hidden="true" />
-              <h2 className="text-2xl font-bold text-[var(--text-primary)]">Book a call</h2>
-              <p className="text-[15px] text-[var(--text-muted)] leading-relaxed">
-                30 minutes on Microsoft Teams with Gabriele, to discuss your project or needs. Free, no commitment.
-              </p>
-              <NextSlots label="Open the calendar" />
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <span className="h-[6px] w-12 rounded-full bg-[var(--line-build)]" aria-hidden="true" />
-              <h2 className="text-2xl font-bold text-[var(--text-primary)]">Send a message</h2>
-              <p className="text-[15px] text-[var(--text-muted)] leading-relaxed">
-                Tell us about your project and we&apos;ll get back to you within one business day.
-              </p>
-              <ContactButton variant="outline" className="self-start">Write to us</ContactButton>
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <span className="h-[6px] w-12 rounded-full bg-[var(--line-build)]" aria-hidden="true" />
-              <h2 className="text-2xl font-bold text-[var(--text-primary)]">Follow along</h2>
-              <p className="text-[15px] text-[var(--text-muted)] leading-relaxed">
-                Updates, insights and news from the Microsoft data &amp; AI world, on LinkedIn.
-              </p>
-              <a
-                href="https://www.linkedin.com/company/tealisdata"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="self-start inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 border-[var(--text-primary)] text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] transition-colors"
-              >
-                Tealisdata on LinkedIn <ArrowUpRight size={16} />
-              </a>
-            </div>
-          </div>
+          <ol className="flex flex-col">
+            <li className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-x-10 gap-y-3 py-6 first:pt-0">
+              <h2 className="self-start flex items-center gap-3 text-xl font-bold text-[var(--text-primary)]">
+                <span className="h-3 w-3 shrink-0 rounded-full border-[3px] border-[var(--line-teach)]" aria-hidden="true" />
+                Book a call
+              </h2>
+              <div className="flex flex-col gap-4">
+                <p className="text-[15px] text-[var(--text-muted)] leading-relaxed max-w-[60ch]">
+                  30 minutes on Microsoft Teams with Gabriele, to discuss your project or needs. Free, no commitment.
+                </p>
+                <NextSlots label="Open the calendar" />
+              </div>
+            </li>
+            <li className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-x-10 gap-y-3 py-6 border-t border-[var(--border-subtle)]">
+              <h2 className="self-start flex items-center gap-3 text-xl font-bold text-[var(--text-primary)]">
+                <span className="h-3 w-3 shrink-0 rounded-full border-[3px] border-[var(--line-build)]" aria-hidden="true" />
+                Send a message
+              </h2>
+              <div className="flex flex-col gap-4">
+                <p className="text-[15px] text-[var(--text-muted)] leading-relaxed max-w-[60ch]">
+                  Tell us about your project and we&apos;ll get back to you within one business day.
+                </p>
+                <ContactButton className="self-start">Write to us</ContactButton>
+              </div>
+            </li>
+            <li className="grid grid-cols-1 md:grid-cols-[240px_1fr] gap-x-10 gap-y-3 py-6 border-t border-[var(--border-subtle)]">
+              <h2 className="self-start flex items-center gap-3 text-xl font-bold text-[var(--text-primary)]">
+                <span className="h-3 w-3 shrink-0 rounded-full border-[3px] border-[var(--line-build)]" aria-hidden="true" />
+                Follow along
+              </h2>
+              <div className="flex flex-col gap-4">
+                <p className="text-[15px] text-[var(--text-muted)] leading-relaxed max-w-[60ch]">
+                  Updates, insights and news from the Microsoft data &amp; AI world, on LinkedIn.
+                </p>
+                <a
+                  href="https://www.linkedin.com/company/tealisdata"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="self-start inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full border-2 border-[var(--text-primary)] text-sm font-semibold text-[var(--text-primary)] hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] transition-colors"
+                >
+                  Tealisdata on LinkedIn <ArrowUpRight size={16} />
+                </a>
+              </div>
+            </li>
+          </ol>
         </Station>
 
         <ApproachSection last title="What happens next" intro="Simple, fast, no strings attached." items={NEXT_STEPS} />
