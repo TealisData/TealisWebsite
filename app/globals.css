@@ -149,3 +149,22 @@ h1, h2, h3, h4, h5, h6 {
 @media (prefers-reduced-motion: reduce) {
   .scribble-stroke { transition: none; stroke-dashoffset: 0 !important; }
 }
+
+/* Browser surfaces carry the palette: keyboard focus, text selection, scrollbars */
+:focus-visible {
+  outline: 2px solid var(--color-brand-text);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+::selection {
+  background: color-mix(in srgb, var(--color-brand) 26%, transparent);
+  color: var(--text-primary);
+}
+html {
+  scrollbar-color: color-mix(in srgb, var(--text-primary) 22%, transparent) transparent;
+}
+/* Press feedback on every button-like control: the interface confirms it heard the click */
+button:not(:disabled):active,
+a[data-press]:active {
+  transform: scale(0.97);
+}

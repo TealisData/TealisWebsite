@@ -65,6 +65,7 @@ export default function ContactPage() {
                 </p>
               </div>
               <Link
+                data-press
                 href="/contact/meet"
                 className="relative mt-auto self-start px-5 py-2.5 rounded-lg text-sm font-semibold bg-[var(--text-on-feature)] text-[var(--bg-feature)] hover:opacity-80 transition-opacity"
               >
@@ -96,6 +97,7 @@ export default function ContactPage() {
                 </p>
               </div>
               <a
+                data-press
                 href="https://www.linkedin.com/company/tealisdata"
                 target="_blank"
                 rel="noopener noreferrer"
