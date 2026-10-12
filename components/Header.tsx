@@ -46,10 +46,14 @@ export default function Header() {
   const mounted = useMounted();
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+    // The page scrolls inside <main>, not the window
+    const scroller = document.querySelector("main");
+    if (!scroller) return;
+    const handler = () => setScrolled(scroller.scrollTop > 20);
+    handler();
+    scroller.addEventListener("scroll", handler, { passive: true });
+    return () => scroller.removeEventListener("scroll", handler);
+  }, [pathname]);
 
   // Close the mobile menu when the route changes (adjusting state during render, not in an effect)
   const [menuPath, setMenuPath] = useState(pathname);
@@ -58,12 +62,16 @@ export default function Header() {
     setMobileOpen(false);
   }
 
+  // The home opens on a dark field: until the visitor scrolls, the header reads light-on-dark
+  const onDark = pathname === "/" && !scrolled && !mobileOpen;
+
   const mobileVariants = shouldReduceMotion
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
     : { initial: { opacity: 0, height: 0 }, animate: { opacity: 1, height: "auto" }, exit: { opacity: 0, height: 0 } };
 
   return (
     <header
+      style={onDark ? ({ "--text-primary": "#F2F4F7", "--text-muted": "#C9CED6", "--color-brand-text": "#8DB5F5" } as React.CSSProperties) : undefined}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled || pathname !== "/"
           ? "bg-[var(--bg-primary)]/90 backdrop-blur-md shadow-sm border-b border-[var(--border-subtle)]"
@@ -79,7 +87,7 @@ export default function Header() {
               width={100}
               height={53}
               className="md:w-[140px] md:h-[74px]"
-              variant={mounted && resolvedTheme === "dark" ? "white" : "default"}
+              variant={onDark || (mounted && resolvedTheme === "dark") ? "white" : "default"}
             />
           </Link>
 

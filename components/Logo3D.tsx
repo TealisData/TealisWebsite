@@ -120,7 +120,7 @@ function cssColor(name: string, fallback: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 }
 
-export default function Logo3D() {
+export default function Logo3D({ ink: inkOverride }: { ink?: string } = {}) {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export default function Logo3D() {
     const ink = new THREE.Color();
     const brand = new THREE.Color();
     const applyTheme = () => {
-      ink.set(cssColor("--text-primary", "#22252A"));
+      ink.set(inkOverride ?? cssColor("--text-primary", "#22252A"));
       brand.set(cssColor("--color-brand", "#4A86E8"));
     };
     applyTheme();
@@ -277,7 +277,7 @@ export default function Logo3D() {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, []);
+  }, [inkOverride]);
 
   return <div ref={hostRef} className="absolute inset-0" aria-hidden="true" />;
 }

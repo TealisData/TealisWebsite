@@ -141,3 +141,18 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
+
+/* ─── Dot matrix ───────────────────────────────────────────────────
+   Fixed brand fields that stay the same in light and dark themes: the logo's ink and blue. */
+:root {
+  --field-ink: #22252A;      /* logo ink, used as a full-bleed dark field */
+  --on-field: #F2F4F7;
+  --on-field-muted: #C9CED6;
+  --on-field-accent: #8DB5F5; /* logo blue lifted for text on the ink field (≥ 7:1) */
+  --field-blue: #2A66C9;      /* logo blue deepened for white text (≥ 5:1) */
+}
+
+/* Keyboard focus, selection and press feedback themed from the palette */
+:focus-visible { outline: 2px solid var(--color-brand-text); outline-offset: 3px; border-radius: 6px; }
+::selection { background: color-mix(in srgb, var(--color-brand) 26%, transparent); color: var(--text-primary); }
+button:not(:disabled):active, a[data-press]:active { transform: scale(0.97); }

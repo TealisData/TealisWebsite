@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import WaveArt from "@/components/showcase/WaveArt";
 
 // A module is a short line, or a titled entry with a one-line explanation
@@ -54,6 +54,15 @@ export default function ProgramShowcase({
     setActive(id);
     explorerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  // Deep links from the home mosaic (/training#power-bi) open that program in the explorer
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (!programs.some((p) => p.id === id)) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync with the URL once on load
+    setActive(id);
+    requestAnimationFrame(() => explorerRef.current?.scrollIntoView({ block: "start" }));
+  }, [programs]);
 
   return (
     <>
