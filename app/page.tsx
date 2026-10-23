@@ -84,7 +84,7 @@ export default function HomePage() {
       </div>
 
       {/* Phones: the same 3D mark, built in its own stage under the text */}
-      <div className="md:hidden relative h-[44vw] min-h-[170px] max-h-[260px] -mt-4 mb-8" aria-hidden="true">
+      <div className="md:hidden relative h-[44vw] min-h-[170px] max-h-[260px] mt-2 mb-20" aria-hidden="true">
         <Logo3D centered />
       </div>
     </div>
