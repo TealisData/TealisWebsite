@@ -9,12 +9,14 @@ import dynamic from "next/dynamic";
 const Logo3D = dynamic(() => import("@/components/Logo3D"), { ssr: false });
 
 function FadeIn({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+  // The starting state must match on server and client: a reduced-motion branch here left the
+  // hero stuck invisible after hydration. Reduced motion only removes the movement and the timing.
   const reduce = useReducedMotion();
   return (
     <motion.div
-      initial={reduce ? {} : { opacity: 0, y: 12 }}
-      animate={reduce ? {} : { opacity: 1, y: 0 }}
-      transition={{ duration: 0.55, delay, ease: "easeOut" }}
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={reduce ? { duration: 0 } : { duration: 0.55, delay, ease: [0.23, 1, 0.32, 1] }}
       className={className}
     >
       {children}
@@ -79,6 +81,11 @@ export default function HomePage() {
 
           </div>
         </div>
+      </div>
+
+      {/* Phones: the same 3D mark, built in its own stage under the text */}
+      <div className="md:hidden relative h-[44vw] min-h-[170px] max-h-[260px] -mt-4 mb-8" aria-hidden="true">
+        <Logo3D centered />
       </div>
     </div>
   );

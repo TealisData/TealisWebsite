@@ -14,24 +14,6 @@ const socials = [
       </svg>
     ),
   },
-  {
-    label: "X / Twitter",
-    href: "https://twitter.com/tealisdata",
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-      </svg>
-    ),
-  },
-  {
-    label: "YouTube",
-    href: "https://youtube.com/@tealisdata",
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.96-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58zM9.75 15.02V8.98L15.5 12z" />
-      </svg>
-    ),
-  },
 ];
 
 export default function Footer() {
@@ -43,7 +25,7 @@ export default function Footer() {
         <div className="flex items-center">
           <p className="text-xs text-[var(--text-muted)] leading-relaxed">
             Tealisdata OÜ · Tallinn, Estonia · VAT EE102990636 ·{" "}
-            <a href="mailto:info@tealisdata.com" className="hover:text-[var(--color-brand-text)] transition-colors">
+            <a href="mailto:info@tealisdata.com" className="py-2 hover:text-[var(--color-brand-text)] transition-colors">
               info@tealisdata.com
             </a>
           </p>
@@ -59,7 +41,7 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="text-[var(--text-muted)] hover:text-[var(--color-brand-text)] transition-colors"
+                className="-m-2 p-2 text-[var(--text-muted)] hover:text-[var(--color-brand-text)] transition-colors"
               >
                 {icon}
               </a>
@@ -69,10 +51,10 @@ export default function Footer() {
           <div className="h-3.5 w-px bg-[var(--border-subtle)]" aria-hidden="true" />
 
           <div className="flex items-center gap-4 text-xs text-[var(--text-muted)]">
-            <Link href="/privacy-policy" className="hover:text-[var(--text-primary)] transition-colors">
+            <Link href="/privacy-policy" className="py-2 hover:text-[var(--text-primary)] transition-colors">
               Privacy
             </Link>
-            <Link href="/cookie-policy" className="hover:text-[var(--text-primary)] transition-colors">
+            <Link href="/cookie-policy" className="py-2 hover:text-[var(--text-primary)] transition-colors">
               Cookies
             </Link>
           </div>

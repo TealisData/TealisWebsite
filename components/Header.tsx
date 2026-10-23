@@ -46,10 +46,14 @@ export default function Header() {
   const mounted = useMounted();
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
+    // The page scrolls inside <main>, not the window
+    const scroller = document.querySelector("main");
+    if (!scroller) return;
+    const handler = () => setScrolled(scroller.scrollTop > 20);
+    handler();
+    scroller.addEventListener("scroll", handler, { passive: true });
+    return () => scroller.removeEventListener("scroll", handler);
+  }, [pathname]);
 
   // Close the mobile menu when the route changes (adjusting state during render, not in an effect)
   const [menuPath, setMenuPath] = useState(pathname);

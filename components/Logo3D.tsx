@@ -120,7 +120,7 @@ function cssColor(name: string, fallback: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
 }
 
-export default function Logo3D() {
+export default function Logo3D({ centered = false }: { centered?: boolean } = {}) {
   const hostRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -169,6 +169,8 @@ export default function Logo3D() {
     logo.add(inner);
     scene.add(logo);
 
+    // Dot size follows the drawn size of the mark, so a small phone logo is not crowded
+    let dotScale = 1;
     const layout = () => {
       const w = host.clientWidth, h = host.clientHeight;
       renderer.setSize(w, h, false);
@@ -180,9 +182,12 @@ export default function Logo3D() {
       const text = document.querySelector("[data-particle-avoid]")?.getBoundingClientRect();
       const box = host.getBoundingClientRect();
       const textRight = text ? text.right - box.left + TEXT_GAP : 0;
-      const targetW = Math.max(320, Math.min(MAX_LOGO_W, w - EDGE_MARGIN - textRight, w * 0.62));
+      const targetW = centered
+        ? Math.min(w * 0.86, 520)
+        : Math.max(320, Math.min(MAX_LOGO_W, w - EDGE_MARGIN - textRight, w * 0.62));
       logo.scale.setScalar(targetW / RAW.w);
-      logo.position.set(w - EDGE_MARGIN - targetW / 2 - w / 2, -h * 0.02, 0);
+      dotScale = Math.min(1, Math.max(0.55, targetW / 760));
+      logo.position.set(centered ? 0 : w - EDGE_MARGIN - targetW / 2 - w / 2, centered ? 0 : -h * 0.02, 0);
     };
     layout();
 
@@ -238,7 +243,7 @@ export default function Logo3D() {
         pos[i * 3] = x; pos[i * 3 + 1] = y; pos[i * 3 + 2] = d.z;
         col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
         alpha[i] = a;
-        size[i] = s;
+        size[i] = s * dotScale;
       }
       geo.attributes.position.needsUpdate = true;
       geo.attributes.aColor.needsUpdate = true;
@@ -277,7 +282,7 @@ export default function Logo3D() {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, []);
+  }, [centered]);
 
   return <div ref={hostRef} className="absolute inset-0" aria-hidden="true" />;
 }

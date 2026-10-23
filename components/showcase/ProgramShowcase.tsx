@@ -120,14 +120,26 @@ export default function ProgramShowcase({
           <p className={`${labelClass} text-[var(--color-brand-text)]`}>{explorerLabel}</p>
         </div>
 
-        <div className="flex gap-6 overflow-x-auto overflow-y-hidden border-b border-[var(--border-subtle)] -mx-4 px-4 sm:mx-0 sm:px-0" role="tablist">
+        <div className="flex flex-wrap gap-x-6 gap-y-1 border-b border-[var(--border-subtle)]" role="tablist">
           {programs.map((p) => (
             <button
               key={p.id}
               role="tab"
+              id={`tab-${p.id}`}
               aria-selected={active === p.id}
+              aria-controls="program-panel"
+              tabIndex={active === p.id ? 0 : -1}
               onClick={() => setActive(p.id)}
-              className={`relative shrink-0 pb-3 text-sm font-medium transition-colors ${
+              onKeyDown={(e) => {
+                const i = programs.findIndex((x) => x.id === p.id);
+                const next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? programs.length - 1 : null;
+                if (next === null) return;
+                e.preventDefault();
+                const t = programs[(next + programs.length) % programs.length];
+                setActive(t.id);
+                document.getElementById(`tab-${t.id}`)?.focus();
+              }}
+              className={`relative shrink-0 py-3 text-sm font-medium transition-colors ${
                 active === p.id ? "text-[var(--color-brand-text)]" : "text-[var(--text-primary)] hover:text-[var(--color-brand-text)]"
               }`}
             >
@@ -137,7 +149,7 @@ export default function ProgramShowcase({
           ))}
         </div>
 
-        <div role="tabpanel" className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 pt-6">
+        <div role="tabpanel" id="program-panel" aria-labelledby={`tab-${current.id}`} className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10 pt-6">
           <div className="flex flex-col gap-6">
             <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)] leading-tight" style={{ fontFamily: "var(--font-heading)" }}>
               {current.headline}

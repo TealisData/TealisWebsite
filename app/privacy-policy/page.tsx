@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy Policy – Tealis",
+  description: "How Tealisdata OÜ collects, uses and protects personal data on tealisdata.com.",
 };
 
 export default function PrivacyPolicyPage() {

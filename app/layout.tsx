@@ -43,8 +43,10 @@ export default function RootLayout({
       <body className="h-full flex flex-col antialiased overflow-hidden bg-[var(--bg-primary)] text-[var(--text-primary)]">
         <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem>
           <Header />
-          <main className="flex-1 overflow-y-auto flex flex-col">{children}</main>
-          <Footer />
+          <main className="flex-1 overflow-y-auto flex flex-col">
+            {children}
+            <Footer />
+          </main>
           <ContactDrawer />
           <CookieBanner />
         </ThemeProvider>

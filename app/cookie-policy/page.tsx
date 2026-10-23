@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Cookie Policy – Tealis",
+  description: "Which cookies tealisdata.com uses, why, and how to manage your consent.",
 };
 
 export default function CookiePolicyPage() {
