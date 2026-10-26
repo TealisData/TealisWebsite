@@ -115,6 +115,24 @@ export default function AboutPage() {
           ))}
         </div>
 
+        {/* From our training sessions */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-16">
+          <img
+            src="/about/classroom.jpg"
+            alt="A full classroom during one of our Microsoft training sessions"
+            className="w-full object-cover rounded-[var(--radius-lg)]"
+            style={{ aspectRatio: "16 / 10" }}
+            loading="lazy"
+          />
+          <img
+            src="/about/session.jpg"
+            alt="Luca Canonico presenting a KQL session to a room of participants"
+            className="w-full object-cover rounded-[var(--radius-lg)]"
+            style={{ aspectRatio: "16 / 10", objectPosition: "70% 50%" }}
+            loading="lazy"
+          />
+        </div>
+
       </div>
     </div>
   );
