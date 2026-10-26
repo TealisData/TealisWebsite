@@ -125,10 +125,10 @@ export default function AboutPage() {
             loading="lazy"
           />
           <img
-            src="/about/session.jpg"
-            alt="Luca Canonico presenting a KQL session to a room of participants"
+            src="/about/podium.jpg"
+            alt="Luca Canonico speaking at a conference"
             className="w-full object-cover rounded-[var(--radius-lg)]"
-            style={{ aspectRatio: "16 / 10", objectPosition: "70% 50%" }}
+            style={{ aspectRatio: "16 / 10", objectPosition: "60% 30%" }}
             loading="lazy"
           />
         </div>
