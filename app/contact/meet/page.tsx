@@ -3,7 +3,7 @@ import BookingWidget from "@/components/booking/BookingWidget";
 
 export const metadata: Metadata = {
   title: "Book a meeting – Tealis",
-  description: "Pick a time for a free 30-minute discovery call on Microsoft Teams.",
+  description: "Book a call on Microsoft Teams: a Data Assessment, a discovery call or a chat about our training courses.",
 };
 
 export default function MeetPage() {

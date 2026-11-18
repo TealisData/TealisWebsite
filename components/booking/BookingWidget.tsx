@@ -9,7 +9,23 @@ import { BOOKING_URL } from "@/lib/booking";
 type SlotsResponse = { slots: string[]; durationMinutes: number; serviceName: string };
 type Step = "pick" | "details" | "done";
 
-const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+// What a visitor can book the call for — matches the campaign offers
+const CALL_TOPICS = [
+  {
+    title: "Data Assessment",
+    text: "A qualitative overall review of your data processes: what to optimize, integrate or build next — followed by feedback and deep dives.",
+  },
+  {
+    title: "Discovery Call",
+    text: "Check if a specific project is feasible, or simply see what BI and AI can do for you.",
+  },
+  {
+    title: "Training",
+    text: "Ask about our courses — official Microsoft certifications or programs tailored to your team.",
+  },
+];
+
+const WEEKDAYS =["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Everything is shown in the visitor's own time zone
@@ -125,12 +141,20 @@ export default function BookingWidget() {
         <div className="relative flex flex-col gap-3">
           <CalendarDays size={20} className="text-[var(--color-brand-text)]" />
           <h2 className="text-xl md:text-2xl font-semibold leading-snug" style={{ fontFamily: "var(--font-heading)" }}>
-            {data?.serviceName ?? "Discovery call"}
+            Book a call
           </h2>
           <p className="text-sm leading-relaxed opacity-80">
-            A short call to understand your goals, your data and your team — and see how we can help.
+            A short call with us on Microsoft Teams, to understand your goals, your data and your team. Book it for:
           </p>
         </div>
+        <dl className="relative flex flex-col gap-3 text-sm">
+          {CALL_TOPICS.map((t) => (
+            <div key={t.title} className="border-l-2 border-[var(--color-brand-text)] pl-3">
+              <dt className="font-semibold">{t.title}</dt>
+              <dd className="leading-relaxed opacity-80">{t.text}</dd>
+            </div>
+          ))}
+        </dl>
         <ul className="relative flex flex-col gap-2.5 text-sm">
           <li className="flex items-center gap-3"><Clock size={16} className="opacity-70" /> {data?.durationMinutes ?? 30} minutes</li>
           <li className="flex items-center gap-3"><Video size={16} className="opacity-70" /> Microsoft Teams</li>
