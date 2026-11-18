@@ -9,17 +9,21 @@ import { BOOKING_URL } from "@/lib/booking";
 type SlotsResponse = { slots: string[]; durationMinutes: number; serviceName: string };
 type Step = "pick" | "details" | "done";
 
-// What a visitor can book the call for — matches the campaign offers
+// What a visitor can book the call for — matches the campaign offers.
+// Campaign links can preselect one with ?topic=assessment | discovery | training
 const CALL_TOPICS = [
   {
+    key: "assessment",
     title: "Data Assessment",
     text: "A qualitative overall review of your data processes: what to optimize, integrate or build next — followed by feedback and deep dives.",
   },
   {
+    key: "discovery",
     title: "Discovery Call",
     text: "Check if a specific project is feasible, or simply see what BI and AI can do for you.",
   },
   {
+    key: "training",
     title: "Training",
     text: "Ask about our courses — official Microsoft certifications or programs tailored to your team.",
   },
@@ -51,10 +55,17 @@ export default function BookingWidget() {
   const [day, setDay] = useState<string | null>(null);
   const [month, setMonth] = useState<{ y: number; m: number } | null>(null);
   const [slot, setSlot] = useState<string | null>(null);
-  const [form, setForm] = useState({ name: "", email: "", company: "", message: "", website: "" });
+  const [form, setForm] = useState({ name: "", email: "", topic: "", company: "", message: "", website: "" });
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  // Preselect the topic from the campaign link
+  useEffect(() => {
+    const key = new URLSearchParams(window.location.search).get("topic");
+    const match = CALL_TOPICS.find((t) => t.key === key);
+    if (match) setForm((f) => ({ ...f, topic: match.title }));
+  }, []);
 
   const load = async () => {
     setLoadError(false);
@@ -215,6 +226,29 @@ export default function BookingWidget() {
                 <input type="email" className={inputClass} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="john@company.com" autoComplete="email" />
               </div>
             </div>
+            <fieldset>
+              <legend className={labelClass}>What is the call about?</legend>
+              <div className="flex flex-wrap gap-2">
+                {CALL_TOPICS.map((t) => {
+                  const on = form.topic === t.title;
+                  return (
+                    <button
+                      key={t.key}
+                      type="button"
+                      aria-pressed={on}
+                      onClick={() => setForm({ ...form, topic: on ? "" : t.title })}
+                      className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                        on
+                          ? "border-[var(--color-brand-solid)] bg-[var(--color-brand-solid)] text-white"
+                          : "border-[var(--border-subtle)] bg-[var(--bg-surface)] text-[var(--text-primary)] hover:border-[var(--color-brand-text)]"
+                      }`}
+                    >
+                      {t.title}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
             <div>
               <label className={labelClass}>Company</label>
               <input className={inputClass} value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} placeholder="Company name" autoComplete="organization" />

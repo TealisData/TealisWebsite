@@ -1,6 +1,7 @@
 import { BookingError, createBooking } from "@/lib/msBookings";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const TOPICS = ["Data Assessment", "Discovery Call", "Training"];
 
 // Best-effort throttle per server instance: a few bookings per visitor per hour
 const recent = new Map<string, number[]>();
@@ -35,6 +36,7 @@ export async function POST(request: Request) {
       start,
       name,
       email,
+      topic: TOPICS.includes(body.topic) ? body.topic : undefined,
       company: text(body.company, 150),
       message: text(body.message, 2000),
       timeZone: text(body.timeZone, 60) || undefined,

@@ -178,7 +178,7 @@ export async function getSlots(): Promise<Slots> {
   return { slots: [...new Set(slots)].sort(), durationMinutes: duration / 60_000, serviceName: service.displayName };
 }
 
-export type BookingRequest = { start: string; name: string; email: string; company?: string; message?: string; timeZone?: string };
+export type BookingRequest = { start: string; name: string; email: string; topic?: string; company?: string; message?: string; timeZone?: string };
 
 /** Creates the appointment in Bookings, which sends the confirmation e-mails with the Teams link */
 export async function createBooking(req: BookingRequest) {
@@ -188,7 +188,7 @@ export async function createBooking(req: BookingRequest) {
 
   const service = await getService();
   const end = new Date(Date.parse(start) + durationMinutes * 60_000).toISOString();
-  const notes = [req.company && `Company: ${req.company}`, req.message].filter(Boolean).join("\n\n");
+  const notes = [req.topic && `Topic: ${req.topic}`, req.company && `Company: ${req.company}`, req.message].filter(Boolean).join("\n\n");
   const utc = (iso: string) => ({ dateTime: iso.slice(0, 19), timeZone: "UTC" });
 
   const appointment = await graph<{ id: string; joinWebUrl?: string }>("/appointments", {
